@@ -1,4 +1,5 @@
-const {Ship, Gameboard, Player} = require("./index");
+const {Ship, Gameboard} = require("./index");
+const {player1} = require("./mainGameLoop");
 
 // Ships class
 test("Create a ship", () => {
@@ -57,14 +58,14 @@ test("Position ship (Length = 1)", () => {
 test("Position ship (Length = 3 ; Y-AXIS)", () => {
     const gameboard = Gameboard(); // Create an instance of Gameboard
     // Call positionShips on the instance
-    gameboard.positionShips([[2,2,3,5]])
+    gameboard.positionShips([[0,0,0,2]])
 
     // Now, check the state of the board
     expect(gameboard.board).toEqual(
         [
-            [null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, { length: 3, hits: 0, sunk: false }, { length: 3, hits: 0, sunk: false }, { length: 3, hits: 0, sunk: false }, null, null, null, null],
+            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
+            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
+            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
@@ -87,11 +88,11 @@ test("Position ship (Length = 5 ; X-AXIS)", () => {
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, { length: 5, hits: 0, sunk: false }, null, null, null],
-            [null, null, null, null, null, null, { length: 5, hits: 0, sunk: false }, null, null, null],
-            [null, null, null, null, null, null, { length: 5, hits: 0, sunk: false }, null, null, null],
-            [null, null, null, null, null, null, { length: 5, hits: 0, sunk: false }, null, null, null],
-            [null, null, null, null, null, null, { length: 5, hits: 0, sunk: false }, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
         ]
     );
@@ -100,20 +101,20 @@ test("Position ship (Length = 5 ; X-AXIS)", () => {
 test("Position multiple ships", () => {
     const gameboard = Gameboard(); // Create an instance of Gameboard
     // Call positionShips on the instance
-    gameboard.positionShips([[1,1,1,1],[2,2,3,5],[4,8,6,6]])
-
+    gameboard.positionShips([[1,1,1,1],[0,0,0,2],[4,8,6,6]])
+    
     // Now, check the state of the board
     expect(gameboard.board).toEqual(
         [
+            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
+            [{ length: 3, hits: 0, sunk: false }, { length: 1, hits: 0, sunk: false }, null, null, null, null, null, null, null, null],
+            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
-            [null, { length: 1, hits: 0, sunk: false }, null, null, null, null, null, null, null, null],
-            [null, null, null, { length: 3, hits: 0, sunk: false }, { length: 3, hits: 0, sunk: false }, { length: 3, hits: 0, sunk: false }, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, { length: 5, hits: 0, sunk: false }, null, null, null],
-            [null, null, null, null, null, null, { length: 5, hits: 0, sunk: false }, null, null, null],
-            [null, null, null, null, null, null, { length: 5, hits: 0, sunk: false }, null, null, null],
-            [null, null, null, null, null, null, { length: 5, hits: 0, sunk: false }, null, null, null],
-            [null, null, null, null, null, null, { length: 5, hits: 0, sunk: false }, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
         ]
     )
@@ -123,21 +124,21 @@ test("Position multiple ships", () => {
 test("Check hit for a SINGLE ship", () => {
     const gameboard = Gameboard(); // Create an instance of Gameboard
     // Call positionShips on the instance
-    gameboard.positionShips([[1,1,1,1],[2,2,3,5],[4,8,6,6]])
+    gameboard.positionShips([[1,1,1,1],[0,0,0,2],[4,8,6,6]])
     gameboard.recieveAttack([1,1]);
 
     // Now, check the state of the board
     expect(gameboard.board).toEqual(
         [
+            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
+            [{ length: 3, hits: 0, sunk: false }, { length: 1, hits: 1, sunk: true }, null, null, null, null, null, null, null, null],
+            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
-            [null, { length: 1, hits: 1, sunk: true }, null, null, null, null, null, null, null, null],
-            [null, null, null, { length: 3, hits: 0, sunk: false }, { length: 3, hits: 0, sunk: false }, { length: 3, hits: 0, sunk: false }, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, { length: 5, hits: 0, sunk: false }, null, null, null],
-            [null, null, null, null, null, null, { length: 5, hits: 0, sunk: false }, null, null, null],
-            [null, null, null, null, null, null, { length: 5, hits: 0, sunk: false }, null, null, null],
-            [null, null, null, null, null, null, { length: 5, hits: 0, sunk: false }, null, null, null],
-            [null, null, null, null, null, null, { length: 5, hits: 0, sunk: false }, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
         ]
     )
@@ -146,18 +147,19 @@ test("Check hit for a SINGLE ship", () => {
 test("Check hits for MULTIPLE ships", () => {
     const gameboard = Gameboard(); // Create an instance of Gameboard
     // Call positionShips on the instance
-    gameboard.positionShips([[1,1,1,1],[2,2,3,5]])
+    gameboard.positionShips([[1,1,1,1],[0,0,0,2]])
     gameboard.recieveAttack([1,1]);
-    gameboard.recieveAttack([2,3]);
-    gameboard.recieveAttack([2,4]);
-    gameboard.recieveAttack([2,5]);
+    gameboard.recieveAttack([0,0]);
+    gameboard.recieveAttack([0,1]);
+    gameboard.recieveAttack([0,2]);
+
 
     // Now, check the state of the board
     expect(gameboard.board).toEqual(
         [
-            [null, null, null, null, null, null, null, null, null, null],
-            [null, { length: 1, hits: 1, sunk: true }, null, null, null, null, null, null, null, null],
-            [null, null, null, { length: 3, hits: 3, sunk: true }, { length: 3, hits: 3, sunk: true }, { length: 3, hits: 3, sunk: true }, null, null, null, null],
+            [{ length: 3, hits: 3, sunk: true }, null, null, null, null, null, null, null, null, null],
+            [{ length: 3, hits: 3, sunk: true }, { length: 1, hits: 1, sunk: true }, null, null, null, null, null, null, null, null],
+            [{ length: 3, hits: 3, sunk: true }, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
@@ -172,11 +174,11 @@ test("Check hits for MULTIPLE ships", () => {
 test("Check hits for allShipsSunk", () => {
     const gameboard = Gameboard(); // Create an instance of Gameboard
     // Call positionShips on the instance
-    gameboard.positionShips([[1,1,1,1],[2,2,3,5]])
+    gameboard.positionShips([[1,1,1,1],[0,0,0,2]])
     gameboard.recieveAttack([1,1]);
-    gameboard.recieveAttack([2,3]);
-    gameboard.recieveAttack([2,4]);
-    gameboard.recieveAttack([2,5]);
+    gameboard.recieveAttack([0,0]);
+    gameboard.recieveAttack([0,1]);
+    gameboard.recieveAttack([0,2]);
 
     // Now, check the state of the board
     expect(gameboard.allShipsSunk()).toBe(true);
@@ -203,19 +205,20 @@ test("Missed hits", () => {
     )
 });
 
-test("Player Gameboard", () => {
-    const Kiff = Player(Kiff);
-    expect(Kiff.board).toEqual(
+
+// MainGameLoop
+test("Testing player1 creation", () => {
+    expect(player1.board).toEqual(
         [
+            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, { length: 1, hits: 0, sunk: false }, null, null],
+            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
+            [{ length: 3, hits: 0, sunk: false }, null, { length: 3, hits: 0, sunk: false }, { length: 3, hits: 0, sunk: false }, { length: 3, hits: 0, sunk: false }, null, { length: 2, hits: 0, sunk: false }, { length: 2, hits: 0, sunk: false }, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, { length: 2, hits: 0, sunk: false }, null, { length: 4, hits: 0, sunk: false }, null, null, null, null],
+            [{ length: 2, hits: 0, sunk: false }, { length: 2, hits: 0, sunk: false }, null, { length: 2, hits: 0, sunk: false }, null, { length: 4, hits: 0, sunk: false }, null, null, null, null],
+            [null, null, null, null, null, { length: 4, hits: 0, sunk: false }, null, { length: 1, hits: 0, sunk: false }, null, { length: 1, hits: 0, sunk: false }],
+            [null, null, null, { length: 1, hits: 0, sunk: false }, null, { length: 4, hits: 0, sunk: false }, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
         ]
     )
