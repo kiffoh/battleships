@@ -1,4 +1,4 @@
-const {Ship, Gameboard} = require("./index");
+const {Ship, Gameboard, Player} = require("./index");
 
 // Ships class
 test("Create a ship", () => {
@@ -202,3 +202,21 @@ test("Missed hits", () => {
         ]
     )
 });
+
+test("Player Gameboard", () => {
+    const Kiff = Player(Kiff);
+    expect(Kiff.board).toEqual(
+        [
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+        ]
+    )
+})
