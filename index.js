@@ -80,14 +80,6 @@ const Gameboard = () => {
     return {board, missed, positionShips, recieveAttack, allShipsSunk, ships};
 }
 
-// Player
-const player1 = Gameboard();
-
-if (player2Playing === true) {
-    const player2 = Gameboard();  
-} else {
-    const computer = Gameboard();
-}
 
 /*
 FOR THE GAME LOGIC
