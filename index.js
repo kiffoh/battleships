@@ -77,14 +77,23 @@ const Gameboard = () => {
         return ships.every(ship => ship.sunk === true);
     }
 
-    return {board, missed, positionShips, recieveAttack, allShipsSunk};
+    return {board, missed, positionShips, recieveAttack, allShipsSunk, ships};
 }
 
-const Player = (player) => {
-    // let turn = turn === player1Name ? player2Name : player1Name;
+// Player
+const player1 = Gameboard();
+
+if (player2Playing === true) {
+    const player2 = Gameboard();  
+} else {
+    const computer = Gameboard();
+}
+
+/*
+FOR THE GAME LOGIC
     let playerGuessX
     let playerGuessY
-    
+
     if (!player2Name) {
         let computerGuessLegal = false;
         while (!computerGuessLegal) {
@@ -94,12 +103,9 @@ const Player = (player) => {
                 computerGuessLegal = true;
             };
         }
-    } else {
-        player2GuessX = input();
-        player2GuessY = input();
-    }
+    } 
 
     return {player1Name, player2Name, turn, missed, computerGuessX, computerGuessY, player1GuessX, player1GuessY, player2GuessX, player2GuessY}
-}
+*/
 
 module.exports = {Ship, Gameboard, Player};
