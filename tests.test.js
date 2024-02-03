@@ -1,5 +1,5 @@
 const {Ship, Gameboard} = require("./src/index");
-const {player1} = require("./src/mainGameLoop");
+const {player1} = require("./src/buildGrid");
 
 // Ships class
 test("Create a ship", () => {

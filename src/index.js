@@ -1,4 +1,4 @@
-import { buildGrid } from "./mainGameLoop";
+import { buildGrid } from "./buildGrid";
 
 
 const playerGrid = document.querySelector("#playerGrid");
