@@ -11,7 +11,7 @@ function buildGrid(grid) {
     for (let x = 0; x <= 9; x++) {
         for (let y = 0; y <= 9; y++) {
             const gridDiv = document.createElement("div");
-            gridDiv.classList = `${grid.classList} ${x}${y}`;
+            gridDiv.classList = `${grid.classList} number ${x}${y}`;
             grid.appendChild(gridDiv);
         }
     }
