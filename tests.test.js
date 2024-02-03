@@ -1,5 +1,5 @@
-const {Ship, Gameboard} = require("./index");
-const {player1} = require("./mainGameLoop");
+const {Ship, Gameboard} = require("./src/index");
+const {player1} = require("./src/mainGameLoop");
 
 // Ships class
 test("Create a ship", () => {
@@ -204,7 +204,6 @@ test("Missed hits", () => {
         ]
     )
 });
-
 
 // MainGameLoop
 test("Testing player1 creation", () => {
