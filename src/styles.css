@@ -1,0 +1,9 @@
+.player-grid.number, .compueter-grid-number {
+    width: 2em;
+    height: 2em;
+}
+
+#playerContainer, #computerContainer {
+    display: grid;
+    grid-template-columns: repeat(10, 32px);
+}
