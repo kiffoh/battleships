@@ -1,9 +1,11 @@
-.player-grid.number, .compueter-grid-number {
-    width: 2em;
-    height: 2em;
+.player-grid.number, .computer-grid.number {
+    border: 1px solid #ff0000;
+    width: 100%;
+    height: 100%;
 }
 
-#playerContainer, #computerContainer {
+#playerGrid, #computerGrid {
     display: grid;
     grid-template-columns: repeat(10, 32px);
+    grid-template-rows: repeat(10, 32px);
 }
