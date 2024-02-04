@@ -2,6 +2,7 @@ import { buildGrid } from "./buildGrid";
 import "./styles.css"
 import {Ship, Gameboard} from "./classCreator";
 import { gameLogic } from "./gameLogic";
+import { addEventListeners } from "./addEventListeners";
 
 const playerGrid = document.querySelector("#playerGrid");
 const computerGrid = document.querySelector("#computerGrid");
@@ -22,6 +23,8 @@ buildGrid(computerGrid, computer.board);
 const startBtn = document.querySelector(".start-button");
 
 startBtn.addEventListener("click", () => {
+    addEventListeners(playerGrid);
+    addEventListeners(computerGrid);
     gameLogic();
     startBtn.disabled = true;
 });
