@@ -7,15 +7,36 @@ import {Ship, Gameboard} from "./classCreator";
 // const player1Btn = document.querySelector(".player-1-btn");
 // const player1Name = player1Btn.textContent
 
-function buildGrid(grid) {
+function buildGrid(grid, gameboard) {
     for (let x = 0; x <= 9; x++) {
         for (let y = 0; y <= 9; y++) {
             const gridDiv = document.createElement("div");
             gridDiv.classList = `${grid.classList} number ${x}${y}`;
-            gridDiv.textContent = " ";
+
+            if (gameboard[y][x] != null) {
+                gridDiv.classList.add("ship-present");
+            }
+            /*
+            else {
+                gridDiv.textContent = "";
+            }
+            */
             grid.appendChild(gridDiv);
+
+            // clickGridSquare(gridDiv, x, y);
         }
     }
 }
+
+
+/*
+function clickGridSquare(gridDiv, x, y) {
+    gridDiv.addEventListener("click", () => {
+        if ("player" in gridDiv.classList) {
+            
+        }
+    });
+}
+*/
 
 export {buildGrid}
