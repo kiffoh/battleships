@@ -1,6 +1,7 @@
 import { buildGrid } from "./buildGrid";
 import "./styles.css"
 import {Ship, Gameboard} from "./classCreator";
+import { gameLogic } from "./gameLogic";
 
 const playerGrid = document.querySelector("#playerGrid");
 const computerGrid = document.querySelector("#computerGrid");
@@ -17,3 +18,10 @@ computer.positionShips(startingCoordinates);
 
 buildGrid(playerGrid, player.board);
 buildGrid(computerGrid, computer.board);
+
+const startBtn = document.querySelector(".start-button");
+
+startBtn.addEventListener("click", () => {
+    gameLogic();
+    startBtn.disabled = true;
+});
