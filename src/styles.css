@@ -22,6 +22,7 @@ h1 {
     text-align: center;
 }
 
+/* ONLY colour player grid */
 .player-grid.number.ship-present {
     outline: 2px solid darkblue;
     width: 100%;
