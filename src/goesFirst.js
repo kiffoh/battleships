@@ -12,7 +12,8 @@ function goesFirst() {
         firstDiv.textContent = "COMPUTER GOES FIRST";
     }
     document.body.appendChild(firstDiv);
-    return first;
+    // For the syntax of toggleOverlay
+    return first + "Grid";
 }
 
 export {goesFirst}
