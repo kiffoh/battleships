@@ -1,5 +1,9 @@
 .player-grid.number, .computer-grid.number {
     background-color: white;
+    color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #playerGrid, #computerGrid {
@@ -22,7 +26,7 @@ h1 {
 }
 
 /* ONLY colour player grid */
-.player-grid.number.ship-present {
+.ship-present.reveal {
     outline: 2px solid darkblue;
     width: 100%;
     height: 100%;
