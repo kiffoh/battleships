@@ -1,4 +1,4 @@
-const {Ship, Gameboard} = require("./src/index");
+const {Ship, Gameboard} = require("./src/classCreator");
 const {player1} = require("./src/buildGrid");
 
 // Ships class
