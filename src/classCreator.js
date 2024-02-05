@@ -78,25 +78,54 @@ const Gameboard = () => {
     return {board, missed, positionShips, recieveAttack, allShipsSunk, ships};
 }
 
-
-/*
-FOR THE GAME LOGIC
-    let playerGuessX
-    let playerGuessY
-
-    if (!player2Name) {
-        let computerGuessLegal = false;
-        while (!computerGuessLegal) {
-            computerGuessX = Math.random(0,9);
-            computerGuessY = Math.random(0,9);
-            if (player2.missed[computerGuessX][computerGuessY] != "X") {
-                computerGuessLegal = true;
-            };
-        }
-    } 
-
-    return {player1Name, player2Name, turn, missed, computerGuessX, computerGuessY, player1GuessX, player1GuessY, player2GuessX, player2GuessY}
-*/
-
 // module.exports = {Ship, Gameboard};
-export {Ship, Gameboard};
+
+const Player = () => {
+    const gameboard = Gameboard();
+
+    function buildGrid(grid, reveal) {
+        for (let y = 0; y <= 9; y++) {
+            for (let x = 0; x <= 9; x++) {
+                const gridDiv = document.createElement("div");
+                gridDiv.classList = `${grid.classList} number ${y}${x}`;
+    
+                if (gameboard.board[y][x] != null) {
+                    gridDiv.classList.add("ship-present");
+                    if (reveal) {
+                        gridDiv.classList.add("reveal");
+                    } else {
+                        gridDiv.classList.add("hidden");
+                    }
+                }
+    
+                grid.appendChild(gridDiv);
+
+                registerGridDivEventListener(gridDiv, x, y);
+            }
+        }
+    }
+
+    function registerGridDivEventListener(gridDiv, x, y) {
+        gridDiv.addEventListener("click", () => {
+            if (gridDiv.textContent === "") {
+                gridDiv.textContent = "X";
+                if (gridDiv.classList.contains("hidden")) {
+                    gridDiv.classList.remove("hidden");
+                    gridDiv.classList.add("reveal");
+                }
+                HTMLtoboard(x, y);
+            }
+        });
+    }
+
+    function HTMLtoboard(x, y) {
+        if (!gameboard) return;             
+        gameboard.recieveAttack([x, y]);
+        console.log(x,y);
+        console.log(gameboard.missed) 
+        console.log(gameboard.board)
+    }
+
+    return {buildGrid, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk}
+}
+export {Ship, Gameboard, Player};
