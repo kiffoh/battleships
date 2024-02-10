@@ -82,8 +82,11 @@ const Gameboard = () => {
 
 const Player = () => {
     const gameboard = Gameboard();
+    const name = "";
+    const opponent = null;
 
-    function buildGrid(grid, reveal) {
+    function buildGrid(reveal) {
+        const grid = document.getElementById(this.name + "Grid");
         for (let y = 0; y <= 9; y++) {
             for (let x = 0; x <= 9; x++) {
                 const gridDiv = document.createElement("div");
@@ -97,35 +100,87 @@ const Player = () => {
                         gridDiv.classList.add("hidden");
                     }
                 }
-    
+                
                 grid.appendChild(gridDiv);
 
-                registerGridDivEventListener(gridDiv, x, y);
             }
         }
     }
 
-    function registerGridDivEventListener(gridDiv, x, y) {
-        gridDiv.addEventListener("click", () => {
-            if (gridDiv.textContent === "") {
-                gridDiv.textContent = "X";
-                if (gridDiv.classList.contains("hidden")) {
-                    gridDiv.classList.remove("hidden");
-                    gridDiv.classList.add("reveal");
+    function registerGridDivEventListener() {
+        const grid = document.getElementById(this.name + "Grid")
+        const gridDivs = grid.querySelectorAll("*");
+
+        gridDivs.forEach(gridDiv => {
+            gridDiv.addEventListener("click", () => {
+                // Remove the text for who goes first
+                const firstPlayerText = document.querySelector(".first-player");
+                if (firstPlayerText.textContent) {
+                    firstPlayerText.textContent = "";
                 }
-                HTMLtoboard(x, y);
+
+                if (gridDiv.textContent === "") {
+                    if (gridDiv.classList.contains("ship-present")) {
+                        gridDiv.textContent = "X";
+                        if (gridDiv.classList.contains("hidden")) {
+                            gridDiv.classList.remove("hidden");
+                            gridDiv.classList.add("reveal");
+                        }
+                    } else {
+                        gridDiv.textContent = "●"
+                    }
+                    HTMLtoboard.bind(this)(gridDiv);
+                    // Move beneath to own function as this is triggered separately
+                    this.toggleOverlay(true);
+                    this.opponent.toggleOverlay(false);
+                }
+            });
+        })
+    };
+
+    function classToInteger(gridDiv) {
+        const classListString = gridDiv.getAttribute("class");
+        const numbers = "0123456789"
+        for (let className of classListString.split(" ")) {
+            if (numbers.includes(className[0])) {
+                return [parseInt(className[0]), parseInt(className[1])];
             }
-        });
+        }
     }
 
-    function HTMLtoboard(x, y) {
-        if (!gameboard) return;             
+    function HTMLtoboard(gridDiv) {
+        if (!gameboard) return;
+    
+        const [y, x] = classToInteger(gridDiv);             
         gameboard.recieveAttack([x, y]);
-        console.log(x,y);
-        console.log(gameboard.missed) 
-        console.log(gameboard.board)
+    
+        if (gameboard.board[y][x] != null && gameboard.board[y][x].sunk) {
+            // Need to add a backtrack algorythm to find all the nodes - Can also use this to make the ship one?
+            gridDiv.classList.add("sunk");
+            if (gameboard.allShipsSunk()) {
+                // Using the div which stated the first player
+                const winnerConfirmation = document.querySelector(".first-player")
+                winnerConfirmation.textContent = `Congratulations ${this.name} wins!`
+                triggerOverallOverlay();
+            }
+        }
+    }
+    
+
+    function toggleOverlay(showOverlay) {
+        const overlay = document.getElementById(this.name + "GridOverlay");
+        if (showOverlay) {
+            overlay.style.display = "block";
+        } else {
+            overlay.style.display = "none";
+        }
     }
 
-    return {buildGrid, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk}
+    function triggerOverallOverlay() {
+        const overlay = document.getElementById("overallOverlay");
+        overlay.style.display = "block";
+    }
+
+    return {buildGrid, toggleOverlay, registerGridDivEventListener, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk}
 }
 export {Ship, Gameboard, Player};
