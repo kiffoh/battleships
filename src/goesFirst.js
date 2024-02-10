@@ -1,8 +1,7 @@
-function goesFirst() {
-    const players = ["player", "computer"];
+function goesFirst(players) {
     let number = Math.random();
     let index = Math.round(number);
-    let first = players[index];
+    let first = players[index].name;
 
     const firstDiv = document.createElement("h3");
     firstDiv.classList = "first-player";
@@ -12,8 +11,8 @@ function goesFirst() {
         firstDiv.textContent = "COMPUTER GOES FIRST";
     }
     document.body.appendChild(firstDiv);
-    // For the syntax of toggleOverlay
-    return first + "Grid";
+    
+    return players[index];
 }
 
 export {goesFirst}
