@@ -156,7 +156,14 @@ const Player = () => {
     
         if (gameboard.board[y][x] != null && gameboard.board[y][x].sunk) {
             // Need to add a backtrack algorythm to find all the nodes - Can also use this to make the ship one?
-            gridDiv.classList.add("sunk");
+            const coordinates = findTouchingShips(gameboard.board, x, y, new Set());
+            coordinates.forEach(coordinate => {
+                let x = parseInt(coordinate[1]);
+                let y = parseInt(coordinate[0]);
+                let shipDiv = gridDivsFromCoordinates.bind(this)(y, x);
+                shipDiv.classList.add("sunk");
+            })
+            
             if (gameboard.allShipsSunk()) {
                 // Using the div which stated the first player
                 const winnerConfirmation = document.querySelector(".first-player")
@@ -164,6 +171,38 @@ const Player = () => {
                 triggerOverallOverlay();
             }
         }
+    }
+    function gridDivsFromCoordinates(y, x) {
+        const grid = document.getElementById(this.name + "Grid");
+        const gridDivs = grid.querySelectorAll("*");
+        let foundGridDiv = null;
+
+        gridDivs.forEach(gridDiv => {
+            if (gridDiv.classList.contains(`${y}${x}`)) {
+                foundGridDiv = gridDiv;                
+            }
+        })
+        return foundGridDiv;
+    }
+
+    function findTouchingShips(gameboard, x, y, path) {
+        if (path.has(`${y}${x}`) || Math.max(x, y) > 9 || Math.min(x, y) < 0 || gameboard[y][x] === null) return;
+
+        // Previously had "path.add([y, x])"
+        //  This line attempts to add an array [y, x] to the Set. However, JavaScript considers two arrays to 
+        // be equal only if they reference the same array object, not if their contents are the same. Since you 
+        // are creating new array objects each time you use [y, x], they are not considered equal, and thus each 
+        // attempt to add a new [y, x] array to the Set will succeed, resulting in duplicates.
+
+        // Beneath allows for proper checks
+        path.add(`${y}${x}`);
+
+        findTouchingShips(gameboard, x + 1, y, path) 
+        findTouchingShips(gameboard, x - 1, y, path)
+        findTouchingShips(gameboard, x, y + 1, path)
+        findTouchingShips(gameboard, x, y - 1, path)
+
+        return path
     }
     
 
