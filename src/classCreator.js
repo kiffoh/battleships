@@ -156,15 +156,17 @@ const Player = () => {
         gameboard.recieveAttack([x, y]);
     
         if (gameboard.board[y][x] != null && gameboard.board[y][x].sunk) {
-            // Need to add a backtrack algorythm to find all the nodes - Can also use this to make the ship one?
+            // Algorithm to find all all parts of ship 
             const coordinates = findTouchingShips(gameboard.board, x, y, new Set());
             coordinates.forEach(coordinate => {
                 let x = parseInt(coordinate[1]);
                 let y = parseInt(coordinate[0]);
-                let shipDiv = gridDivsFromCoordinates.bind(this)(y, x);
+                let shipDiv = gridDivFromCoordinates.bind(this)(y, x);
                 shipDiv.classList.add("sunk");
-            })
-            
+                nearbyShipSquaresHit.bind(this)(x, y);
+            })        
+
+
             if (gameboard.allShipsSunk()) {
                 // Using the div which stated the first player
                 const winnerConfirmation = document.querySelector(".first-player")
@@ -173,7 +175,41 @@ const Player = () => {
             }
         }
     }
-    function gridDivsFromCoordinates(y, x) {
+
+    function nearbyShipSquaresHit(x, y) {
+        // Create array of surrounding coordinates
+        // Iterate through array to determine if needs to be updated;
+        console.log(x)
+        console.log(y)
+        const surroundingCoordinates = findSurroundingCoordinates(x, y);
+        console.log(surroundingCoordinates);
+        for (let coordinates of surroundingCoordinates) {
+            let x = coordinates[0];
+            let y = coordinates[1];
+
+            if (gameboard.missed[y][x] === null) {
+                gameboard.recieveAttack([x, y])
+                const missedDiv = gridDivFromCoordinates.bind(this)(y, x);
+                missedDiv.textContent = "●";
+            }
+
+        }
+    }
+
+    function findSurroundingCoordinates(x, y) {
+        const surroundingCoordinates = [];
+        for (let Y = y - 1; Y <= y + 1; Y++) {
+            for (let X = x - 1; X <= x + 1; X++) {
+                if (Math.min(X, Y) < 0 || Math.max(X, Y) > 9 || gameboard.board[Y][X] != null) {
+                    continue;
+                }
+                surroundingCoordinates.push([X, Y]);
+            }
+        }
+        return surroundingCoordinates;
+    }
+
+    function gridDivFromCoordinates(y, x) {
         const grid = document.getElementById(this.name + "Grid");
         const gridDivs = grid.querySelectorAll("*");
         let foundGridDiv = null;
