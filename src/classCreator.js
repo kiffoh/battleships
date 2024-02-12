@@ -127,12 +127,13 @@ const Player = () => {
                             gridDiv.classList.add("reveal");
                         }
                     } else {
-                        gridDiv.textContent = "●"
+                        gridDiv.textContent = "●";
+                        this.toggleOverlay(true);
+                        this.opponent.toggleOverlay(false);
                     }
                     HTMLtoboard.bind(this)(gridDiv);
                     // Move beneath to own function as this is triggered separately
-                    this.toggleOverlay(true);
-                    this.opponent.toggleOverlay(false);
+                    
                 }
             });
         })
