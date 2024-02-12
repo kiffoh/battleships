@@ -1,9 +1,13 @@
 .player-grid.number, .computer-grid.number {
     background-color: white;
-    color: red;
+    color: black;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.player-grid.number.ship-present, .computer-grid.number.ship-present {
+    color: red;
 }
 
 #playerGrid, #computerGrid {
