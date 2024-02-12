@@ -6,6 +6,14 @@
     align-items: center;
 }
 
+#hit, #revealedMiss {
+    background-color: #bbb2b279;
+}
+
+#revealedMiss {
+    color: rgb(118, 115, 115);
+}
+
 .player-grid.number.ship-present, .computer-grid.number.ship-present {
     color: red;
 }
