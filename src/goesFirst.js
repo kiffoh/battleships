@@ -15,4 +15,20 @@ function goesFirst(players) {
     return players[index];
 }
 
-export {goesFirst}
+function removeFirstPlayerText(turn) {
+    // Opponent variable as turn is not an instance of the player class
+    // Therefore opponent needed as this will be the first grid clicked
+    const opponent = turn = "player" ? "computer" : "player";
+    const grid = document.getElementById(opponent + "Grid")
+    const gridDivs = grid.querySelectorAll("*");
+    gridDivs.forEach((gridDiv) => {
+        gridDiv.addEventListener("click", () => {
+            const firstPlayerText = document.querySelector(".first-player");
+            if (firstPlayerText.textContent) {
+                firstPlayerText.textContent = "";
+            }
+        })
+    })
+}
+
+export { goesFirst, removeFirstPlayerText }
