@@ -83,15 +83,7 @@ const Player = () => {
     const gameboard = Gameboard();
     const name = "";
     const opponent = null;
-    if (name === "computer") {
-        potentialComputerGuesses = []
-        const computerGrid = document.getElementById("computerGrid")
-        const computerGridDivs = computerGrid.querySelectorAll("*");
-
-        computerGridDivs.forEach(div => {
-            potentialComputerGuesses.push(div);
-        })
-    }
+    let potentialComputerGuesses = null;
 
     function buildGrid(reveal) {
         const grid = document.getElementById(this.name + "Grid");
@@ -121,55 +113,95 @@ const Player = () => {
 
         gridDivs.forEach(gridDiv => {
             gridDiv.addEventListener("click", () => {
-                // Remove the text for who goes first
-                // Move this into a separate function & trigger it when the computer's turn
-                // Up to HTMLtoBoard
-                const firstPlayerText = document.querySelector(".first-player");
-                if (firstPlayerText.textContent) {
-                    firstPlayerText.textContent = "";
-                }
-                
-                if (gridDiv.textContent === "") {
-                    if (gridDiv.classList.contains("ship-present")) {
-                        gridDiv.textContent = "X";
-                        if (gridDiv.classList.contains("hidden")) {
-                            gridDiv.classList.remove("hidden");
-                            gridDiv.classList.add("reveal");
-                        }
-
-                        if (this.opponent === "computer") {
-                            computerGuess(true);
-                        }
-                    } else {
-                        gridDiv.textContent = "●";
-                        this.toggleOverlay(true);
-                        this.opponent.toggleOverlay(false);
-                        gridDiv.id = "hit";
-
-                        if (this.opponent === "computer") {
-                            computerGuess(false);
-                        }
-                    }
-                    HTMLtoboard.bind(this)(gridDiv);
-                    
-                }
+                clickToHTML.bind(this)(gridDiv);   
             });
         })
     };
 
-    function computerGuess(prevHit) {
-        // Code for successful guess
-        if (prevHit) {
-
-        } else {
-            // Change this to random guess of an array of potential guesses
-            let guess =  Math.floor(Math.random() * 101);
-            let guessedDiv = potentialComputerGuesses[guess];
-            potentialComputerGuesses.splice(guess, 1);
+    function clickToHTML(gridDiv) {
+        if (gridDiv.textContent === "") {
+            if (gridDiv.classList.contains("ship-present")) {
+                gridDiv.textContent = "X";
+                if (gridDiv.classList.contains("hidden")) {
+                    gridDiv.classList.remove("hidden");
+                    gridDiv.classList.add("reveal");
+                }
+            } else {
+                gridDiv.textContent = "●";
+                this.showOverlay(true);
+                this.opponent.showOverlay(false);
+                gridDiv.id = "hit";
+                
+                // Computer guess if player missses
+                // Keeps going until it hits and X
+                if (this.name === "computer") {
+                    computerGuess.bind(this)();
+                }
+            }
+            HTMLtoboard.bind(this)(gridDiv);
+            
         }
-        
-        // Toggle overlays
     }
+
+    function computerGuessToHTML(gridDiv) {
+        if (gridDiv.textContent === "") {
+            if (gridDiv.classList.contains("ship-present")) {
+                gridDiv.textContent = "X";
+                
+                console.log("COMPUTER HIT")
+                // This way the computer shall keep regoing until it hits a dot
+                computerGuess.bind(this)();
+
+            } else {
+                gridDiv.textContent = "●";
+
+                // Reverse as this is done in player class
+                this.showOverlay(false);
+                this.opponent.showOverlay(true);
+                gridDiv.id = "hit";
+                
+            }
+            computerHTMLtoboard.bind(this)(gridDiv);
+        }
+    }
+
+    async function computerGuess() {
+        // Code for successful guess
+        // Change this to random guess of an array of potential guesses
+        if (potentialComputerGuesses === null) {
+            generateComputerGuesses();
+        }
+        let numberOfGuesses = potentialComputerGuesses.length + 1;
+        let guess = await Math.floor(Math.random() * numberOfGuesses);
+        let guessedDiv = await potentialComputerGuesses[guess];
+        potentialComputerGuesses.splice(guess, 1);
+        await new Promise(resolve => setTimeout(resolve, 100));
+        if (guessedDiv === undefined) {
+            console.log("UNDEFINED GUESS")
+        }
+        // Put beneath in an await?
+        computerGuessToHTML.bind(this)(guessedDiv);
+        // Toggle overlays
+        }
+
+    
+    function generateComputerGuesses() {
+        potentialComputerGuesses = []
+        const computerGrid = document.getElementById("playerGrid")
+        const computerGridDivs = computerGrid.querySelectorAll("*");
+        computerGridDivs.forEach(div => {
+            potentialComputerGuesses.push(div);
+        })
+    }
+        
+    function removeComputerGuess(divToRemove, potentialComputerGuesses) {
+        for (let i = 0; i < potentialComputerGuesses.length; i++) {
+            if (potentialComputerGuesses[i] === divToRemove) {
+                potentialComputerGuesses.splice(i, 1);
+                break;
+            } 
+        }
+    }   
 
     function classToInteger(gridDiv) {
         const classListString = gridDiv.getAttribute("class");
@@ -182,12 +214,15 @@ const Player = () => {
     }
 
     function HTMLtoboard(gridDiv) {
+        // Don't think board is properly switching with computer as the number of registered hits is wrong.
+        // Maybe need to create a different class for computer vs player
         if (!gameboard) return;
     
         const [y, x] = classToInteger(gridDiv);             
         gameboard.recieveAttack([x, y]);
     
         if (gameboard.board[y][x] != null && gameboard.board[y][x].sunk) {
+            console.log("PLAYER SANK A COMPUTER'S SHIP")
             // Algorithm to find all all parts of ship 
             const coordinates = findTouchingShips(gameboard.board, x, y, new Set());
             coordinates.forEach(coordinate => {
@@ -208,9 +243,42 @@ const Player = () => {
         }
     }
 
-    function nearbyShipSquaresHit(x, y) {
+    function computerHTMLtoboard(gridDiv) {
+        // Don't think board is properly switching with computer as the number of registered hits is wrong.
+        // Maybe need to create a different class for computer vs player
+        if (!gameboard) return;
+    
+        const [y, x] = classToInteger(gridDiv);            
+        this.opponent.gameboard.recieveAttack([x, y]);
+    
+        if (this.opponent.gameboard.board[y][x] != null && this.opponent.gameboard.board[y][x].sunk) {
+            console.log("COMPUTER SANK A PLAYER'S SHIP");
+            // Algorithm to find all all parts of ship 
+            const coordinates = findTouchingShips(this.opponent.gameboard.board, x, y, new Set());
+            coordinates.forEach(coordinate => {
+                let x = parseInt(coordinate[1]);
+                let y = parseInt(coordinate[0]);
+                let shipDiv = this.opponent.gridDivFromCoordinates(y, x);
+                shipDiv.classList.add("sunk");
+                this.opponent.nearbyShipSquaresHit(x, y, potentialComputerGuesses);
+            })        
+
+
+            if (this.opponent.gameboard.allShipsSunk()) {
+                // Using the div which stated the first player
+                const winnerConfirmation = document.querySelector(".first-player")
+                winnerConfirmation.textContent = `Congratulations ${this.name} wins!`
+                triggerOverallOverlay();
+            }
+        }
+    }
+
+    function nearbyShipSquaresHit(x, y, potentialComputerGuesses = null) {
+        // This is displaying these on the wrong board with COMPUTER
+        // As they are displaying on the wrong board the guesses aren't been taken out of the potentialComputerGuesses
         // Create array of surrounding coordinates
         const surroundingCoordinates = findSurroundingCoordinates(x, y);
+
 
         // Iterate through array to determine if needs to be updated;
         for (let coordinates of surroundingCoordinates) {
@@ -218,10 +286,18 @@ const Player = () => {
             let y = coordinates[1];
 
             if (gameboard.missed[y][x] === null) {
+                console.log(potentialComputerGuesses)
                 gameboard.recieveAttack([x, y])
                 const missedDiv = gridDivFromCoordinates.bind(this)(y, x);
                 missedDiv.textContent = "●";
                 missedDiv.id = "revealedMiss";
+                
+                // Need to remove missedDiv from potentialComputerGuesses
+                if (this.name === "player" && this.opponent.name === "computer") {
+                    console.log(potentialComputerGuesses.includes(missedDiv));
+                    removeComputerGuess(missedDiv, potentialComputerGuesses);
+                    console.log(potentialComputerGuesses.includes(missedDiv));
+                }
             }
 
         }
@@ -274,8 +350,8 @@ const Player = () => {
     }
     
 
-    function toggleOverlay(showOverlay) {
-        const overlay = document.getElementById(this.name + "GridOverlay");
+    function showOverlay(showOverlay, name=this.name) {
+        let overlay = document.getElementById(name + "GridOverlay");
         if (showOverlay) {
             overlay.style.display = "block";
         } else {
@@ -288,6 +364,6 @@ const Player = () => {
         overlay.style.display = "block";
     }
 
-    return {buildGrid, toggleOverlay, registerGridDivEventListener, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk}
+    return {buildGrid, showOverlay, registerGridDivEventListener, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses}
 }
 export {Ship, Gameboard, Player};
