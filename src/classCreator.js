@@ -166,23 +166,27 @@ const Player = () => {
     }
 
     async function computerGuess() {
-        // Code for successful guess
-        // Change this to random guess of an array of potential guesses
-        if (potentialComputerGuesses === null) {
-            generateComputerGuesses();
+        try {
+            if (potentialComputerGuesses === null) {
+                generateComputerGuesses();
+            }
+            console.log(potentialComputerGuesses.length)
+            let numberOfGuesses = potentialComputerGuesses.length + 1;
+            let guess = await Math.floor(Math.random() * numberOfGuesses);
+            let guessedDiv = await potentialComputerGuesses[guess];
+            potentialComputerGuesses.splice(guess, 1);
+            await new Promise(resolve => setTimeout(resolve, 100));
+            if (guessedDiv === undefined) {
+                console.log("UNDEFINED GUESS");
+            }
+            // Put beneath in an await?
+            computerGuessToHTML.bind(this)(guessedDiv);
+            // Toggle overlays
+        } catch (error) {
+            console.error("An error occurred in the computerGuess function:", error);
         }
-        let numberOfGuesses = potentialComputerGuesses.length + 1;
-        let guess = await Math.floor(Math.random() * numberOfGuesses);
-        let guessedDiv = await potentialComputerGuesses[guess];
-        potentialComputerGuesses.splice(guess, 1);
-        await new Promise(resolve => setTimeout(resolve, 100));
-        if (guessedDiv === undefined) {
-            console.log("UNDEFINED GUESS")
-        }
-        // Put beneath in an await?
-        computerGuessToHTML.bind(this)(guessedDiv);
-        // Toggle overlays
-        }
+    }
+    
 
     
     function generateComputerGuesses() {
@@ -294,12 +298,13 @@ const Player = () => {
                 
                 // Need to remove missedDiv from potentialComputerGuesses
                 if (this.name === "player" && this.opponent.name === "computer") {
-                    console.log(potentialComputerGuesses.includes(missedDiv));
                     removeComputerGuess(missedDiv, potentialComputerGuesses);
-                    console.log(potentialComputerGuesses.includes(missedDiv));
                 }
             }
 
+        }
+        if (potentialComputerGuesses != null) {
+            console.log(potentialComputerGuesses.length);
         }
     }
 
