@@ -85,6 +85,23 @@ const Player = () => {
     const opponent = null;
     let potentialComputerGuesses = null;
 
+    function buildHTML() {
+        const gridContainers = document.querySelector(".grid-containers");
+        const playerContainer = document.createElement("div");
+        playerContainer.classList.add(`${this.name}-grid-container`);
+        playerContainer.id = `${this.name}Container`;
+
+        playerContainer.innerHTML = 
+        `
+        <h3>${this.name.toUpperCase()}</h3>
+                <div class="${this.name}-grid game-board" id="${this.name}Grid">
+
+                </div>
+                <div class="grid-overlay" id="${this.name}GridOverlay"></div>
+        `
+        gridContainers.appendChild(playerContainer);
+    }
+
     function buildGrid(reveal) {
         const grid = document.getElementById(this.name + "Grid");
         for (let y = 0; y <= 9; y++) {
@@ -297,6 +314,7 @@ const Player = () => {
                 missedDiv.id = "revealedMiss";
                 
                 // Need to remove missedDiv from potentialComputerGuesses
+                // MAY NEED TO CHANGE THIS AS PLAYER WILL CHANGE
                 if (this.name === "player" && this.opponent.name === "computer") {
                     removeComputerGuess(missedDiv, potentialComputerGuesses);
                 }
@@ -369,6 +387,6 @@ const Player = () => {
         overlay.style.display = "block";
     }
 
-    return {buildGrid, showOverlay, registerGridDivEventListener, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses}
+    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses}
 }
 export {Ship, Gameboard, Player};
