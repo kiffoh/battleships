@@ -6,6 +6,42 @@
     align-items: center;
 }
 
+.centered-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Adjust as needed */
+    background-color: rgb(255, 255, 255);
+}
+
+.welcome-title {
+    display: flex;
+    flex: 4;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.player-selection {
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+    background-color: rgb(255, 255, 255);
+    /* height: 100%; */
+    width: 100%;
+    flex: 5;
+    align-items: flex-start;
+}
+
+.player-selection-container {
+    display: flex;
+    gap: 1em;
+    flex-direction: column;
+}
+
+.player-2-btn-container, .computer-btn-container {
+    display: flex;
+    justify-content: center;
+}
+
 #hit, #revealedMiss {
     background-color: #bbb2b279;
 }
@@ -44,7 +80,7 @@ h1 {
     height: 100%;
 }
 
-.start-button-container {
+.start-button-container{
     display: flex;
     align-items: center;
     justify-content: center;
