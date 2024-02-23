@@ -315,7 +315,8 @@ const Player = () => {
                 
                 // Need to remove missedDiv from potentialComputerGuesses
                 // MAY NEED TO CHANGE THIS AS PLAYER WILL CHANGE
-                if (this.name === "player" && this.opponent.name === "computer") {
+                // if (this.name === "player" && this.opponent.name === "computer")
+                if (this.opponent.name === "computer") {
                     removeComputerGuess(missedDiv, potentialComputerGuesses);
                 }
             }
@@ -387,6 +388,6 @@ const Player = () => {
         overlay.style.display = "block";
     }
 
-    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses}
+    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses}
 }
 export {Ship, Gameboard, Player};
