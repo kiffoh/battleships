@@ -4,13 +4,14 @@ import { goesFirst, removeFirstPlayerText, playerOrComputer } from "./goesFirst"
 
 async function initialiseGame() {
     let opponent = await playerOrComputer();
-    console.log(opponent)
+    if (opponent === "player") opponent = "player2";
+    console.log(opponent);
     // Creating the player classes
     const player1 = Player();
-    player1.name = "player";
+    player1.name = "player1";
     const player2 = Player();
-    player2.name = `computer`;
-    console.log(opponent);
+    player2.name = `${opponent}`;
+
     player1.buildHTML();
     player2.buildHTML();
     
@@ -41,10 +42,13 @@ async function initialiseGame() {
     // For turn with computer I only register the event listeners on the computer squares
     if (player2.name != "computer") {
         player1.registerGridDivEventListener();
+    } else if (player2.name === "computer") {
+        player2.generateComputerGuesses()
     }
     player2.registerGridDivEventListener();
 
     if (turn.name === "computer") {
+        console.log("COMPUTER GUESSED FIRST")
         player2.computerGuess();
     }
 
