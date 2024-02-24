@@ -5,21 +5,14 @@ function goesFirst(players) {
 
     const firstDiv = document.createElement("h3");
     firstDiv.classList = "first-player";
-    if (first === "player1" || first === "player2") {
-        firstDiv.textContent = "PLAYER GOES FIRST";
-    } else if (first === "") {
-        firstDiv.textContent = "COMPUTER GOES FIRST";
-    }
+    firstDiv.textContent = `${first.toUpperCase()} GOES FIRST`;
     document.body.appendChild(firstDiv);
     
     return players[index];
 }
 
 function removeFirstPlayerText(turn) {
-    // Opponent variable as turn is not an instance of the player class
-    // Therefore opponent needed as this will be the first grid clicked
-    const opponent = turn = "player" ? "computer" : "player";
-    const grid = document.getElementById(opponent + "Grid")
+    const grid = document.getElementById(turn.name + "Grid")
     const gridDivs = grid.querySelectorAll("*");
     gridDivs.forEach((gridDiv) => {
         gridDiv.addEventListener("click", () => {
