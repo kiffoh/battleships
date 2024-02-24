@@ -184,23 +184,24 @@ const Player = () => {
 
     async function computerGuess() {
         try {
-            if (potentialComputerGuesses === null) {
-                generateComputerGuesses();
-            }
-            console.log(potentialComputerGuesses.length)
-            let numberOfGuesses = potentialComputerGuesses.length + 1;
-            let guess = await Math.floor(Math.random() * numberOfGuesses);
+            let guess = await Math.floor(Math.random() * potentialComputerGuesses.length);
             let guessedDiv = await potentialComputerGuesses[guess];
             potentialComputerGuesses.splice(guess, 1);
-            await new Promise(resolve => setTimeout(resolve, 100));
+            let minTime = await Math.max(150, Math.random() * 500) 
+            await new Promise(resolve => setTimeout(resolve, minTime));
             if (guessedDiv === undefined) {
                 console.log("UNDEFINED GUESS");
+                console.log(`Potential Computer Guesses: ${potentialComputerGuesses.length}`)
+                console.log(`Guess index: ${guess}`);
+                console.log(`Guessed div: ${guessedDiv}`);
             }
-            // Put beneath in an await?
             computerGuessToHTML.bind(this)(guessedDiv);
             // Toggle overlays
         } catch (error) {
             console.error("An error occurred in the computerGuess function:", error);
+            console.error(potentialComputerGuesses.length);
+            console.error(guess);
+            console.error(guessedDiv);
         }
     }
     
@@ -208,7 +209,8 @@ const Player = () => {
     
     function generateComputerGuesses() {
         potentialComputerGuesses = []
-        const computerGrid = document.getElementById("playerGrid")
+        console.log(this)
+        const computerGrid = document.getElementById(`${this.opponent.name}Grid`)
         const computerGridDivs = computerGrid.querySelectorAll("*");
         computerGridDivs.forEach(div => {
             potentialComputerGuesses.push(div);
@@ -271,7 +273,7 @@ const Player = () => {
     
         const [y, x] = classToInteger(gridDiv);            
         this.opponent.gameboard.recieveAttack([x, y]);
-    
+        console.log(potentialComputerGuesses.length);
         if (this.opponent.gameboard.board[y][x] != null && this.opponent.gameboard.board[y][x].sunk) {
             console.log("COMPUTER SANK A PLAYER'S SHIP");
             // Algorithm to find all all parts of ship 
@@ -307,7 +309,6 @@ const Player = () => {
             let y = coordinates[1];
 
             if (gameboard.missed[y][x] === null) {
-                console.log(potentialComputerGuesses)
                 gameboard.recieveAttack([x, y])
                 const missedDiv = gridDivFromCoordinates.bind(this)(y, x);
                 missedDiv.textContent = "●";
@@ -318,13 +319,17 @@ const Player = () => {
                 // if (this.name === "player" && this.opponent.name === "computer")
                 if (this.opponent.name === "computer") {
                     removeComputerGuess(missedDiv, potentialComputerGuesses);
+                    console.log(potentialComputerGuesses.length);
                 }
             }
 
         }
+        // Log amount of computer guesses after potential guesses have been removed
+        /*
         if (potentialComputerGuesses != null) {
             console.log(potentialComputerGuesses.length);
         }
+        */
     }
 
     function findSurroundingCoordinates(x, y) {
@@ -388,6 +393,6 @@ const Player = () => {
         overlay.style.display = "block";
     }
 
-    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses}
+    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses}
 }
 export {Ship, Gameboard, Player};
