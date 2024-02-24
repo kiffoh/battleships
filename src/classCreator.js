@@ -149,7 +149,7 @@ const Player = () => {
                 this.opponent.showOverlay(false);
                 gridDiv.id = "hit";
                 
-                // Computer guess if player missses
+                // Computer guessIndex if player missses
                 // Keeps going until it hits and X
                 if (this.name === "computer") {
                     computerGuess.bind(this)();
@@ -183,26 +183,24 @@ const Player = () => {
     }
 
     async function computerGuess() {
-        try {
-            let guess = await Math.floor(Math.random() * potentialComputerGuesses.length);
-            let guessedDiv = await potentialComputerGuesses[guess];
-            potentialComputerGuesses.splice(guess, 1);
-            let minTime = await Math.max(150, Math.random() * 500) 
-            await new Promise(resolve => setTimeout(resolve, minTime));
-            if (guessedDiv === undefined) {
-                console.log("UNDEFINED GUESS");
-                console.log(`Potential Computer Guesses: ${potentialComputerGuesses.length}`)
-                console.log(`Guess index: ${guess}`);
-                console.log(`Guessed div: ${guessedDiv}`);
-            }
-            computerGuessToHTML.bind(this)(guessedDiv);
-            // Toggle overlays
-        } catch (error) {
-            console.error("An error occurred in the computerGuess function:", error);
-            console.error(potentialComputerGuesses.length);
-            console.error(guess);
-            console.error(guessedDiv);
+        let guessIndex = await Math.floor(Math.random() * potentialComputerGuesses.length);
+        while (guessIndex >= potentialComputerGuesses.length) {
+            guessIndex = await Math.floor(Math.random() * potentialComputerGuesses.length);
         }
+        let guessedDiv = await potentialComputerGuesses[guessIndex];
+        potentialComputerGuesses.splice(guessIndex, 1);
+
+        let minTime = await Math.max(150, Math.random() * 500) 
+        await new Promise(resolve => setTimeout(resolve, minTime));
+
+        if (guessedDiv === undefined) {
+            console.log("UNDEFINED GUESS");
+            console.log(`Potential Computer Guesses: ${potentialComputerGuesses.length}`)
+            console.log(`Guess index: ${guessIndex}`);
+            console.log(`Guessed div: ${guessedDiv}`);
+        }
+        
+        computerGuessToHTML.bind(this)(guessedDiv);
     }
     
 
