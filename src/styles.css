@@ -1,4 +1,4 @@
-.player-grid.number, .computer-grid.number {
+.player1-grid.number, .player2-grid.number, .computer-grid.number {
     background-color: white;
     color: black;
     display: flex;
@@ -50,11 +50,11 @@
     color: rgb(118, 115, 115);
 }
 
-.player-grid.number.ship-present, .computer-grid.number.ship-present {
+.player1-grid.number.ship-present, .player2-grid.number.ship-present, .computer-grid.number.ship-present {
     color: red;
 }
 
-#playerGrid, #computerGrid {
+#player1Grid, #player2Grid, #computerGrid {
     display: grid;
     grid-template-columns: repeat(10, 32px);
     grid-template-rows: repeat(10, 32px);
@@ -96,7 +96,7 @@ h3 {
     text-align: center;
 }
 
-.player-grid-container, .computer-grid-container {
+.player1-grid-container, .player2-grid-container, .computer-grid-container {
     position: relative;
 }
 
