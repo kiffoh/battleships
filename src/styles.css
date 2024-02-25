@@ -13,6 +13,18 @@
     background-color: rgb(255, 255, 255);
 }
 
+.congratulations-container {
+    display: flex;
+    background-color: lightblue;
+    flex-direction: column;
+
+}
+
+.reset-btn-div {
+    text-align: center;
+    padding: 16px;
+}
+
 .welcome-title {
     display: flex;
     flex: 4;
@@ -87,7 +99,7 @@ h1 {
     margin-top: 32px;
 }
 
-.start-button {
+.start-button, .reset-btn {
     font-size: large;
     padding: 4px 8px;
 }
