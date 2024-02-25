@@ -11,8 +11,8 @@ function goesFirst(players) {
     return players[index];
 }
 
-function removeFirstPlayerText(turn) {
-    const grid = document.getElementById(turn.name + "Grid")
+function removeFirstPlayerText(name) {
+    const grid = document.getElementById(name + "Grid")
     const gridDivs = grid.querySelectorAll("*");
     gridDivs.forEach((gridDiv) => {
         gridDiv.addEventListener("click", () => {
