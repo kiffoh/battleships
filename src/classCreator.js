@@ -404,17 +404,17 @@ const Player = () => {
         overlay.style.display = "block";
 
         // Create a new div element to hold the player-selection HTML content
-        const centeredContainerDiv = document.createElement("div");
-        centeredContainerDiv.classList.add("centered-container");
+        const congratulationsContainerDiv = document.createElement("div");
+        congratulationsContainerDiv.classList.add("congratulations-container");
 
         // Add the inner HTML content for the player-selection div
-        centeredContainerDiv.innerHTML = `
+        congratulationsContainerDiv.innerHTML = `
             <h1 class="winnerConfirmation">Congratulations ${this.opponent.name.toUpperCase()} wins!</h1>
             <div class="reset-btn-div">
                 <button class="reset-btn">Play again?</button>
             </div>
         `
-        overlay.appendChild(centeredContainerDiv);
+        overlay.appendChild(congratulationsContainerDiv);
     }
 
     return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses}
