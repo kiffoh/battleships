@@ -407,9 +407,17 @@ const Player = () => {
         const congratulationsContainerDiv = document.createElement("div");
         congratulationsContainerDiv.classList.add("congratulations-container");
 
+        let winner;
+
+        if (this.gameboard.allShipsSunk()) {
+            winner = this.opponent.name;
+        } else {
+            winner = this.name;
+        }
+
         // Add the inner HTML content for the player-selection div
         congratulationsContainerDiv.innerHTML = `
-            <h1 class="winnerConfirmation">Congratulations ${this.opponent.name.toUpperCase()} wins!</h1>
+            <h1 class="winnerConfirmation">Congratulations ${winner.toUpperCase()} wins!</h1>
             <div class="reset-btn-div">
                 <button class="reset-btn">Play again?</button>
             </div>
