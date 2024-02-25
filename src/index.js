@@ -40,10 +40,22 @@ async function initialiseGame() {
 
     // Starting the game
     // For turn with computer I only register the event listeners on the computer squares
-    if (player2.name != "computer") {
-        player1.registerGridDivEventListener();
-    } else if (player2.name === "computer") {
+    if (player2.name === "computer") {
         player2.generateComputerGuesses()
+
+        // As playing computer the player's ships can be revealed
+        /*
+        player1.buildGrid(true);
+        player2.buildGrid(false);
+        */
+    } else {
+        player1.registerGridDivEventListener();
+
+        // As playing on the same screen neither player can have ships revealed
+        /*
+        player1.buildGrid(false);
+        player2.buildGrid(false);
+        */
     }
     player2.registerGridDivEventListener();
 
