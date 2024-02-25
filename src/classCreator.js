@@ -162,7 +162,6 @@ const Player = () => {
     }
 
     function computerGuessToHTML(gridDiv, prev=false) {
-        computerHTMLtoboard.bind(this)(gridDiv);
         if (gridDiv.textContent === "") {
             if (gridDiv.classList.contains("ship-present")) {
                 gridDiv.textContent = "X";
@@ -186,6 +185,7 @@ const Player = () => {
                 gridDiv.id = "hit";
             }
         }
+        computerHTMLtoboard.bind(this)(gridDiv);
     }
 
     function localisedComputerGuess() {
@@ -409,9 +409,9 @@ const Player = () => {
 
         // Add the inner HTML content for the player-selection div
         centeredContainerDiv.innerHTML = `
-            <h1 class="winnerConfirmation">Congratulations ${this.name.toUpperCase()} wins!</h1>
+            <h1 class="winnerConfirmation">Congratulations ${this.opponent.name.toUpperCase()} wins!</h1>
             <div class="reset-btn-div">
-                <btn class="reset-btn">Play again?</btn>
+                <button class="reset-btn">Play again?</button>
             </div>
         `
         overlay.appendChild(centeredContainerDiv);
