@@ -84,6 +84,7 @@ const Player = () => {
     const name = "";
     const opponent = null;
     let potentialComputerGuesses = null;
+    let prev = false;
 
     function buildHTML() {
         const gridContainers = document.querySelector(".grid-containers");
@@ -160,14 +161,21 @@ const Player = () => {
         }
     }
 
-    function computerGuessToHTML(gridDiv) {
+    function computerGuessToHTML(gridDiv, prev=false) {
+        computerHTMLtoboard.bind(this)(gridDiv);
         if (gridDiv.textContent === "") {
             if (gridDiv.classList.contains("ship-present")) {
                 gridDiv.textContent = "X";
                 
                 console.log("COMPUTER HIT")
+                
                 // This way the computer shall keep regoing until it hits a dot
-                computerGuess.bind(this)();
+                // Chooses local coordinates if previous was a hit && not sunk
+                if (prev) {
+                    localisedComputerGuess.bind(this)();
+                } else {
+                    computerGuess.bind(this)();
+                }
 
             } else {
                 gridDiv.textContent = "●";
@@ -176,10 +184,12 @@ const Player = () => {
                 this.showOverlay(false);
                 this.opponent.showOverlay(true);
                 gridDiv.id = "hit";
-                
             }
-            computerHTMLtoboard.bind(this)(gridDiv);
         }
+    }
+
+    function localisedComputerGuess() {
+
     }
 
     async function computerGuess() {
@@ -256,10 +266,7 @@ const Player = () => {
 
 
             if (gameboard.allShipsSunk()) {
-                // Using the div which stated the first player
-                const winnerConfirmation = document.querySelector(".first-player")
-                winnerConfirmation.textContent = `Congratulations ${this.name} wins!`
-                triggerOverallOverlay();
+                triggerOverallOverlay.bind(this)();
             }
         }
     }
@@ -286,11 +293,17 @@ const Player = () => {
 
 
             if (this.opponent.gameboard.allShipsSunk()) {
-                // Using the div which stated the first player
-                const winnerConfirmation = document.querySelector(".first-player")
-                winnerConfirmation.textContent = `Congratulations ${this.name} wins!`
-                triggerOverallOverlay();
+                triggerOverallOverlay.bind(this)();
             }
+        }
+
+        // Logic to see if computer's previous guess was a hit to trigger nearby guesses
+        // A hit which sinks a ships will result in an error potentially
+        // Maybe write the code where if nearby coordinates is null then trigger computerGuess?
+        if (this.opponent.gameboard.board[y][x] != null /* && !this.opponent.gameboard.board[y][x].sunk */) {
+            prev = true;
+        } else {
+            prev = false;
         }
     }
 
@@ -389,6 +402,19 @@ const Player = () => {
     function triggerOverallOverlay() {
         const overlay = document.getElementById("overallOverlay");
         overlay.style.display = "block";
+
+        // Create a new div element to hold the player-selection HTML content
+        const centeredContainerDiv = document.createElement("div");
+        centeredContainerDiv.classList.add("centered-container");
+
+        // Add the inner HTML content for the player-selection div
+        centeredContainerDiv.innerHTML = `
+            <h1 class="winnerConfirmation">Congratulations ${this.name.toUpperCase()} wins!</h1>
+            <div class="reset-btn-div">
+                <btn class="reset-btn">Play again?</btn>
+            </div>
+        `
+        overlay.appendChild(centeredContainerDiv);
     }
 
     return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses}
