@@ -13,10 +13,11 @@
     background-color: rgb(255, 255, 255);
 }
 
-.congratulations-container {
-    display: flex;
+#gameEndingOverlay {
+    display: none;
     background-color: lightblue;
     flex-direction: column;
+    height: auto;
 
 }
 
