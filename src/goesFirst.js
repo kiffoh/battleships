@@ -3,10 +3,8 @@ function goesFirst(players) {
     let index = Math.round(number);
     let first = players[index].name;
 
-    const firstDiv = document.createElement("h3");
-    firstDiv.classList = "first-player";
+    const firstDiv = document.querySelector(".first-player");
     firstDiv.textContent = `${first.toUpperCase()} GOES FIRST`;
-    document.body.appendChild(firstDiv);
     
     return players[index];
 }
