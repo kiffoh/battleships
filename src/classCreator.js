@@ -400,12 +400,11 @@ const Player = () => {
     }
 
     function triggerOverallOverlay() {
-        const overlay = document.getElementById("overallOverlay");
-        overlay.style.display = "block";
+        const overlay = document.getElementById("gameEndingOverlay");
+        overlay.style.display = "flex";
 
         // Create a new div element to hold the player-selection HTML content
-        const congratulationsContainerDiv = document.createElement("div");
-        congratulationsContainerDiv.classList.add("congratulations-container");
+        const congratulationsTitle = document.querySelector(".winner-confirmation");
 
         let winner;
 
@@ -416,13 +415,16 @@ const Player = () => {
         }
 
         // Add the inner HTML content for the player-selection div
-        congratulationsContainerDiv.innerHTML = `
-            <h1 class="winnerConfirmation">Congratulations ${winner.toUpperCase()} wins!</h1>
-            <div class="reset-btn-div">
-                <button class="reset-btn">Play again?</button>
-            </div>
-        `
-        overlay.appendChild(congratulationsContainerDiv);
+        congratulationsTitle.textContent = `Congratulations ${winner.toUpperCase()} wins!        `
+
+        const resetBtn = document.querySelector(".reset-btn")
+
+        resetBtn.addEventListener("click", () => {
+            overlay.style.display = "none";
+            const resetHTML = document.querySelector(".grid-containers");
+
+            resetHTML.innerHTML = "";
+        })
     }
 
     return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses}
