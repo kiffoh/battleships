@@ -54,6 +54,10 @@ async function initialiseGame() {
 
     removeFirstPlayerText(player1.name);
     removeFirstPlayerText(player2.name);
+    
+    // Reset the whole game
+    const resetWholeGame = document.querySelector(".reset-btn");
+    resetWholeGame.addEventListener("click", initialiseGame);
 }
 
 initialiseGame();
