@@ -18,6 +18,22 @@ async function initialiseGame() {
     player1.opponent = player2;
     player2.opponent = player1;
 
+    // await for coordinates to be given
+    // const await startingCoordinates = coordinates();
+
+    player1.buildShips();
+    player2.buildShips();
+
+    player1.buildGrid();
+    player2.buildGrid();
+
+    player1.applyDragDrop();
+    player2.applyDragDrop();
+
+    player1.applyDraggableShips();
+    player2.applyDraggableShips();
+
+    /*
     // Populating the player classes
     const startingCoordinates = [[0,0,0,2], [7,7,0,0], [2,4,2,2], [6,7,2,2], [0,1,6,6], [3,3,5,6], [3,3,8,8], [5,5,5,8], [7,7,7,7], [9,9,7,7]];
     player1.positionShips(startingCoordinates);
@@ -58,6 +74,7 @@ async function initialiseGame() {
     // Reset the whole game
     const resetWholeGame = document.querySelector(".reset-btn");
     resetWholeGame.addEventListener("click", initialiseGame);
+    */
 }
 
 initialiseGame();
