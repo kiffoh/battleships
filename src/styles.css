@@ -67,6 +67,49 @@
     color: red;
 }
 
+div.player1-grid.number.highlight, div.player2-grid.number.highlight, div.computer-grid.number.highlight {
+    border: 2px solid lightgreen;
+}
+
+
+/* DRAGGABLE SHIPS */
+.ship-container-1, .ship-container-2, .ship-container-3 {
+    display: grid;
+}
+
+.ships-container {
+    display: flex;
+    gap: 1em;
+}
+
+.draggable-ship[data-size="1"] {
+    width: 32px;
+    height: 32px;
+    outline: 2px solid darkblue;
+    position: absolute;
+}
+
+.draggable-ship[data-size="2"] {
+    width: 32px;
+    height: 64px;
+    outline: 2px solid darkblue;
+    position: relative;
+}
+
+.draggable-ship[data-size="3"] {
+    width: 32px;
+    height: 96px;
+    outline: 2px solid darkblue;
+    position: relative;
+}
+
+.draggable-ship[data-size="4"] {
+    width: 32px;
+    height: 128px;
+    outline: 2px solid darkblue;
+    position: relative;
+}
+
 #player1Grid, #player2Grid, #computerGrid {
     display: grid;
     grid-template-columns: repeat(10, 32px);
