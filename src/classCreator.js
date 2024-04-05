@@ -103,6 +103,117 @@ const Player = () => {
         gridContainers.appendChild(playerContainer);
     }
 
+    function buildShips() {
+        const playerContainer = document.getElementById(`${this.name}Container`);
+
+        const shipsContainer = document.createElement('div');
+        shipsContainer.classList.add('ships-container');
+
+        shipsContainer.innerHTML = `
+        <div class="ship-container-1">
+            <div class="draggable-ship" data-size="4"></div>
+            <div class="draggable-ship" data-size="3"></div>
+            <div class="draggable-ship" draggable="true" data-size="3"></div>
+        </div>
+        <div class="ship-container-2">
+            <div class="draggable-ship" draggable="true" data-size="2"></div>
+            <div class="draggable-ship" draggable="true" data-size="2"></div>
+            <div class="draggable-ship" draggable="true" data-size="2"></div>
+        </div>
+        <div class="ship-container-3">
+        <div class="draggable-ship" data-size="1"></div>
+        <div class="draggable-ship" draggable="true" data-size="1"></div>
+        <div class="draggable-ship" draggable="true" data-size="1"></div>
+        <div class="draggable-ship" draggable="true" data-size="1"></div>
+        </div>
+        `;
+
+        const confirmBtn = document.createElement("button");
+        confirmBtn.classList.add("confirm-btn");
+        confirmBtn.textContent = "CONFIRM";
+        // Beneath is for correct UX placement of the confirm button
+        const firstPlayer = document.querySelector(".first-player")
+
+        document.querySelector(".grid-containers").insertBefore(shipsContainer, playerContainer)
+        document.body.insertBefore(confirmBtn, firstPlayer)
+    }
+
+    function applyDraggableShips() {
+        const draggableShips = document.querySelectorAll('.draggable-ship');
+
+        let offsetX, offsetY, isDragging = false;
+        let draggedShip = null;
+
+        draggableShips.forEach(ship => {
+            ship.addEventListener('mousedown', startDrag);
+        });
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', stopDrag);
+
+        function startDrag(event) {
+            draggedShip = event.target;
+            offsetX = event.clientX - draggedShip.getBoundingClientRect().left;
+            offsetY = event.clientY - draggedShip.getBoundingClientRect().top;
+            isDragging = true;
+        }
+
+        function drag(event) {
+            if (isDragging && draggedShip) {
+                draggedShip.style.left = `${event.clientX - offsetX}px`;
+                draggedShip.style.top = `${event.clientY - offsetY}px`;
+            }
+        }
+
+        function stopDrag() {
+            isDragging = false;
+            draggedShip = null;
+        }
+    }
+    
+    
+
+    function applyDragDrop() {
+        const gridElements = document.querySelectorAll(`.${this.name}-grid.game-board.number`);
+
+        gridElements.forEach(gridElement => {
+            gridElement.addEventListener('dragover', dragOver);
+            gridElement.addEventListener('dragenter', dragEnter);
+            gridElement.addEventListener('dragleave', dragLeave);
+            gridElement.addEventListener('drop', drop);
+            gridElement.addEventListener('dragstart', dragStart);
+        });
+
+        function dragOver(event) {
+            event.preventDefault();
+        }
+        
+        function dragEnter(event) {
+            // Add highlight effect to the grid element
+            event.target.classList.add('highlight');
+        }
+        
+        function dragLeave(event) {
+            // Remove highlight effect from the grid element
+            event.target.classList.remove('highlight');
+        }
+        
+        function drop(event) {
+            event.preventDefault();
+            // Remove highlight effect from the grid element
+            event.target.classList.remove('highlight');
+            // Add logic to handle the dropped item (e.g., place the ship on the grid)
+            event.target.classList.add("ship-present", "reveal");
+        }
+
+        function dragStart(event) {
+            if (event.target.classList.contains("ship-present")) {
+                event.dataTransfer.setData('text/plain', event.target.id);
+                event.target.classList.remove("ship-present", "reveal");
+            }
+        } 
+    }
+
     function buildGrid(reveal) {
         const grid = document.getElementById(this.name + "Grid");
         for (let y = 0; y <= 9; y++) {
@@ -427,6 +538,6 @@ const Player = () => {
         })
     }
 
-    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses}
+    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDragDrop, applyDraggableShips}
 }
 export {Ship, Gameboard, Player};
