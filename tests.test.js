@@ -1,6 +1,8 @@
-const {Ship, Gameboard} = require("./src/classCreator");
-const {player1} = require("./src/buildGrid");
+// const {Ship, Gameboard} = require("./src/classCreator");
+// const {player1} = require("./src/buildGrid");
+const {nearbyShipSquaresHit, board, Ship} = require("./src/randomise")
 
+/*
 // Ships class
 test("Create a ship", () => {
     expect(new Ship(4)).toEqual({
@@ -218,6 +220,36 @@ test("Testing player1 creation", () => {
             [{ length: 2, hits: 0, sunk: false }, { length: 2, hits: 0, sunk: false }, null, { length: 2, hits: 0, sunk: false }, null, { length: 4, hits: 0, sunk: false }, null, null, null, null],
             [null, null, null, null, null, { length: 4, hits: 0, sunk: false }, null, { length: 1, hits: 0, sunk: false }, null, { length: 1, hits: 0, sunk: false }],
             [null, null, null, { length: 1, hits: 0, sunk: false }, null, { length: 4, hits: 0, sunk: false }, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+        ]
+    )
+})
+*/
+
+test("Testing nearbySquaresHit", () => {
+    const board = Array.from({length: 10}, () => Array(10).fill(null));
+    const newShip = new Ship(2);
+    board[1][2] = newShip;
+    board[1][3] = newShip;
+    let x1 = 2;
+    let x2 = 3;
+    let y1 = 1;
+    let y2 = 1;
+    for (let i=x1; i<=x2; i++) {
+        nearbyShipSquaresHit(i, y1, board);
+    }
+
+    expect(board).toEqual(
+        [
+            [null, "Nearby", "Nearby", "Nearby", "Nearby", null, null, null, null, null],
+            [null, "Nearby", { length: 2, hits: 0, sunk: false }, { length: 2, hits: 0, sunk: false }, "Nearby", null, null, null, null, null],
+            [null, "Nearby", "Nearby", "Nearby", "Nearby", null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
         ]
     )
