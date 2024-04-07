@@ -1,6 +1,7 @@
 import "./styles.css"
 import { Player } from "./classCreator";
 import { goesFirst, removeFirstPlayerText, playerOrComputer } from "./goesFirst";
+import { randomise } from "./randomise";
 
 async function initialiseGame() {
     let opponent = await playerOrComputer();
@@ -24,8 +25,20 @@ async function initialiseGame() {
     player1.buildShips();
     player2.buildShips();
 
-    player1.buildGrid();
-    player2.buildGrid();
+    let startingCoordinates_player1 = await randomise();
+    console.log(startingCoordinates_player1); 
+    
+    let startingCoordinates_player2 = await randomise();
+    console.log(startingCoordinates_player2); 
+    
+    player1.positionShips(startingCoordinates_player1);
+    player2.positionShips(startingCoordinates_player2);
+
+    player1.buildGrid(true);
+    player2.buildGrid(true);
+
+    // let startingCoordinates_player2 = await randomise();
+    // console.log(startingCoordinates_player2);
 
     player1.applyDragDrop();
     player2.applyDragDrop();
