@@ -104,27 +104,25 @@ const Player = () => {
     }
 
     function buildShips() {
-        const playerContainer = document.getElementById(`${this.name}Container`);
-
         const shipsContainer = document.createElement('div');
         shipsContainer.classList.add('ships-container');
 
         shipsContainer.innerHTML = `
         <div class="ship-container-1">
-            <div class="draggable-ship" data-size="4"></div>
-            <div class="draggable-ship" data-size="3"></div>
-            <div class="draggable-ship" draggable="true" data-size="3"></div>
+            <div class="draggable-ship vertical" draggable="true" data-size="4"></div>
+            <div class="draggable-ship vertical" draggable="true" data-size="3"></div>
+            <div class="draggable-ship vertical" draggable="true" data-size="3"></div>
         </div>
         <div class="ship-container-2">
-            <div class="draggable-ship" draggable="true" data-size="2"></div>
-            <div class="draggable-ship" draggable="true" data-size="2"></div>
-            <div class="draggable-ship" draggable="true" data-size="2"></div>
+            <div class="draggable-ship vertical" draggable="true" data-size="2"></div>
+            <div class="draggable-ship vertical" draggable="true" data-size="2"></div>
+            <div class="draggable-ship vertical" draggable="true" data-size="2"></div>
         </div>
         <div class="ship-container-3">
-        <div class="draggable-ship" data-size="1"></div>
-        <div class="draggable-ship" draggable="true" data-size="1"></div>
-        <div class="draggable-ship" draggable="true" data-size="1"></div>
-        <div class="draggable-ship" draggable="true" data-size="1"></div>
+            <div class="draggable-ship vertical" draggable="true" data-size="1"></div>
+            <div class="draggable-ship vertical" draggable="true" data-size="1"></div>
+            <div class="draggable-ship vertical" draggable="true" data-size="1"></div>
+            <div class="draggable-ship vertical" draggable="true" data-size="1"></div>
         </div>
         `;
 
@@ -133,8 +131,7 @@ const Player = () => {
         confirmBtn.textContent = "CONFIRM";
         // Beneath is for correct UX placement of the confirm button
         const firstPlayer = document.querySelector(".first-player")
-
-        document.querySelector(".grid-containers").insertBefore(shipsContainer, playerContainer)
+        document.body.insertBefore(shipsContainer, firstPlayer)
         document.body.insertBefore(confirmBtn, firstPlayer)
     }
 
@@ -146,6 +143,7 @@ const Player = () => {
 
         draggableShips.forEach(ship => {
             ship.addEventListener('mousedown', startDrag);
+            ship.addEventListener("drag", dragShip)
         });
 
         document.addEventListener('mousemove', drag);
@@ -153,15 +151,27 @@ const Player = () => {
 
         function startDrag(event) {
             draggedShip = event.target;
-            offsetX = event.clientX - draggedShip.getBoundingClientRect().left;
-            offsetY = event.clientY - draggedShip.getBoundingClientRect().top;
+            console.log(draggedShip.getBoundingClientRect().left)
+            const style = window.getComputedStyle(event.target, null);
+            offsetX = parseInt(style.getPropertyValue("left"), 10) - event.clientX;
+            offsetY = parseInt(style.getPropertyValue("top"), 10) - event.clientY;
             isDragging = true;
         }
 
+        function dragShip(event) {
+            const x = event.clientX + offsetX - 252;
+            const y = event.clientY + offsetY;
+            event.target.style.left = x + 'px';
+            event.target.style.top = y + 'px';
+        }
+
         function drag(event) {
+            
             if (isDragging && draggedShip) {
-                draggedShip.style.left = `${event.clientX - offsetX}px`;
-                draggedShip.style.top = `${event.clientY - offsetY}px`;
+                console.log(event.clientX)
+                console.log(draggedShip.style.left)
+                draggedShip.style.left = `${event.clientX-offsetX}px`;
+                draggedShip.style.top = `${event.clientY}px`;
             }
         }
 
@@ -446,12 +456,6 @@ const Player = () => {
             }
 
         }
-        // Log amount of computer guesses after potential guesses have been removed
-        /*
-        if (potentialComputerGuesses != null) {
-            console.log(potentialComputerGuesses.length);
-        }
-        */
     }
 
     function findSurroundingCoordinates(x, y) {
@@ -536,7 +540,7 @@ const Player = () => {
 
             resetHTML.innerHTML = "";
         })
-    }
+    }  
 
     return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDragDrop, applyDraggableShips}
 }
