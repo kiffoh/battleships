@@ -94,7 +94,7 @@ const Player = () => {
 
         playerContainer.innerHTML = 
         `
-        <h3>${this.name.toUpperCase()}</h3>
+        <h3 class="${this.name} title">${this.name.toUpperCase()}</h3>
                 <div class="${this.name}-grid game-board" id="${this.name}Grid">
 
                 </div>
@@ -109,30 +109,68 @@ const Player = () => {
 
         shipsContainer.innerHTML = `
         <div class="ship-container-1">
-            <div class="draggable-ship vertical" draggable="true" data-size="4"></div>
-            <div class="draggable-ship vertical" draggable="true" data-size="3"></div>
-            <div class="draggable-ship vertical" draggable="true" data-size="3"></div>
+            <div class="draggable-ship" draggable="true" data-size="4"></div>
+            <div class="draggable-ship" draggable="true" data-size="3"></div>
+            <div class="draggable-ship" draggable="true" data-size="3"></div>
         </div>
         <div class="ship-container-2">
-            <div class="draggable-ship vertical" draggable="true" data-size="2"></div>
-            <div class="draggable-ship vertical" draggable="true" data-size="2"></div>
-            <div class="draggable-ship vertical" draggable="true" data-size="2"></div>
+            <div class="draggable-ship" draggable="true" data-size="2"></div>
+            <div class="draggable-ship" draggable="true" data-size="2"></div>
+            <div class="draggable-ship" draggable="true" data-size="2"></div>
         </div>
         <div class="ship-container-3">
-            <div class="draggable-ship vertical" draggable="true" data-size="1"></div>
-            <div class="draggable-ship vertical" draggable="true" data-size="1"></div>
-            <div class="draggable-ship vertical" draggable="true" data-size="1"></div>
-            <div class="draggable-ship vertical" draggable="true" data-size="1"></div>
+            <div class="draggable-ship" draggable="true" data-size="1"></div>
+            <div class="draggable-ship" draggable="true" data-size="1"></div>
+            <div class="draggable-ship" draggable="true" data-size="1"></div>
+            <div class="draggable-ship" draggable="true" data-size="1"></div>
         </div>
         `;
 
-        const confirmBtn = document.createElement("button");
-        confirmBtn.classList.add("confirm-btn");
-        confirmBtn.textContent = "CONFIRM";
         // Beneath is for correct UX placement of the confirm button
-        const firstPlayer = document.querySelector(".first-player")
-        document.body.insertBefore(shipsContainer, firstPlayer)
-        document.body.insertBefore(confirmBtn, firstPlayer)
+        const gridContainer = document.querySelector(`.${this.name}-grid-container`)
+        gridContainer.insertAdjacentElement("afterbegin", shipsContainer);
+        
+        buildButtonContainer.bind(this)();
+
+    }
+
+    function buildButtonContainer() {
+        const btnContainer = document.createElement("div");
+        btnContainer.classList.add("btn-container");
+
+        const confirmBtn = document.createElement("button");
+        confirmBtn.classList.add(`${this.name}`, `confirm-btn`);
+        confirmBtn.textContent = "CONFIRM";
+
+        const randomiseBtn = document.createElement("button");
+        randomiseBtn.classList.add(`${this.name}`, `randomise-btn`);
+        randomiseBtn.textContent = "RANDOMISE";
+
+        btnContainer.appendChild(randomiseBtn);
+        btnContainer.appendChild(confirmBtn);
+
+        const gameboard = document.querySelector(`.${this.name}-grid.game-board`)
+        console.log(gameboard);
+        gameboard.insertAdjacentElement("afterend", btnContainer);
+    }
+
+    function removeShipsAndButtons() {
+        const gridContainer = document.querySelector(`.${this.name}-grid-container`);
+        const shipsContainer = gridContainer.querySelector(`.ships-container`);
+        const btnContainer = gridContainer.querySelector(`.btn-container`);
+
+        gridContainer.removeChild(shipsContainer);
+        gridContainer.removeChild(btnContainer);
+    }
+
+    function hideShips() {
+        const gameboard = document.querySelectorAll(`.${this.name}-grid.game-board.number`);
+        gameboard.forEach(element => {
+            if (element.classList.contains("reveal")) {
+                element.classList.remove("reveal");
+                element.classList.add("hidden");
+            }
+        })
     }
 
     function applyDraggableShips() {
@@ -244,6 +282,20 @@ const Player = () => {
 
             }
         }
+    }
+
+    function resetGrid() {
+        for (let y = 0; y <= 9; y++) {
+            for (let x = 0; x <= 9; x++) {
+                gameboard.board[y][x] = null;
+            }
+        }
+        resetHTMLGrid.bind(this)();
+    }
+
+    function resetHTMLGrid() {
+        const HTMLGrid = document.querySelector(`.${this.name}-grid.game-board`);
+        HTMLGrid.innerHTML = "";
     }
 
     function registerGridDivEventListener() {
@@ -542,6 +594,6 @@ const Player = () => {
         })
     }  
 
-    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDragDrop, applyDraggableShips}
+    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDragDrop, applyDraggableShips, resetGrid, removeShipsAndButtons, hideShips}
 }
 export {Ship, Gameboard, Player};
