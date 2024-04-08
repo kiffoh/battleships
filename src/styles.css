@@ -1,3 +1,7 @@
+body {
+    user-select: none;
+}
+
 .player1-grid.number, .player2-grid.number, .computer-grid.number {
     background-color: white;
     color: black;
@@ -80,6 +84,8 @@ div.player1-grid.number.highlight, div.player2-grid.number.highlight, div.comput
 .ships-container {
     display: flex;
     gap: 1em;
+    grid-area: 1 / 1 / -1 / 1;
+    justify-content: flex-end;
 }
 
 .draggable-ship[data-size="1"], .draggable-ship.vertical[data-size="1"] {
@@ -131,6 +137,10 @@ div.player1-grid.number.highlight, div.player2-grid.number.highlight, div.comput
     position: relative;
 }
 
+h3.title {
+    grid-area: 1 / 2;
+}
+
 #player1Grid, #player2Grid, #computerGrid {
     display: grid;
     grid-template-columns: repeat(10, 32px);
@@ -138,6 +148,9 @@ div.player1-grid.number.highlight, div.player2-grid.number.highlight, div.comput
     grid-gap: 2px;
     background-color: lightblue;
     border: 2px solid lightblue;
+
+    grid-area: 2 / 2;
+    height: max-content;
 }
 
 .grid-containers {
@@ -173,9 +186,16 @@ h3 {
     text-align: center;
 }
 
+/* GRID CONTAINERS */
 .player1-grid-container, .player2-grid-container, .computer-grid-container {
     position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr auto;
+    gap: 1em;
 }
+
+
 
 /* NEED TO FIX THIS OVERLAY */
 .grid-overlay {
