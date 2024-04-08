@@ -1,13 +1,15 @@
 import "./styles.css"
 import { Player } from "./classCreator";
-import { goesFirst, removeFirstPlayerText, playerOrComputer } from "./goesFirst";
+import { goesFirst, removeFirstPlayerText, playerOrComputer, handleConfirmBtnClick } from "./goesFirst";
 import { randomise } from "./randomise";
 
 async function initialiseGame() {
+    // Welcome STAGE
     let opponent = await playerOrComputer();
     if (opponent === "player") opponent = "player2";
-    console.log(opponent);
-    // Creating the player classes
+
+
+    // Initialising the player classes
     const player1 = Player();
     player1.name = "player1";
     const player2 = Player();
@@ -19,53 +21,71 @@ async function initialiseGame() {
     player1.opponent = player2;
     player2.opponent = player1;
 
-    // await for coordinates to be given
-    // const await startingCoordinates = coordinates();
-
-    player1.buildShips();
-    player2.buildShips();
-
+    // Ship position STAGE
+    // Obtain random starting coordinates
     let startingCoordinates_player1 = await randomise();
-    console.log(startingCoordinates_player1); 
-    
     let startingCoordinates_player2 = await randomise();
-    console.log(startingCoordinates_player2); 
     
     player1.positionShips(startingCoordinates_player1);
     player2.positionShips(startingCoordinates_player2);
-
-    player1.buildGrid(true);
-    player2.buildGrid(true);
-
-    // let startingCoordinates_player2 = await randomise();
-    // console.log(startingCoordinates_player2);
-
-    player1.applyDragDrop();
-    player2.applyDragDrop();
-
-    player1.applyDraggableShips();
-    player2.applyDraggableShips();
-
-    /*
-    // Populating the player classes
-    const startingCoordinates = [[0,0,0,2], [7,7,0,0], [2,4,2,2], [6,7,2,2], [0,1,6,6], [3,3,5,6], [3,3,8,8], [5,5,5,8], [7,7,7,7], [9,9,7,7]];
-    player1.positionShips(startingCoordinates);
-    player2.positionShips(startingCoordinates);
-
-    // Starting the game
-    // For turn with computer I only register the event listeners on the computer squares
+    
     if (player2.name === "computer") {
-        // As playing computer the player's ships can be revealed
+        player1.buildShips();
+        
         player1.buildGrid(true);
         player2.buildGrid(false);
 
-        player2.generateComputerGuesses();
-        
+        player1.applyDragDrop();
+
+        player1.applyDraggableShips();
+
     } else {
-        // As playing on the same screen neither player can have ships revealed
-        player1.buildGrid(false);
-        player2.buildGrid(false);
-        
+        player1.buildShips();
+        player2.buildShips();
+
+        player1.buildGrid(true);
+        player2.buildGrid(true);
+
+        player1.applyDragDrop();
+        player2.applyDragDrop();
+
+        player1.applyDraggableShips();
+        player2.applyDraggableShips();
+
+        player2.showOverlay(true);
+    }
+
+    // randomise button functionality  
+    const randomiseButtons = document.querySelectorAll(".randomise-btn");
+
+    // Define an async function to use await
+    async function handleButtonClick(button) {
+        const coordinates = await randomise(); // Wait for randomise() to resolve
+        if (button.classList.contains("player1")) {
+            player1.resetGrid()
+            player1.positionShips(coordinates);
+            player1.buildGrid(true);
+        } else {
+            player2.resetGrid()
+            player2.positionShips(coordinates);
+            player2.buildGrid(true);
+        }
+    }
+
+    // Use a for...of loop to iterate over the buttons
+    for (const button of randomiseButtons) {
+        button.onclick = () => handleButtonClick(button);
+    }
+
+    await handleConfirmBtnClick(player1, player2);
+
+    // Starting the game
+    // gameplay STAGE
+
+    // For turn with computer I only register the event listeners on the computer squares
+    if (player2.name === "computer") {
+        player2.generateComputerGuesses();  
+    } else {
         // Register event listeners on both grids
         player1.registerGridDivEventListener();
     }
@@ -84,10 +104,9 @@ async function initialiseGame() {
     removeFirstPlayerText(player1.name);
     removeFirstPlayerText(player2.name);
     
-    // Reset the whole game
+    // Reset the game - ONLY VISUALISES WHEN GAME IS FINISHED
     const resetWholeGame = document.querySelector(".reset-btn");
     resetWholeGame.addEventListener("click", initialiseGame);
-    */
 }
 
 initialiseGame();
