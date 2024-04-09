@@ -93,7 +93,8 @@ function singlePlayerConfirmBtn(player1) {
     const moveOnPromise = new Promise(resolve => {
         resolvePromise = resolve;
         player1ConfirmBtn.onclick = () => {
-            player1.removeShipsAndButtons();
+            player1.removeShips();
+            player1.removeButtons();
 
             resolve();
         }
@@ -125,17 +126,21 @@ function multiPlayerConfirmBtn(player1, player2) {
         resolvePromise = resolve;
         
         player2ConfirmBtn.onclick = () => {
-            player1.removeShipsAndButtons();
-            player2.removeShipsAndButtons();
-            player1.showOverlay(false);
-    
-            player1.hideShips();
-            player2.hideShips();
-            // Revert overlay colour back to original
-            changeOverlaysTo("partially-transparent");
-            
-            // Resolve the promise when the player 2 confirmation button is clicked
-            resolve();
+            if (validPosition) {
+                player1.removeShips();
+                player1.removeButtons();
+                player2.removeShips();
+                player2.removeButtons();
+                player1.showOverlay(false);
+        
+                player1.hideShips();
+                player2.hideShips();
+                // Revert overlay colour back to original
+                changeOverlaysTo("partially-transparent");
+                
+                // Resolve the promise when the player 2 confirmation button is clicked
+                resolve();
+            }
         }
     });
     
@@ -166,4 +171,4 @@ function hideShipsContainer(hide, playerName) {
 
 }
 
-export { goesFirst, removeFirstPlayerText, playerOrComputer, handleConfirmBtnClick }
+export { goesFirst, removeFirstPlayerText, playerOrComputer, handleConfirmBtnClick, hideShipsContainer }
