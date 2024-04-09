@@ -3,8 +3,8 @@ function goesFirst(players) {
     let index = Math.round(number);
     let first = players[index].name;
 
-    const firstDiv = document.querySelector(".first-player");
-    firstDiv.textContent = `${first.toUpperCase()} GOES FIRST`;
+    const turnDiv = document.querySelector(".turn-text");
+    turnDiv.textContent = `${first.toUpperCase()} GOES FIRST`;
     
     return players[index];
 }
@@ -14,9 +14,9 @@ function removeFirstPlayerText(name) {
     const gridDivs = grid.querySelectorAll("*");
     gridDivs.forEach((gridDiv) => {
         gridDiv.addEventListener("click", () => {
-            const firstPlayerText = document.querySelector(".first-player");
-            if (firstPlayerText.textContent) {
-                firstPlayerText.textContent = "";
+            const turnText = document.querySelector(".turn-text");
+            if (turnText.textContent) {
+                turnText.textContent = "";
             }
         })
     })
