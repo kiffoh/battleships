@@ -79,13 +79,13 @@ div.player1-grid.number.highlight, div.player2-grid.number.highlight, div.comput
 /* DRAGGABLE SHIPS */
 .ship-container-1, .ship-container-2, .ship-container-3 {
     display: grid;
+    align-items: end;
 }
 
 .ships-container {
     display: flex;
     gap: 1em;
     grid-area: 1 / 1 / -1 / 1;
-    justify-content: flex-end;
 }
 
 .draggable-ship[data-size="1"], .draggable-ship.vertical[data-size="1"] {
