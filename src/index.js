@@ -86,7 +86,6 @@ async function initialiseGame() {
     // Determines who goes first
     let turn = goesFirst([player1, player2]);
     turn.showOverlay(true);
-    console.log(turn)
 
     if (turn.name === "computer") {
         console.log("COMPUTER GUESSED FIRST")
