@@ -546,7 +546,6 @@ const Player = () => {
     }
 
     function computerHTMLtoboard(gridDiv) {
-        // Convert's player interaction with grid into a guess by changing board array
         if (!gameboard) return;
     
         const [y, x] = classToInteger(gridDiv);            
