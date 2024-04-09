@@ -74,6 +74,10 @@ const Gameboard = () => {
         return ships.every(ship => ship.sunk === true);
     }
 
+    function allShipsPlaced() {
+        
+    }
+
     return {board, missed, positionShips, recieveAttack, allShipsSunk, ships};
 }
 
@@ -138,15 +142,20 @@ const Player = () => {
         const btnContainer = document.createElement("div");
         btnContainer.classList.add("btn-container");
 
-        const confirmBtn = document.createElement("button");
-        confirmBtn.classList.add(`${this.name}`, `confirm-btn`);
-        confirmBtn.textContent = "CONFIRM";
-
         const randomiseBtn = document.createElement("button");
         randomiseBtn.classList.add(`${this.name}`, `randomise-btn`);
         randomiseBtn.textContent = "RANDOMISE";
 
+        const confirmBtn = document.createElement("button");
+        confirmBtn.classList.add(`${this.name}`, `confirm-btn`);
+        confirmBtn.textContent = "CONFIRM";
+
+        const resetBtn = document.createElement("button");
+        resetBtn.classList.add(`${this.name}`, `reset-btn`);
+        resetBtn.textContent = "RESET";
+
         btnContainer.appendChild(randomiseBtn);
+        btnContainer.appendChild(resetBtn);
         btnContainer.appendChild(confirmBtn);
 
         const gameboard = document.querySelector(`.${this.name}-grid.game-board`)
@@ -154,12 +163,19 @@ const Player = () => {
         gameboard.insertAdjacentElement("afterend", btnContainer);
     }
 
-    function removeShipsAndButtons() {
+    function removeShips() {
         const gridContainer = document.querySelector(`.${this.name}-grid-container`);
         const shipsContainer = gridContainer.querySelector(`.ships-container`);
+
+        if (shipsContainer) {
+            gridContainer.removeChild(shipsContainer);
+        }
+    }
+
+    function removeButtons() {
+        const gridContainer = document.querySelector(`.${this.name}-grid-container`);
         const btnContainer = gridContainer.querySelector(`.btn-container`);
 
-        gridContainer.removeChild(shipsContainer);
         gridContainer.removeChild(btnContainer);
     }
 
@@ -594,6 +610,6 @@ const Player = () => {
         })
     }  
 
-    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDragDrop, applyDraggableShips, resetGrid, removeShipsAndButtons, hideShips}
+    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDragDrop, applyDraggableShips, resetGrid, removeShips, removeButtons, hideShips}
 }
 export {Ship, Gameboard, Player};
