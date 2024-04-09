@@ -2,6 +2,7 @@ import "./styles.css"
 import { Player } from "./classCreator";
 import { goesFirst, removeFirstPlayerText, playerOrComputer } from "./goesFirst";
 import { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick } from "./buttonLogic";
+import { randomise } from "./randomise";
 
 async function initialiseGame() {
     // Welcome STAGE
@@ -22,8 +23,8 @@ async function initialiseGame() {
     player2.opponent = player1;
 
     // Ship position STAGE   
-    if (player2.name === "computer") {
-        player1.buildShips();
+    if (player2.name === "computer") { 
+        player1.buildButtonContainer();
         
         player1.buildGrid(true);
         player2.buildGrid(false);
@@ -33,8 +34,8 @@ async function initialiseGame() {
         player1.applyDraggableShips();
 
     } else {
-        player1.buildShips();
-        player2.buildShips();
+        player1.buildButtonContainer();
+        player2.buildButtonContainer();
 
         player1.buildGrid(true);
         player2.buildGrid(true);
@@ -64,10 +65,17 @@ async function initialiseGame() {
 
     // Starting the game
     // gameplay STAGE
+    player1.buildShips();
+    player2.buildShips();
 
     // For turn with computer I only register the event listeners on the computer squares
     if (player2.name === "computer") {
-        player2.generateComputerGuesses();  
+        player2.generateComputerGuesses();
+
+        const computerCoordinates = await randomise();
+        player2.resetGrid()
+        player2.positionShips(computerCoordinates);
+        player2.buildGrid(false);
     } else {
         // Register event listeners on both grids
         player1.registerGridDivEventListener();
@@ -84,8 +92,8 @@ async function initialiseGame() {
         player2.computerGuess();
     }
 
-    removeFirstPlayerText(player1.name);
-    removeFirstPlayerText(player2.name);
+    //removeFirstPlayerText(player1.name);
+    // removeFirstPlayerText(player2.name);
     
     // Reset the game - ONLY VISUALISES WHEN GAME IS FINISHED
     const resetWholeGame = document.querySelector(".reset-btn");
