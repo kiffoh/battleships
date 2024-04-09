@@ -112,7 +112,7 @@ const Player = () => {
     const name = "";
     const opponent = null;
     let potentialComputerGuesses = null;
-    let prev = false;
+    let localisedGuesses = null;
 
     function buildHTML() {
         const gridContainers = document.querySelector(".grid-containers");
@@ -366,55 +366,135 @@ const Player = () => {
                 // Computer guessIndex if player missses
                 // Keeps going until it hits and X
                 if (this.name === "computer") {
-                    computerGuess.bind(this)();
+                    if (localisedGuesses) {
+                        localisedComputerGuess.bind(this)();
+                    } else {
+                        computerGuess.bind(this)();
+                    }
                 }
             }
             HTMLtoboard.bind(this)(gridDiv);
         }
     }
 
-    function computerGuessToHTML(gridDiv, prev=false) {
+    function computerGuessToHTML(gridDiv, localiseComputerGuess=false) {
         if (gridDiv.textContent === "") {
             if (gridDiv.classList.contains("ship-present")) {
                 gridDiv.textContent = "X";
                 updateTurnText("COMPUTER HIT")
-                console.log("COMPUTER HIT")
-                
+
+                computerHTMLtoboard.bind(this)(gridDiv);
+
+                localisedComputerGuess.bind(this)(gridDiv, true);
+                // computerGuess.bind(this)();
+
+                /*
                 // This way the computer shall keep regoing until it hits a dot
                 // Chooses local coordinates if previous was a hit && not sunk
-                if (prev) {
-                    localisedComputerGuess.bind(this)();
+                // Don't know if I need a localiseComputerGuess as localisedComputerGuess will always be triggered in an event of a hit?
+                if (localiseComputerGuess) {
+                    localisedComputerGuess.bind(this)(gridDiv);
                 } else {
                     computerGuess.bind(this)();
+                    localisedComputerGuess.bind(this)(gridDiv);
                 }
+                */
 
             } else {
                 gridDiv.textContent = "●";
                 updateTurnText("COMPUTER MISSED")
-                // Reverse as this is done in player class
+
+                computerHTMLtoboard.bind(this)(gridDiv);
+
+                // Reverse process due to the logic occurring from the player class
                 this.showOverlay(false);
                 this.opponent.showOverlay(true);
                 gridDiv.id = "hit";
             }
         }
-        computerHTMLtoboard.bind(this)(gridDiv);
     }
 
-    function localisedComputerGuess() {
+    async function localisedComputerGuess(gridDiv=null, hit) {
+        if (!localisedGuesses) {
+            localisedGuesses = generateLocalComputerGuesses(gridDiv);
+        } else if (hit) {
+            const newDivs = generateLocalComputerGuesses(gridDiv);
+            newDivs.forEach(div => localisedGuesses.push(div));
+        }
+        console.log(localisedGuesses);
 
+        // Randomly adjusts the computer response time with minTime
+        let minTime = await Math.max(150, Math.random() * 500) 
+        await new Promise(resolve => setTimeout(resolve, minTime));
+
+        if (localisedGuesses.length === 0) {
+            computerGuess.bind(this);
+        } else {
+            const localGuess = localisedGuesses.shift()//[1];
+            console.log(localGuess);
+
+            removeComputerGuess(localGuess, potentialComputerGuesses);
+            
+            console.log(gridDiv);
+            computerGuessToHTML.bind(this)(localGuess);
+        }
+
+        // localisedGuesses = Object.entries(localisedGuesses)
+        
+
+        // Guess around the square
+        // computerGuessToHTML.bind(this)(localisedGuesses.shift());
+    }
+
+    function generateLocalComputerGuesses(gridDiv) {
+        // Recieved [y, x] to match up with the gameboard
+        const [y, x] = classToInteger(gridDiv);
+        const nearbyCoordinates = [
+            [y+1, x, "beneath"],
+            [y-1, x, "above"],
+            [y, x+1, "right"],
+            [y, x-1, "left"],
+        ] 
+        const nearbyGuesses = [];
+
+        for (let coordinate of nearbyCoordinates) {
+            let [y, x, reference] = coordinate;
+            
+            // computerDivFromInteger returns null if not found
+            // Therefore will be null if not in potentialComputerGuesses or if out of range
+            const nearbyDiv = computerDivFromInteger(x, y)
+            if (nearbyDiv) nearbyGuesses.push(nearbyDiv);
+        }
+
+        return nearbyGuesses;      
+    }
+
+    // Similar logic to gridDivFromCoordinates
+    function computerDivFromInteger(x, y) {
+        let foundGridDiv = null;
+
+        potentialComputerGuesses.forEach(gridDiv => {
+            if (gridDiv.classList.contains(`${y}${x}`)) {
+                foundGridDiv = gridDiv;                
+            }
+        })
+
+        return foundGridDiv;
     }
 
     async function computerGuess() {
-        let guessIndex = await Math.floor(Math.random() * potentialComputerGuesses.length);
+        let guessIndex = Math.floor(Math.random() * potentialComputerGuesses.length);
         while (guessIndex >= potentialComputerGuesses.length) {
-            guessIndex = await Math.floor(Math.random() * potentialComputerGuesses.length);
+            guessIndex = Math.floor(Math.random() * potentialComputerGuesses.length);
         }
         let guessedDiv = await potentialComputerGuesses[guessIndex];
         potentialComputerGuesses.splice(guessIndex, 1);
 
+        // Randomly adjusts the computer response time with minTime
         let minTime = await Math.max(150, Math.random() * 500) 
         await new Promise(resolve => setTimeout(resolve, minTime));
 
+        // Code to determine why guessIndex would generate an undefined guess
         if (guessedDiv === undefined) {
             console.log("UNDEFINED GUESS");
             console.log(`Potential Computer Guesses: ${potentialComputerGuesses.length}`)
@@ -425,11 +505,8 @@ const Player = () => {
         computerGuessToHTML.bind(this)(guessedDiv);
     }
     
-
-    
     function generateComputerGuesses() {
         potentialComputerGuesses = []
-        console.log(this)
         const computerGrid = document.getElementById(`${this.opponent.name}Grid`)
         const computerGridDivs = computerGrid.querySelectorAll("*");
         computerGridDivs.forEach(div => {
@@ -467,7 +544,8 @@ const Player = () => {
         if (gameboard.board[y][x] != null && gameboard.board[y][x].sunk) {
             updateTurnText(`${this.opponent.name.toUpperCase()} SANK ONE OF ${this.name.toUpperCase()}'S SHIP`)
             console.log("PLAYER SANK A COMPUTER'S SHIP")
-            // Algorithm to find all all parts of ship 
+
+            // Algorithm to find all all parts of sunk ship to change border to red
             const coordinates = findTouchingShips(gameboard.board, x, y, new Set());
             coordinates.forEach(coordinate => {
                 let x = parseInt(coordinate[1]);
@@ -485,17 +563,16 @@ const Player = () => {
     }
 
     function computerHTMLtoboard(gridDiv) {
-        // Don't think board is properly switching with computer as the number of registered hits is wrong.
-        // Maybe need to create a different class for computer vs player
         if (!gameboard) return;
     
         const [y, x] = classToInteger(gridDiv);            
         this.opponent.gameboard.recieveAttack([x, y]);
         console.log(potentialComputerGuesses.length);
         if (this.opponent.gameboard.board[y][x] != null && this.opponent.gameboard.board[y][x].sunk) {
-            updateTurnText("COMPUTER SANK A PLAYER'S SHIP")
-            console.log(`COMPUTER SANK ONE OF ${this.name.toUpperCase()}'S SHIP`);
-            // Algorithm to find all all parts of ship 
+            updateTurnText(`COMPUTER SANK ONE OF ${this.name.toUpperCase()}'S SHIP`)
+            localisedGuesses = null;
+            
+            // Algorithm to find all all parts of sunk ship to change border to red 
             const coordinates = findTouchingShips(this.opponent.gameboard.board, x, y, new Set());
             coordinates.forEach(coordinate => {
                 let x = parseInt(coordinate[1]);
@@ -511,14 +588,17 @@ const Player = () => {
             }
         }
 
+
+        /*
         // Logic to see if computer's previous guess was a hit to trigger nearby guesses
         // A hit which sinks a ships will result in an error potentially
         // Maybe write the code where if nearby coordinates is null then trigger computerGuess?
-        if (this.opponent.gameboard.board[y][x] != null /* && !this.opponent.gameboard.board[y][x].sunk */) {
+        if (this.opponent.gameboard.board[y][x] != null && !this.opponent.gameboard.board[y][x].sunk ) {
             prev = true;
         } else {
             prev = false;
         }
+        */
     }
 
     function nearbyShipSquaresHit(x, y, potentialComputerGuesses = null) {
