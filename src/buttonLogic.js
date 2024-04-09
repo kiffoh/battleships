@@ -62,6 +62,8 @@ function multiPlayerConfirmBtn(player1, player2) {
         if (player1.allShipsPlaced()) {
             player1.showOverlay(true);
             player2.showOverlay(false);
+
+            player2.updateTurnText(`${player2.name.toUpperCase()} PLACE YOUR SHIPS`);
         }
     }
 

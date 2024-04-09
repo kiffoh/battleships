@@ -22,8 +22,9 @@ async function initialiseGame() {
     player1.opponent = player2;
     player2.opponent = player1;
 
-    // Ship position STAGE   
-    if (player2.name === "computer") { 
+    // Ship position STAGE
+    player1.updateTurnText(`${player1.name.toUpperCase()} PLACE YOUR SHIPS`);
+    if (player2.name === "computer") {
         player1.buildButtonContainer();
         
         player1.buildGrid(true);
