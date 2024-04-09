@@ -92,7 +92,7 @@ div.player1-grid.number.highlight, div.player2-grid.number.highlight, div.comput
     width: 32px;
     height: 32px;
     outline: 2px solid darkblue;
-    position: absolute;
+    position: relative;
 }
 
 .draggable-ship[data-size="2"] {
@@ -151,6 +151,7 @@ h3.title {
 
     grid-area: 2 / 2;
     height: max-content;
+    
 }
 
 .grid-containers {
@@ -177,7 +178,7 @@ h1 {
     margin-top: 32px;
 }
 
-.start-button, .reset-btn {
+.start-button, .reset-btn, .randomise-btn, .confirm-btn {
     font-size: large;
     padding: 4px 8px;
 }
@@ -193,6 +194,14 @@ h3 {
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr auto;
     gap: 1em;
+
+    padding-right: 1em; /* Keeps the athestetic with the overlay even */
+}
+
+.btn-container {
+    display: flex;
+    justify-content: space-between;
+    grid-area: 3 / 2;
 }
 
 
