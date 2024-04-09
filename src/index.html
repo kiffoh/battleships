@@ -6,16 +6,16 @@
     <title>Battleships</title>
 </head>
 <body>
-    <h1>BATTLESHIPS</h1>
-        <div class="grid-containers">
+    <h1 class="first">BATTLESHIPS</h1>
+    <h3 class="turn-text"></h3>
+    <div class="grid-containers">
+    </div>
+    <div class="grid-overlay" id="overallOverlay"></div>
+    <div class="grid-overlay" id="gameEndingOverlay" style="display: none;">
+        <h1 class="winner-confirmation">Congratulations on winning!</h1>
+        <div class="reset-btn-div">
+            <button class="reset-btn">Play again?</button>
         </div>
-        <div class="grid-overlay" id="overallOverlay"></div>
-        <div class="grid-overlay" id="gameEndingOverlay" style="display: none;">
-            <h1 class="winner-confirmation">Congratulations on winning!</h1>
-            <div class="reset-btn-div">
-                <button class="reset-btn">Play again?</button>
-            </div>
-        </div>
-        <h3 class="first-player"></h3>
+    </div>
 </body>
 </html>
