@@ -1,6 +1,6 @@
 import "./styles.css"
 import { Player } from "./classCreator";
-import { goesFirst, removeFirstPlayerText, playerOrComputer, handleConfirmBtnClick } from "./goesFirst";
+import { goesFirst, removeFirstPlayerText, playerOrComputer, handleConfirmBtnClick, hideShipsContainer } from "./goesFirst";
 import { randomise } from "./randomise";
 
 async function initialiseGame() {
@@ -21,14 +21,7 @@ async function initialiseGame() {
     player1.opponent = player2;
     player2.opponent = player1;
 
-    // Ship position STAGE
-    // Obtain random starting coordinates
-    let startingCoordinates_player1 = await randomise();
-    let startingCoordinates_player2 = await randomise();
-    
-    player1.positionShips(startingCoordinates_player1);
-    player2.positionShips(startingCoordinates_player2);
-    
+    // Ship position STAGE   
     if (player2.name === "computer") {
         player1.buildShips();
         
@@ -59,22 +52,42 @@ async function initialiseGame() {
     const randomiseButtons = document.querySelectorAll(".randomise-btn");
 
     // Define an async function to use await
-    async function handleButtonClick(button) {
+    async function handleRandomiseButtonClick(button) {
         const coordinates = await randomise(); // Wait for randomise() to resolve
         if (button.classList.contains("player1")) {
             player1.resetGrid()
             player1.positionShips(coordinates);
             player1.buildGrid(true);
+            hideShipsContainer(true, player1.name);
         } else {
             player2.resetGrid()
             player2.positionShips(coordinates);
             player2.buildGrid(true);
+            hideShipsContainer(true, player2.name);
         }
     }
 
     // Use a for...of loop to iterate over the buttons
     for (const button of randomiseButtons) {
-        button.onclick = () => handleButtonClick(button);
+        button.onclick = () => handleRandomiseButtonClick(button);
+    }
+
+    // randomise button functionality  
+    const resetButtons = document.querySelectorAll(".reset-btn");
+    function handleResetButtonClick(button) {
+        if (button.classList.contains("player1")) {
+            player1.resetGrid();
+            player1.buildGrid(true);
+            hideShipsContainer(false, player1.name);
+        } else {
+            player2.resetGrid();
+            player2.buildGrid(true);
+            hideShipsContainer(false, player2.name);
+        }
+    }
+
+    for (const button of resetButtons) {
+        button.onclick = () => handleResetButtonClick(button);
     }
 
     await handleConfirmBtnClick(player1, player2);
