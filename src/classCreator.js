@@ -1,6 +1,7 @@
 class Ship {
-    constructor(length, hits=0, sunk=false) {
+    constructor(length, placed=false, hits=0, sunk=false) {
         this.length = length;
+        this.placed = placed;
         this.hits = hits;
         this.sunk = sunk;
     }
@@ -39,19 +40,19 @@ const Gameboard = () => {
             // Length 1
             if (x1 === x2 && y1 === y2) {
                 // Fill board with Ship
-                newShip = new Ship(1);
+                newShip = new Ship(1, true);
                 board[y1][x1] = newShip;
             } // For a constant X
             else if (x1 === x2) {
                 const yDiff = y2 - y1 + 1;
-                newShip = new Ship(yDiff);
+                newShip = new Ship(yDiff, true);
                 // Fill board with Ship
                 for (let i = 0; i < yDiff; i++) {
                     board[y1 + i][x1] = newShip;
                 }
             } else if (y1 === y2) {
                 const xDiff = x2 - x1 + 1;
-                newShip = new Ship(xDiff);
+                newShip = new Ship(xDiff, true);
                 // Fill board with Ship
                 for (let i = 0; i < xDiff; i++) {
                     board[y1][x1 + i] = newShip;
@@ -74,11 +75,35 @@ const Gameboard = () => {
         return ships.every(ship => ship.sunk === true);
     }
 
+    function obtainCurrentShips() {
+        const currentShips = [];
+        for (let y = 0; y <= 9; y++) {
+            for (let x = 0; x <= 9; x++) {
+                if (board[y][x] != null && !currentShips.includes(board[y][x])) {
+                    currentShips.push(board[y][x]);
+                }
+            }
+        }
+        return currentShips;
+    }
+    
     function allShipsPlaced() {
-        
+        const requiredShipsLength = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
+        const currentShips = obtainCurrentShips();
+        console.log(currentShips);
+
+        for (const ship of currentShips) {
+            const index = requiredShipsLength.indexOf(ship.length);
+            if (index === -1) {
+                return false;
+            }
+            requiredShipsLength.splice(index, 1);
+        };
+
+        return (requiredShipsLength.length === 0 && currentShips.every(ship => ship.placed === true));
     }
 
-    return {board, missed, positionShips, recieveAttack, allShipsSunk, ships};
+    return {board, missed, positionShips, recieveAttack, allShipsSunk, ships, allShipsPlaced};
 }
 
 // module.exports = {Ship, Gameboard};
@@ -610,6 +635,6 @@ const Player = () => {
         })
     }  
 
-    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDragDrop, applyDraggableShips, resetGrid, removeShips, removeButtons, hideShips}
+    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDragDrop, applyDraggableShips, resetGrid, removeShips, removeButtons, hideShips}
 }
 export {Ship, Gameboard, Player};
