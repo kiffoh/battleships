@@ -86,11 +86,10 @@ const Gameboard = () => {
         }
         return currentShips;
     }
-    
+
     function allShipsPlaced() {
         const requiredShipsLength = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
         const currentShips = obtainCurrentShips();
-        console.log(currentShips);
 
         for (const ship of currentShips) {
             const index = requiredShipsLength.indexOf(ship.length);
@@ -158,9 +157,6 @@ const Player = () => {
         // Beneath is for correct UX placement of the confirm button
         const gridContainer = document.querySelector(`.${this.name}-grid-container`)
         gridContainer.insertAdjacentElement("afterbegin", shipsContainer);
-        
-        buildButtonContainer.bind(this)();
-
     }
 
     function buildButtonContainer() {
@@ -184,7 +180,6 @@ const Player = () => {
         btnContainer.appendChild(confirmBtn);
 
         const gameboard = document.querySelector(`.${this.name}-grid.game-board`)
-        console.log(gameboard);
         gameboard.insertAdjacentElement("afterend", btnContainer);
     }
 
@@ -354,12 +349,16 @@ const Player = () => {
         if (gridDiv.textContent === "") {
             if (gridDiv.classList.contains("ship-present")) {
                 gridDiv.textContent = "X";
+                updateTurnText(`${this.opponent.name.toUpperCase()} HIT`)
+
                 if (gridDiv.classList.contains("hidden")) {
                     gridDiv.classList.remove("hidden");
                     gridDiv.classList.add("reveal");
                 }
             } else {
                 gridDiv.textContent = "●";
+                updateTurnText(`${this.opponent.name.toUpperCase()} MISSED`)
+
                 this.showOverlay(true);
                 this.opponent.showOverlay(false);
                 gridDiv.id = "hit";
@@ -371,7 +370,6 @@ const Player = () => {
                 }
             }
             HTMLtoboard.bind(this)(gridDiv);
-            
         }
     }
 
@@ -379,7 +377,7 @@ const Player = () => {
         if (gridDiv.textContent === "") {
             if (gridDiv.classList.contains("ship-present")) {
                 gridDiv.textContent = "X";
-                
+                updateTurnText("COMPUTER HIT")
                 console.log("COMPUTER HIT")
                 
                 // This way the computer shall keep regoing until it hits a dot
@@ -392,7 +390,7 @@ const Player = () => {
 
             } else {
                 gridDiv.textContent = "●";
-
+                updateTurnText("COMPUTER MISSED")
                 // Reverse as this is done in player class
                 this.showOverlay(false);
                 this.opponent.showOverlay(true);
@@ -467,6 +465,7 @@ const Player = () => {
         gameboard.recieveAttack([x, y]);
     
         if (gameboard.board[y][x] != null && gameboard.board[y][x].sunk) {
+            updateTurnText(`${this.opponent.name.toUpperCase()} SANK ONE OF ${this.name.toUpperCase()}'S SHIP`)
             console.log("PLAYER SANK A COMPUTER'S SHIP")
             // Algorithm to find all all parts of ship 
             const coordinates = findTouchingShips(gameboard.board, x, y, new Set());
@@ -494,7 +493,8 @@ const Player = () => {
         this.opponent.gameboard.recieveAttack([x, y]);
         console.log(potentialComputerGuesses.length);
         if (this.opponent.gameboard.board[y][x] != null && this.opponent.gameboard.board[y][x].sunk) {
-            console.log("COMPUTER SANK A PLAYER'S SHIP");
+            updateTurnText("COMPUTER SANK A PLAYER'S SHIP")
+            console.log(`COMPUTER SANK ONE OF ${this.name.toUpperCase()}'S SHIP`);
             // Algorithm to find all all parts of ship 
             const coordinates = findTouchingShips(this.opponent.gameboard.board, x, y, new Set());
             coordinates.forEach(coordinate => {
@@ -607,6 +607,11 @@ const Player = () => {
         }
     }
 
+    function updateTurnText(text) {
+        const turnDiv = document.querySelector(".turn-text");
+        turnDiv.textContent = text;
+    }
+
     function triggerOverallOverlay() {
         const overlay = document.getElementById("gameEndingOverlay");
         overlay.style.display = "flex";
@@ -635,6 +640,6 @@ const Player = () => {
         })
     }  
 
-    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDragDrop, applyDraggableShips, resetGrid, removeShips, removeButtons, hideShips}
+    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, buildButtonContainer, applyDragDrop, applyDraggableShips, resetGrid, removeShips, removeButtons, hideShips}
 }
 export {Ship, Gameboard, Player};
