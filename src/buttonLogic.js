@@ -7,12 +7,10 @@ async function handleRandomiseButtonClick(button, player1, player2) {
         player1.resetGrid()
         player1.positionShips(coordinates);
         player1.buildGrid(true);
-        hideShipsContainer(true, player1.name);
     } else {
         player2.resetGrid()
         player2.positionShips(coordinates);
         player2.buildGrid(true);
-        hideShipsContainer(true, player2.name);
     }
 }
 
@@ -20,11 +18,9 @@ function handleResetButtonClick(button, player1, player2) {
     if (button.classList.contains("player1")) {
         player1.resetGrid();
         player1.buildGrid(true);
-        hideShipsContainer(false, player1.name);
     } else {
         player2.resetGrid();
         player2.buildGrid(true);
-        hideShipsContainer(false, player2.name);
     }
 }
 
@@ -45,7 +41,6 @@ function singlePlayerConfirmBtn(player1) {
         player1ConfirmBtn.onclick = () => {
             // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
             if (player1.allShipsPlaced()) {
-                player1.removeShips();
                 player1.removeButtons();
 
                 resolve();
@@ -59,7 +54,6 @@ function singlePlayerConfirmBtn(player1) {
 function multiPlayerConfirmBtn(player1, player2) {
     // Change the overlay colour for ship placement
     changeOverlaysTo("blue");
-    hideShipsContainer(true, player2.name)
 
     const player1ConfirmBtn = document.querySelector(".player1.confirm-btn");
 
@@ -68,9 +62,6 @@ function multiPlayerConfirmBtn(player1, player2) {
         if (player1.allShipsPlaced()) {
             player1.showOverlay(true);
             player2.showOverlay(false);
-
-            hideShipsContainer(false, player2.name)
-            hideShipsContainer(true, player1.name)
         }
     }
 
@@ -84,9 +75,7 @@ function multiPlayerConfirmBtn(player1, player2) {
         player2ConfirmBtn.onclick = () => {
             // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
             if (player2.allShipsPlaced()) {
-                player1.removeShips();
                 player1.removeButtons();
-                player2.removeShips();
                 player2.removeButtons();
                 player1.showOverlay(false);
         
