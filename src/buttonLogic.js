@@ -26,13 +26,13 @@ function handleResetButtonClick(button, player1, player2) {
 
 async function handleConfirmBtnClick(player1, player2) {
     if (player2.name === "computer") {
-        await singlePlayerConfirmBtn(player1);
+        await singlePlayerConfirmBtn(player1, player2);
     } else {
         await multiPlayerConfirmBtn(player1, player2);
     }
 }
 
-function singlePlayerConfirmBtn(player1) {
+function singlePlayerConfirmBtn(player1, player2) {
     const player1ConfirmBtn = document.querySelector(".player1.confirm-btn");
     let resolvePromise;
 
@@ -42,6 +42,9 @@ function singlePlayerConfirmBtn(player1) {
             // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
             if (player1.allShipsPlaced()) {
                 player1.removeButtons();
+                changeOverlaysTo("partially-transparent", true)
+
+                player2.removeRules();
 
                 resolve();
             }
@@ -60,8 +63,8 @@ function multiPlayerConfirmBtn(player1, player2) {
     player1ConfirmBtn.onclick = () => {
         // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
         if (player1.allShipsPlaced()) {
-            player1.showOverlay(true);
-            player2.showOverlay(false);
+            player1.buildRules(true);
+            player2.removeRules();
 
             player2.updateTurnText(`${player2.name.toUpperCase()} PLACE YOUR SHIPS`);
         }
@@ -79,7 +82,8 @@ function multiPlayerConfirmBtn(player1, player2) {
             if (player2.allShipsPlaced()) {
                 player1.removeButtons();
                 player2.removeButtons();
-                player1.showOverlay(false);
+                
+                player1.removeRules();
         
                 player1.hideShips();
                 player2.hideShips();
@@ -96,8 +100,13 @@ function multiPlayerConfirmBtn(player1, player2) {
     return moveOnPromise;
 }
 
-function changeOverlaysTo(colour) {
-    const playerOverlays = [document.querySelector(`#player1GridOverlay`), document.querySelector(`#player2GridOverlay`)];
+function changeOverlaysTo(colour, computer=false) {
+    let playerOverlays;
+    if (computer) {
+        playerOverlays = [document.querySelector(`#player1GridOverlay`), document.querySelector(`#computerGridOverlay`)];
+    } else {
+        playerOverlays = [document.querySelector(`#player1GridOverlay`), document.querySelector(`#player2GridOverlay`)];
+    }
     if (colour === "blue") {
         playerOverlays.forEach(overlay => {
             overlay.style.backgroundColor = "rgb(73, 110, 235)";
@@ -118,4 +127,4 @@ function hideShipsContainer(hide, playerName) {
     }
 }
 
-export { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, hideShipsContainer }
+export { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, hideShipsContainer, changeOverlaysTo }
