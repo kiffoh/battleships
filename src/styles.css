@@ -198,6 +198,12 @@ h3.title {
     
 }
 
+#player1GridOverlay, #player2GridOverlay, #computerGridOverlay {
+    padding-left: 1em;
+    padding-right: 1em;
+    color: rgb(237, 233, 233);
+}
+
 .grid-containers {
     display: flex;
     gap: 2em;
