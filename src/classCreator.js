@@ -190,12 +190,14 @@ const Player = () => {
         confirmBtn.classList.add(`${this.name}`, `confirm-btn`);
         confirmBtn.textContent = "CONFIRM";
 
+        /* NOT A NEED FOR RESET YET
         const resetBtn = document.createElement("button");
         resetBtn.classList.add(`${this.name}`, `reset-btn`);
         resetBtn.textContent = "RESET";
+        */
 
         btnContainer.appendChild(randomiseBtn);
-        btnContainer.appendChild(resetBtn);
+        // btnContainer.appendChild(resetBtn);
         btnContainer.appendChild(confirmBtn);
 
         const gameboard = document.querySelector(`.${this.name}-grid.game-board`)
@@ -228,93 +230,42 @@ const Player = () => {
         })
     }
 
-    function applyDraggableShips() {
-        const draggableShips = document.querySelectorAll('.draggable-ship');
+    function buildRules(pvp) {
+        const playerOverlay = document.getElementById(`${this.name}GridOverlay`);
 
-        let offsetX, offsetY, isDragging = false;
-        let draggedShip = null;
+        this.showOverlay(true);
 
-        draggableShips.forEach(ship => {
-            ship.addEventListener('mousedown', startDrag);
-            ship.addEventListener("drag", dragShip)
-        });
+        playerOverlay.innerHTML = `
+            <h3 class="rules-title">RULES</h3>
+            <p>Try and deduce where the enemy ships are and sink them first!</p>
+            <br></br>
+            <p>Each player deploys their ships (of lengths varying from 1 to 4 squares) secretly on a their square grid.</p>
+            <p>Every turn each player shoots at the other's grid by clicking on a location to a response of "HIT", "MISS" or "SUNK".</p>
+            <p>(Watch the turn counter beneath the title if you get lost)</p>
+            <p>First player to sink all of the opponents ships wins! Good Luck!</p>
+        `;
 
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('mouseup', stopDrag);
-
-        function startDrag(event) {
-            draggedShip = event.target;
-            console.log(draggedShip.getBoundingClientRect().left)
-            const style = window.getComputedStyle(event.target, null);
-            offsetX = parseInt(style.getPropertyValue("left"), 10) - event.clientX;
-            offsetY = parseInt(style.getPropertyValue("top"), 10) - event.clientY;
-            isDragging = true;
-        }
-
-        function dragShip(event) {
-            const x = event.clientX + offsetX - 252;
-            const y = event.clientY + offsetY;
-            event.target.style.left = x + 'px';
-            event.target.style.top = y + 'px';
-        }
-
-        function drag(event) {
-            
-            if (isDragging && draggedShip) {
-                console.log(event.clientX)
-                console.log(draggedShip.style.left)
-                draggedShip.style.left = `${event.clientX-offsetX}px`;
-                draggedShip.style.top = `${event.clientY}px`;
-            }
-        }
-
-        function stopDrag() {
-            isDragging = false;
-            draggedShip = null;
+        if (pvp) {
+            playerOverlay.innerHTML = `
+            <h3 class="rules-title">RULES</h3>
+            <p>Try and deduce where the enemy ships are and sink them first!</p>
+            <br></br>
+            <p>Each player deploys their ships (of lengths varying from 1 to 4 squares) secretly on a their square grid.</p>
+            <p>Every turn each player shoots at the other's grid by clicking on a location to a response of "HIT", "MISS" or "SUNK".</p>
+            <p>(Watch the turn counter beneath the title if you get lost)</p>
+            <p>First player to sink all of the opponents ships wins! Good Luck!</p>
+            <br></br>
+            <p>Local play requires the opponent to not look at the screen whilst the player is positioning their ships!</p>
+        `;
         }
     }
-    
-    
 
-    function applyDragDrop() {
-        const gridElements = document.querySelectorAll(`.${this.name}-grid.game-board.number`);
+    function removeRules() {
+        const playerOverlay = document.getElementById(`${this.name}GridOverlay`);
 
-        gridElements.forEach(gridElement => {
-            gridElement.addEventListener('dragover', dragOver);
-            gridElement.addEventListener('dragenter', dragEnter);
-            gridElement.addEventListener('dragleave', dragLeave);
-            gridElement.addEventListener('drop', drop);
-            gridElement.addEventListener('dragstart', dragStart);
-        });
+        this.showOverlay(false);
 
-        function dragOver(event) {
-            event.preventDefault();
-        }
-        
-        function dragEnter(event) {
-            // Add highlight effect to the grid element
-            event.target.classList.add('highlight');
-        }
-        
-        function dragLeave(event) {
-            // Remove highlight effect from the grid element
-            event.target.classList.remove('highlight');
-        }
-        
-        function drop(event) {
-            event.preventDefault();
-            // Remove highlight effect from the grid element
-            event.target.classList.remove('highlight');
-            // Add logic to handle the dropped item (e.g., place the ship on the grid)
-            event.target.classList.add("ship-present", "reveal");
-        }
-
-        function dragStart(event) {
-            if (event.target.classList.contains("ship-present")) {
-                event.dataTransfer.setData('text/plain', event.target.id);
-                event.target.classList.remove("ship-present", "reveal");
-            }
-        } 
+        playerOverlay.innerHTML = ``
     }
 
     function buildGrid(reveal) {
@@ -664,6 +615,6 @@ const Player = () => {
         })
     }  
 
-    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, buildButtonContainer, applyDragDrop, applyDraggableShips, resetGrid, removeShips, removeButtons, hideShips, updateTurnText, updateClassListOnShipSunk}
+    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules}
 }
 export {Ship, Gameboard, Player};
