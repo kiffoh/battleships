@@ -1,7 +1,7 @@
 import "./styles.css"
 import { Player } from "./classCreator";
-import { goesFirst, removeFirstPlayerText, playerOrComputer } from "./goesFirst";
-import { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick } from "./buttonLogic";
+import { goesFirst, playerOrComputer } from "./goesFirst";
+import { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, changeOverlaysTo } from "./buttonLogic";
 import { randomise } from "./randomise";
 
 async function initialiseGame() {
@@ -24,30 +24,29 @@ async function initialiseGame() {
 
     // Ship position STAGE
     player1.updateTurnText(`${player1.name.toUpperCase()} PLACE YOUR SHIPS`);
+
+
     if (player2.name === "computer") {
+        // As player1 will always position ships first
+        player2.buildRules();
+
         player1.buildButtonContainer();
         
         player1.buildGrid(true);
         player2.buildGrid(false);
 
-        player1.applyDragDrop();
-
-        player1.applyDraggableShips();
-
+        changeOverlaysTo("blue", true);
+        
     } else {
+        // As player1 will always position ships first
+        player2.buildRules(true);
+
         player1.buildButtonContainer();
         player2.buildButtonContainer();
 
         player1.buildGrid(true);
         player2.buildGrid(true);
 
-        player1.applyDragDrop();
-        player2.applyDragDrop();
-
-        player1.applyDraggableShips();
-        player2.applyDraggableShips();
-
-        player2.showOverlay(true);
     }
 
     // Attach logic to each button (Randomise, Reset, Confirm) for positioning stage
@@ -57,10 +56,12 @@ async function initialiseGame() {
         button.onclick = () => handleRandomiseButtonClick(button, player1, player2);
     }
 
+    /* COMMENTED OUT RESET AS THERE IS NOT A NEED FOR IT YET
     const resetButtons = document.querySelectorAll(".reset-btn");
     for (const button of resetButtons) {
         button.onclick = () => handleResetButtonClick(button, player1, player2);
     }
+    */
 
     await handleConfirmBtnClick(player1, player2);
 
@@ -93,9 +94,6 @@ async function initialiseGame() {
         console.log("COMPUTER GUESSED FIRST")
         player2.computerGuess();
     }
-
-    //removeFirstPlayerText(player1.name);
-    // removeFirstPlayerText(player2.name);
     
     // Reset the game - ONLY VISUALISES WHEN GAME IS FINISHED
     const resetWholeGame = document.querySelector(".reset-btn");
