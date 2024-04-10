@@ -86,6 +86,7 @@ div.player1-grid.number.highlight, div.player2-grid.number.highlight, div.comput
     display: flex;
     gap: 1em;
     grid-area: 1 / 1 / -1 / 1;
+    padding-left: 1em;
 }
 
 .draggable-ship[data-size="1"], .draggable-ship.vertical[data-size="1"] {
@@ -221,4 +222,8 @@ h3 {
     outline: 2px solid red;
     width: 100%;
     height: 100%;
+}
+
+.draggable-ship.sunk {
+    outline: 2px solid red;
 }
