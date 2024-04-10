@@ -66,8 +66,6 @@ async function initialiseGame() {
 
     // Starting the game
     // gameplay STAGE
-    player1.buildShips();
-    player2.buildShips();
 
     // For turn with computer I only register the event listeners on the computer squares
     if (player2.name === "computer") {
@@ -81,12 +79,15 @@ async function initialiseGame() {
         // Register event listeners on both grids
         player1.registerGridDivEventListener();
     }
+    
+    player1.buildShips();
+    player2.buildShips();
+
     player2.registerGridDivEventListener();
 
     // Determines who goes first
     let turn = goesFirst([player1, player2]);
     turn.showOverlay(true);
-    console.log(turn)
 
     if (turn.name === "computer") {
         console.log("COMPUTER GUESSED FIRST")
