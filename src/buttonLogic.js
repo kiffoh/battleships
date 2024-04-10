@@ -26,13 +26,13 @@ function handleResetButtonClick(button, player1, player2) {
 
 async function handleConfirmBtnClick(player1, player2) {
     if (player2.name === "computer") {
-        await singlePlayerConfirmBtn(player1);
+        await singlePlayerConfirmBtn(player1, player2);
     } else {
         await multiPlayerConfirmBtn(player1, player2);
     }
 }
 
-function singlePlayerConfirmBtn(player1) {
+function singlePlayerConfirmBtn(player1, player2) {
     const player1ConfirmBtn = document.querySelector(".player1.confirm-btn");
     let resolvePromise;
 
@@ -41,8 +41,10 @@ function singlePlayerConfirmBtn(player1) {
         player1ConfirmBtn.onclick = () => {
             // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
             if (player1.allShipsPlaced()) {
-                player1.removeChooseCoordinatesDiv();
-                player1.removeGridNumbersAndButtons();
+                player1.removeButtons();
+                changeOverlaysTo("partially-transparent", true)
+
+                player2.removeRules();
 
                 resolve();
             }
@@ -61,8 +63,8 @@ function multiPlayerConfirmBtn(player1, player2) {
     player1ConfirmBtn.onclick = () => {
         // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
         if (player1.allShipsPlaced()) {
-            player1.showOverlay(true);
-            player2.showOverlay(false);
+            player1.buildRules(true);
+            player2.removeRules();
 
             player2.updateTurnText(`${player2.name.toUpperCase()} PLACE YOUR SHIPS`);
 
@@ -89,14 +91,10 @@ function multiPlayerConfirmBtn(player1, player2) {
         player2ConfirmBtn.onclick = () => {
             // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
             if (player2.allShipsPlaced()) {
-                player1.showOverlay(false);
-
-                // Remove input coordinates section
-                player2.removeChooseCoordinatesDiv();
-                player2.removeGridNumbersAndButtons();
-
-                // Due to order of adding, the 3 big buttons under grid (Btns container) get added in the wrong place to get removed with above function
+                player1.removeButtons();
                 player2.removeButtons();
+                
+                player1.removeRules();
         
                 // Hide both player's ships as the game is local
                 player1.hideShips();
@@ -115,8 +113,13 @@ function multiPlayerConfirmBtn(player1, player2) {
     return moveOnPromise;
 }
 
-function changeOverlaysTo(colour) {
-    const playerOverlays = [document.querySelector(`#player1GridOverlay`), document.querySelector(`#player2GridOverlay`)];
+function changeOverlaysTo(colour, computer=false) {
+    let playerOverlays;
+    if (computer) {
+        playerOverlays = [document.querySelector(`#player1GridOverlay`), document.querySelector(`#computerGridOverlay`)];
+    } else {
+        playerOverlays = [document.querySelector(`#player1GridOverlay`), document.querySelector(`#player2GridOverlay`)];
+    }
     if (colour === "blue") {
         playerOverlays.forEach(overlay => {
             overlay.style.backgroundColor = "rgb(73, 110, 235)";
@@ -137,35 +140,4 @@ function hideShipsContainer(hide, playerName) {
     }
 }
 
-function handleHorizontalOrVerticalClick(horizontalOrVerticalBtn, player) {
-    const constantCoordinate = document.getElementById("constantCoordinate");
-    const variableCoordinate1 = document.getElementById("variableCoordinate1");
-    const variableCoordinate2 = document.getElementById("variableCoordinate2");
-    const shipDirection = document.querySelector(".ship-direction");
-
-    const constantCoordinateInput = constantCoordinate.querySelector("input");
-    const variableCoordinate1Input = variableCoordinate1.querySelector("input");
-    const variableCoordinate2Input = variableCoordinate2.querySelector("input");
-
-    if (horizontalOrVerticalBtn.textContent === "HORIZONTAL") {
-        horizontalOrVerticalBtn.textContent = "VERTICAL";
-        constantCoordinate.textContent = `X`;
-        constantCoordinate.appendChild(constantCoordinateInput);
-        variableCoordinate1.textContent = `Y1`;
-        variableCoordinate1.appendChild(variableCoordinate1Input);
-        variableCoordinate2.textContent = `Y2`;
-        variableCoordinate2.appendChild(variableCoordinate2Input);
-        shipDirection.textContent = "HORIZONTAL SHIP";
-    } else {
-        horizontalOrVerticalBtn.textContent = "HORIZONTAL";
-        constantCoordinate.textContent = `Y`;
-        constantCoordinate.appendChild(constantCoordinateInput);
-        variableCoordinate1.textContent = `X1`;
-        variableCoordinate1.appendChild(variableCoordinate1Input);
-        variableCoordinate2.textContent = `X2`;
-        variableCoordinate2.appendChild(variableCoordinate2Input);
-        shipDirection.textContent = "VERTICAL SHIP";
-    }
-}
-
-export { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, hideShipsContainer, handleHorizontalOrVerticalClick }
+export { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, hideShipsContainer, changeOverlaysTo }
