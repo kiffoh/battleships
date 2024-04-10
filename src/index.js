@@ -5,10 +5,10 @@ import { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnCli
 import { randomise } from "./randomise";
 
 async function initialiseGame() {
-    // Welcome STAGE
+
+    // WELCOME STAGE
     let opponent = await playerOrComputer();
     if (opponent === "player") opponent = "player2";
-
 
     // Initialising the player classes
     const player1 = Player();
@@ -22,7 +22,7 @@ async function initialiseGame() {
     player1.opponent = player2;
     player2.opponent = player1;
 
-    // Ship position STAGE
+    // SHIP POSITION STAGE
     player1.updateTurnText(`${player1.name.toUpperCase()} PLACE YOUR SHIPS`);
 
 
@@ -66,8 +66,7 @@ async function initialiseGame() {
     await handleConfirmBtnClick(player1, player2);
 
     // Starting the game
-    // gameplay STAGE
-
+    // GAMEPLAY STAGE
     // For turn with computer I only register the event listeners on the computer squares
     if (player2.name === "computer") {
         player2.generateComputerGuesses();
