@@ -102,7 +102,7 @@ const Gameboard = () => {
         return (requiredShipsLength.length === 0 && currentShips.every(ship => ship.placed === true));
     }
 
-    return {board, missed, positionShips, recieveAttack, allShipsSunk, ships, allShipsPlaced};
+    return {board, missed, positionShips, recieveAttack, allShipsSunk, ships, allShipsPlaced, obtainCurrentShips};
 }
 
 // module.exports = {Ship, Gameboard};
@@ -113,6 +113,7 @@ const Player = () => {
     const opponent = null;
     let potentialComputerGuesses = null;
     let prev = false;
+    let draggableShips;
 
     function buildHTML() {
         const gridContainers = document.querySelector(".grid-containers");
@@ -155,8 +156,26 @@ const Player = () => {
         `;
 
         // Beneath is for correct UX placement of the confirm button
-        const gridContainer = document.querySelector(`.${this.name}-grid-container`)
-        gridContainer.insertAdjacentElement("afterbegin", shipsContainer);
+        const playerGridContainer = document.querySelector(`.${this.name}-grid-container`)
+        playerGridContainer.insertAdjacentElement("afterbegin", shipsContainer);
+
+        // Stores the draggableShips div in array for updateClassLisstOnShipSunk
+        draggableShips = [...playerGridContainer.querySelectorAll(".draggable-ship")];
+        console.log(draggableShips);
+    }
+
+    // Function to update the classList of the HTML element when the associated ship is sunk
+    function updateClassListOnShipSunk(ship) {
+        console.log(ship);
+        console.log(draggableShips);
+        for (let i =0; i < draggableShips.length; i++) {
+            const dataSize = parseInt(draggableShips[i].dataset.size);
+            if (ship.length === dataSize) {
+                draggableShips[i].classList.add("sunk");
+                draggableShips.splice(i, 1);
+                break;
+            }
+        }
     }
 
     function buildButtonContainer() {
@@ -429,7 +448,6 @@ const Player = () => {
     
     function generateComputerGuesses() {
         potentialComputerGuesses = []
-        console.log(this)
         const computerGrid = document.getElementById(`${this.opponent.name}Grid`)
         const computerGridDivs = computerGrid.querySelectorAll("*");
         computerGridDivs.forEach(div => {
@@ -467,6 +485,7 @@ const Player = () => {
         if (gameboard.board[y][x] != null && gameboard.board[y][x].sunk) {
             updateTurnText(`${this.opponent.name.toUpperCase()} SANK ONE OF ${this.name.toUpperCase()}'S SHIP`)
             console.log("PLAYER SANK A COMPUTER'S SHIP")
+
             // Algorithm to find all all parts of ship 
             const coordinates = findTouchingShips(gameboard.board, x, y, new Set());
             coordinates.forEach(coordinate => {
@@ -476,6 +495,8 @@ const Player = () => {
                 shipDiv.classList.add("sunk");
                 nearbyShipSquaresHit.bind(this)(x, y);
             })        
+
+            updateClassListOnShipSunk.bind(this)(gameboard.board[y][x]);
 
 
             if (gameboard.allShipsSunk()) {
@@ -495,6 +516,7 @@ const Player = () => {
         if (this.opponent.gameboard.board[y][x] != null && this.opponent.gameboard.board[y][x].sunk) {
             updateTurnText("COMPUTER SANK A PLAYER'S SHIP")
             console.log(`COMPUTER SANK ONE OF ${this.name.toUpperCase()}'S SHIP`);
+
             // Algorithm to find all all parts of ship 
             const coordinates = findTouchingShips(this.opponent.gameboard.board, x, y, new Set());
             coordinates.forEach(coordinate => {
@@ -505,6 +527,8 @@ const Player = () => {
                 this.opponent.nearbyShipSquaresHit(x, y, potentialComputerGuesses);
             })        
 
+            console.log(this.opponent.gameboard.board[y][x])
+            this.opponent.updateClassListOnShipSunk(this.opponent.gameboard.board[y][x]);
 
             if (this.opponent.gameboard.allShipsSunk()) {
                 triggerOverallOverlay.bind(this)();
@@ -640,6 +664,6 @@ const Player = () => {
         })
     }  
 
-    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, buildButtonContainer, applyDragDrop, applyDraggableShips, resetGrid, removeShips, removeButtons, hideShips, updateTurnText}
+    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, buildButtonContainer, applyDragDrop, applyDraggableShips, resetGrid, removeShips, removeButtons, hideShips, updateTurnText, updateClassListOnShipSunk}
 }
 export {Ship, Gameboard, Player};
