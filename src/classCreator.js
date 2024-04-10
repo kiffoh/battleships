@@ -161,7 +161,6 @@ const Player = () => {
 
         // Stores the draggableShips div in array for updateClassLisstOnShipSunk
         draggableShips = [...playerGridContainer.querySelectorAll(".draggable-ship")];
-        console.log(draggableShips);
     }
 
     // Function to update the classList of the HTML element when the associated ship is sunk
@@ -228,6 +227,7 @@ const Player = () => {
         })
     }
 
+    /*
     function applyDraggableShips() {
         const draggableShips = document.querySelectorAll('.draggable-ship');
 
@@ -315,6 +315,108 @@ const Player = () => {
                 event.target.classList.remove("ship-present", "reveal");
             }
         } 
+    }
+    */
+
+    function buildPlayerChoosesCoordinatesDiv() {
+        const playerChoosesCoordinatesDiv = document.createElement('div');
+        playerChoosesCoordinatesDiv.classList.add(`chooses-coordinates-container`);
+
+        playerChoosesCoordinatesDiv.innerHTML = `
+        <h4 class="input-coordinates-title">INPUT COORDINATES</h4>
+        <p class="ship-direction">HORIZONTAL SHIP</p>
+        <label id="constantCoordinate">
+            Y
+            <input type="number" name="constantCoordinate" min="0" max="9"></input>
+        </label>
+        <label id="variableCoordinate1">
+            X1
+            <input type="number" name="variableCoordinate1" min="0" max="9"></input>
+        </label>
+        <label id="variableCoordinate2">
+            X2
+            <input type="number" name="variableCoordinate2" min="0" max="9"></input>
+        </label>
+        <div class="coordinates-btn-container">
+            <button class="horizontal-or-vertical-btn">VERTICAL</button>
+            <button class="place-btn">PLACE</button>
+        </button>
+        `;
+
+        // Beneath is for correct UX placement of the container
+        const playerGridContainer = document.querySelector(`.${this.name}-grid-container`)
+        playerGridContainer.insertAdjacentElement("afterbegin", playerChoosesCoordinatesDiv);
+
+        numberGridsForCoordinates.bind(this)();
+    }
+
+    function numberGridsForCoordinates() {
+        const gridNumbersDivHorizontal = document.createElement('div');
+        gridNumbersDivHorizontal.classList.add(`horizontal-grid-numbers-container`);
+        gridNumbersDivHorizontal.style.direction = "horizontal";
+
+        gridNumbersDivHorizontal.innerHTML = `
+        <div>0</div>
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        <div>6</div>
+        <div>7</div>
+        <div>8</div>
+        <div>9</div>
+        `
+
+        const gridNumbersDivVertical = document.createElement('div');
+        gridNumbersDivVertical.classList.add(`vertical-grid-numbers-container`);
+
+        gridNumbersDivVertical.innerHTML = `
+        <div>0</div>
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        <div>6</div>
+        <div>7</div>
+        <div>8</div>
+        <div>9</div>
+        `
+
+        const labelledGameboardDiv = document.createElement("div");
+        labelledGameboardDiv.classList.add("labelled-gameboard-container");
+
+        const playerGameboard = document.querySelector(`.${this.name}-grid.game-board`)
+
+        labelledGameboardDiv.appendChild(gridNumbersDivHorizontal);
+        labelledGameboardDiv.appendChild(gridNumbersDivVertical);
+        labelledGameboardDiv.appendChild(playerGameboard);
+
+        const playerTitle = document.querySelector(`.${this.name}.title`)
+        playerTitle.insertAdjacentElement("afterend", labelledGameboardDiv);
+
+    }
+
+    function removeChooseCoordinatesDiv() {
+        const playerChoosesCoordinatesDiv = document.querySelector(`.chooses-coordinates-container`);
+        const playerGridContainer = document.querySelector(`.${this.name}-grid-container`)
+
+        playerGridContainer.removeChild(playerChoosesCoordinatesDiv);
+    }
+
+    function removeGridNumbersAndButtons() {
+        // Revert playerGameboard position to beneath playerTitle
+        const playerGameboard = document.querySelector(`.${this.name}-grid.game-board`)
+        const playerTitle = document.querySelector(`.${this.name}.title`)
+        playerTitle.insertAdjacentElement("afterend", playerGameboard);
+
+        // Remove gridNumbers
+        const playerContainer = document.querySelector(`.${this.name}-grid-container`);
+        const labelledGameboardDiv = playerContainer.querySelector(`.labelled-gameboard-container`)
+        playerContainer.removeChild(labelledGameboardDiv);
+
+        
     }
 
     function buildGrid(reveal) {
@@ -664,6 +766,6 @@ const Player = () => {
         })
     }  
 
-    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, buildButtonContainer, applyDragDrop, applyDraggableShips, resetGrid, removeShips, removeButtons, hideShips, updateTurnText, updateClassListOnShipSunk}
+    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideShips, updateTurnText, updateClassListOnShipSunk, buildPlayerChoosesCoordinatesDiv, removeChooseCoordinatesDiv, removeGridNumbersAndButtons};
 }
 export {Ship, Gameboard, Player};
