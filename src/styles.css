@@ -75,6 +75,49 @@ div.player1-grid.number.highlight, div.player2-grid.number.highlight, div.comput
     border: 2px solid lightgreen;
 }
 
+/* CHOOSE COORDINATES CONTAINER */
+
+.chooses-coordinates-container{
+    grid-area: 2 / 1 / -2 / 1;
+    display: grid;
+    align-items: center;
+    padding-right: 1em;
+    min-width: 240px;
+}
+
+h4 {
+    margin: 0;
+}
+ 
+
+.coordinates-btn-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.labelled-gameboard-container {
+    grid-area: 2 / 2;
+    
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 1em;
+}
+
+.horizontal-grid-numbers-container {
+    grid-area: 1 / 2;
+    display: flex;
+    justify-content: space-around;
+}
+
+.vertical-grid-numbers-container {
+    grid-area: 2 / 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
 
 /* DRAGGABLE SHIPS */
 .ship-container-1, .ship-container-2, .ship-container-3 {
@@ -86,7 +129,7 @@ div.player1-grid.number.highlight, div.player2-grid.number.highlight, div.comput
     display: flex;
     gap: 1em;
     grid-area: 1 / 1 / -1 / 1;
-    padding-left: 1em;
+    padding: 1em;
 }
 
 .draggable-ship[data-size="1"], .draggable-ship.vertical[data-size="1"] {
@@ -179,7 +222,7 @@ h1 {
     margin-top: 32px;
 }
 
-.start-button, .reset-btn, .randomise-btn, .confirm-btn {
+.start-button, .reset-btn, .randomise-btn, .confirm-btn, .horizontal-or-vertical-btn, .place-btn {
     font-size: large;
     padding: 4px 8px;
 }
