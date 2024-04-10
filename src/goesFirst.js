@@ -78,6 +78,11 @@ function playerOrComputer() {
 
 };
 
-
+function dullTitleText(dull) {
+    const titleText = document.querySelector("h1")
+    if (dull) {
+        titleText.style.color = black;
+    }
+}
 
 export { goesFirst, removeFirstPlayerText, playerOrComputer }
