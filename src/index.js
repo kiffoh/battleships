@@ -1,7 +1,7 @@
 import "./styles.css"
 import { Player } from "./classCreator";
 import { goesFirst, removeFirstPlayerText, playerOrComputer } from "./goesFirst";
-import { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick } from "./buttonLogic";
+import { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, handleHorizontalOrVerticalClick } from "./buttonLogic";
 import { randomise } from "./randomise";
 
 async function initialiseGame() {
@@ -22,35 +22,43 @@ async function initialiseGame() {
     player1.opponent = player2;
     player2.opponent = player1;
 
+    player1.buildPlayerChoosesCoordinatesDiv();
+
     // Ship position STAGE
     player1.updateTurnText(`${player1.name.toUpperCase()} PLACE YOUR SHIPS`);
     if (player2.name === "computer") {
         player1.buildButtonContainer();
+
+        const player1handleHorizontalOrVerticalBtn = document.querySelector(".horizontal-or-vertical-btn");
+        player1handleHorizontalOrVerticalBtn.onclick = () => handleHorizontalOrVerticalClick(player1handleHorizontalOrVerticalBtn, player1);
         
         player1.buildGrid(true);
         player2.buildGrid(false);
 
-        player1.applyDragDrop();
+        // player1.applyDragDrop();
 
-        player1.applyDraggableShips();
+        // player1.applyDraggableShips();
 
     } else {
         player1.buildButtonContainer();
         player2.buildButtonContainer();
 
+        const player1handleHorizontalOrVerticalBtn = document.querySelector(".horizontal-or-vertical-btn");
+        player1handleHorizontalOrVerticalBtn.onclick = () => handleHorizontalOrVerticalClick(player1handleHorizontalOrVerticalBtn, player1);
+
         player1.buildGrid(true);
         player2.buildGrid(true);
 
-        player1.applyDragDrop();
-        player2.applyDragDrop();
+        // player1.applyDragDrop();
+        // player2.applyDragDrop();
 
-        player1.applyDraggableShips();
-        player2.applyDraggableShips();
+        // player1.applyDraggableShips();
+        // player2.applyDraggableShips();
 
         player2.showOverlay(true);
     }
 
-    // Attach logic to each button (Randomise, Reset, Confirm) for positioning stage
+    // Attach logic to each button (Place, Randomise, Reset, Confirm) for positioning stage
     // Use a for...of loop to iterate over the buttons 
     const randomiseButtons = document.querySelectorAll(".randomise-btn");
     for (const button of randomiseButtons) {
