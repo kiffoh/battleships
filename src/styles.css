@@ -86,7 +86,7 @@ div.player1-grid.number.highlight, div.player2-grid.number.highlight, div.comput
     display: flex;
     gap: 1em;
     grid-area: 1 / 1 / -1 / 1;
-    padding-left: 1em;
+    padding: 1em;
 }
 
 .draggable-ship[data-size="1"], .draggable-ship.vertical[data-size="1"] {
@@ -153,6 +153,12 @@ h3.title {
     grid-area: 2 / 2;
     height: max-content;
     
+}
+
+#player1GridOverlay, #player2GridOverlay, #computerGridOverlay {
+    padding-left: 1em;
+    padding-right: 1em;
+    color: rgb(237, 233, 233);
 }
 
 .grid-containers {
