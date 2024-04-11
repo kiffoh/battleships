@@ -14,4 +14,4 @@ Main Game Loop and DOM Interaction Create the main game loop and a module for DO
 
 Game Completion Create conditions to end the game once one player’s ships have all been sunk.
 
-Implementation GitHub Pages Deployment The latest version of the Battleships game is deployed on GitHub Pages. You can play it here. The code pushed to github pages is from production-build branch which is different to the rest as the dist files are created using npm run build rather than watch. The other branches contain unfinished features.
+The latest version of the Battleships game is deployed on GitHub Pages. You can play it at https://kiffoh.github.io/battleships/. The code pushed to github pages is from production-build branch which is different to the rest as the dist files are created using "webpack --mode production" rather than "webpack serve --open". The other branches contain unfinished features.
