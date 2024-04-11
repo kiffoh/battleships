@@ -46,16 +46,8 @@ async function initialiseGame() {
         player1.buildButtonContainer();
         player2.buildButtonContainer();
 
-<<<<<<< HEAD
-        const player1handleHorizontalOrVerticalBtn = document.querySelector(".horizontal-or-vertical-btn");
-        player1handleHorizontalOrVerticalBtn.onclick = () => handleHorizontalOrVerticalClick(player1handleHorizontalOrVerticalBtn, player1);
-
-        player1.buildGrid(true);
-        player2.buildGrid(true);
-=======
         player1.buildHTMLGrid(true);
         player2.buildHTMLGrid(true);
->>>>>>> 5933337 (Update buildGrid name to buildHTMLGrid)
 
     }
 

@@ -36,13 +36,13 @@ const Gameboard = () => {
             let newShip;
 
             const [x1, x2, y1, y2] = position;
-            // Assuming each coordinate is fine bc it will come from the UI
+
             // Length 1
             if (x1 === x2 && y1 === y2) {
                 // Fill board with Ship
                 newShip = new Ship(1, true);
                 board[y1][x1] = newShip;
-            } // For a constant X
+            } // For a vertical ship
             else if (x1 === x2) {
                 const yDiff = y2 - y1 + 1;
                 newShip = new Ship(yDiff, true);
@@ -50,7 +50,8 @@ const Gameboard = () => {
                 for (let i = 0; i < yDiff; i++) {
                     board[y1 + i][x1] = newShip;
                 }
-            } else if (y1 === y2) {
+            } // For a horizontal ship
+            else if (y1 === y2) {
                 const xDiff = x2 - x1 + 1;
                 newShip = new Ship(xDiff, true);
                 // Fill board with Ship
@@ -76,6 +77,7 @@ const Gameboard = () => {
     }
 
     function obtainCurrentShips() {
+        // adds every ship on board to currentShips
         const currentShips = [];
         for (let y = 0; y <= 9; y++) {
             for (let x = 0; x <= 9; x++) {
@@ -88,6 +90,7 @@ const Gameboard = () => {
     }
 
     function allShipsPlaced() {
+        // Compares every ship on board with required lengths
         const requiredShipsLength = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
         const currentShips = obtainCurrentShips();
 
@@ -116,6 +119,7 @@ const Player = () => {
     let draggableShips;
 
     function buildHTML() {
+        // Function to build the top level HTML stucture for player's grids 
         const gridContainers = document.querySelector(".grid-containers");
         const playerContainer = document.createElement("div");
         playerContainer.classList.add(`${this.name}-grid-container`);
@@ -133,6 +137,7 @@ const Player = () => {
     }
 
     function buildShips() {
+        // Function to build HTML ships for player
         const shipsContainer = document.createElement('div');
         shipsContainer.classList.add('ships-container');
 
@@ -163,8 +168,9 @@ const Player = () => {
         draggableShips = [...playerGridContainer.querySelectorAll(".draggable-ship")];
     }
 
-    // Function to update the classList of the HTML element when the associated ship is sunk
+    
     function updateClassListOnShipSunk(ship) {
+        // Function to update the classList of the HTML element when the associated ship is sunk
         console.log(ship);
         console.log(draggableShips);
         for (let i =0; i < draggableShips.length; i++) {
@@ -178,6 +184,7 @@ const Player = () => {
     }
 
     function buildButtonContainer() {
+        // Buttons for SHIP POSITIONING STAGE
         const btnContainer = document.createElement("div");
         btnContainer.classList.add("btn-container");
 
@@ -220,6 +227,7 @@ const Player = () => {
     }
 
     function hideShips() {
+        // Used for local play to remove ships from screen
         const gameboard = document.querySelectorAll(`.${this.name}-grid.game-board.number`);
         gameboard.forEach(element => {
             if (element.classList.contains("reveal")) {
@@ -230,6 +238,7 @@ const Player = () => {
     }
 
     function buildRules(pvp) {
+        // Display's rules whilst ships are being placed
         const playerOverlay = document.getElementById(`${this.name}GridOverlay`);
 
         this.showOverlay(true);
@@ -267,108 +276,8 @@ const Player = () => {
         playerOverlay.innerHTML = ``
     }
 
-    function buildPlayerChoosesCoordinatesDiv() {
-        const playerChoosesCoordinatesDiv = document.createElement('div');
-        playerChoosesCoordinatesDiv.classList.add(`chooses-coordinates-container`);
-
-        playerChoosesCoordinatesDiv.innerHTML = `
-        <h4 class="input-coordinates-title">INPUT COORDINATES</h4>
-        <p class="ship-direction">HORIZONTAL SHIP</p>
-        <label id="constantCoordinate">
-            Y
-            <input type="number" name="constantCoordinate" min="0" max="9"></input>
-        </label>
-        <label id="variableCoordinate1">
-            X1
-            <input type="number" name="variableCoordinate1" min="0" max="9"></input>
-        </label>
-        <label id="variableCoordinate2">
-            X2
-            <input type="number" name="variableCoordinate2" min="0" max="9"></input>
-        </label>
-        <div class="coordinates-btn-container">
-            <button class="horizontal-or-vertical-btn">VERTICAL</button>
-            <button class="place-btn">PLACE</button>
-        </button>
-        `;
-
-        // Beneath is for correct UX placement of the container
-        const playerGridContainer = document.querySelector(`.${this.name}-grid-container`)
-        playerGridContainer.insertAdjacentElement("afterbegin", playerChoosesCoordinatesDiv);
-
-        numberGridsForCoordinates.bind(this)();
-    }
-
-    function numberGridsForCoordinates() {
-        const gridNumbersDivHorizontal = document.createElement('div');
-        gridNumbersDivHorizontal.classList.add(`horizontal-grid-numbers-container`);
-        gridNumbersDivHorizontal.style.direction = "horizontal";
-
-        gridNumbersDivHorizontal.innerHTML = `
-        <div>0</div>
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>4</div>
-        <div>5</div>
-        <div>6</div>
-        <div>7</div>
-        <div>8</div>
-        <div>9</div>
-        `
-
-        const gridNumbersDivVertical = document.createElement('div');
-        gridNumbersDivVertical.classList.add(`vertical-grid-numbers-container`);
-
-        gridNumbersDivVertical.innerHTML = `
-        <div>0</div>
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>4</div>
-        <div>5</div>
-        <div>6</div>
-        <div>7</div>
-        <div>8</div>
-        <div>9</div>
-        `
-
-        const labelledGameboardDiv = document.createElement("div");
-        labelledGameboardDiv.classList.add("labelled-gameboard-container");
-
-        const playerGameboard = document.querySelector(`.${this.name}-grid.game-board`)
-
-        labelledGameboardDiv.appendChild(gridNumbersDivHorizontal);
-        labelledGameboardDiv.appendChild(gridNumbersDivVertical);
-        labelledGameboardDiv.appendChild(playerGameboard);
-
-        const playerTitle = document.querySelector(`.${this.name}.title`)
-        playerTitle.insertAdjacentElement("afterend", labelledGameboardDiv);
-
-    }
-
-    function removeChooseCoordinatesDiv() {
-        const playerChoosesCoordinatesDiv = document.querySelector(`.chooses-coordinates-container`);
-        const playerGridContainer = document.querySelector(`.${this.name}-grid-container`)
-
-        playerGridContainer.removeChild(playerChoosesCoordinatesDiv);
-    }
-
-    function removeGridNumbersAndButtons() {
-        // Revert playerGameboard position to beneath playerTitle
-        const playerGameboard = document.querySelector(`.${this.name}-grid.game-board`)
-        const playerTitle = document.querySelector(`.${this.name}.title`)
-        playerTitle.insertAdjacentElement("afterend", playerGameboard);
-
-        // Remove gridNumbers
-        const playerContainer = document.querySelector(`.${this.name}-grid-container`);
-        const labelledGameboardDiv = playerContainer.querySelector(`.labelled-gameboard-container`)
-        playerContainer.removeChild(labelledGameboardDiv);
-
-        
-    }
-
-    function buildGrid(reveal) {
+    function buildHTMLGrid(reveal) {
+        // Build player's HTML grid based off player's board array
         const grid = document.getElementById(this.name + "Grid");
         for (let y = 0; y <= 9; y++) {
             for (let x = 0; x <= 9; x++) {
@@ -391,6 +300,7 @@ const Player = () => {
     }
 
     function resetGrid() {
+        // Reset board array
         for (let y = 0; y <= 9; y++) {
             for (let x = 0; x <= 9; x++) {
                 gameboard.board[y][x] = null;
@@ -405,6 +315,7 @@ const Player = () => {
     }
 
     function registerGridDivEventListener() {
+        // Allows for player interaction with grid
         const grid = document.getElementById(this.name + "Grid")
         const gridDivs = grid.querySelectorAll("*");
 
@@ -416,6 +327,7 @@ const Player = () => {
     };
 
     function clickToHTML(gridDiv) {
+        // Convert's player interaction with grid into a guess by changing HTML
         if (gridDiv.textContent === "") {
             if (gridDiv.classList.contains("ship-present")) {
                 gridDiv.textContent = "X";
@@ -443,35 +355,28 @@ const Player = () => {
         }
     }
 
-    function computerGuessToHTML(gridDiv, prev=false) {
+    function computerGuessToHTML(gridDiv) {
+        // Requires own function due to logic of how computer guesses
         if (gridDiv.textContent === "") {
             if (gridDiv.classList.contains("ship-present")) {
                 gridDiv.textContent = "X";
                 updateTurnText("COMPUTER HIT")
                 console.log("COMPUTER HIT")
                 
-                // This way the computer shall keep regoing until it hits a dot
-                // Chooses local coordinates if previous was a hit && not sunk
-                if (prev) {
-                    localisedComputerGuess.bind(this)();
-                } else {
-                    computerGuess.bind(this)();
-                }
+                computerGuess.bind(this)();
 
             } else {
                 gridDiv.textContent = "●";
                 updateTurnText("COMPUTER MISSED")
-                // Reverse as this is done in player class
+
+                // In Computer vs Player the computer board needs to be accessed through the player class
+                // Therefore reverse to logic in player class
                 this.showOverlay(false);
                 this.opponent.showOverlay(true);
                 gridDiv.id = "hit";
             }
         }
         computerHTMLtoboard.bind(this)(gridDiv);
-    }
-
-    function localisedComputerGuess() {
-
     }
 
     async function computerGuess() {
@@ -482,20 +387,13 @@ const Player = () => {
         let guessedDiv = await potentialComputerGuesses[guessIndex];
         potentialComputerGuesses.splice(guessIndex, 1);
 
+        // Randomises computer's guess time
         let minTime = await Math.max(150, Math.random() * 500) 
         await new Promise(resolve => setTimeout(resolve, minTime));
-
-        if (guessedDiv === undefined) {
-            console.log("UNDEFINED GUESS");
-            console.log(`Potential Computer Guesses: ${potentialComputerGuesses.length}`)
-            console.log(`Guess index: ${guessIndex}`);
-            console.log(`Guessed div: ${guessedDiv}`);
-        }
         
         computerGuessToHTML.bind(this)(guessedDiv);
     }
     
-
     
     function generateComputerGuesses() {
         potentialComputerGuesses = []
@@ -516,6 +414,7 @@ const Player = () => {
     }   
 
     function classToInteger(gridDiv) {
+        // Used for interaction between DOM and board array
         const classListString = gridDiv.getAttribute("class");
         const numbers = "0123456789"
         for (let className of classListString.split(" ")) {
@@ -526,8 +425,7 @@ const Player = () => {
     }
 
     function HTMLtoboard(gridDiv) {
-        // Don't think board is properly switching with computer as the number of registered hits is wrong.
-        // Maybe need to create a different class for computer vs player
+        // Convert's player interaction with grid into a guess by changing board array
         if (!gameboard) return;
     
         const [y, x] = classToInteger(gridDiv);             
@@ -535,9 +433,9 @@ const Player = () => {
     
         if (gameboard.board[y][x] != null && gameboard.board[y][x].sunk) {
             updateTurnText(`${this.opponent.name.toUpperCase()} SANK ONE OF ${this.name.toUpperCase()}'S SHIP`)
-            console.log("PLAYER SANK A COMPUTER'S SHIP")
 
-            // Algorithm to find all all parts of ship 
+            // Algorithm to find all all parts of a sunken ship 
+            // Allows for "sunk" to be added to each part of the sunken ship, not just the hit which sank the ship  
             const coordinates = findTouchingShips(gameboard.board, x, y, new Set());
             coordinates.forEach(coordinate => {
                 let x = parseInt(coordinate[1]);
@@ -549,7 +447,7 @@ const Player = () => {
 
             updateClassListOnShipSunk.bind(this)(gameboard.board[y][x]);
 
-
+            // Game over check?
             if (gameboard.allShipsSunk()) {
                 triggerOverallOverlay.bind(this)();
             }
@@ -557,8 +455,7 @@ const Player = () => {
     }
 
     function computerHTMLtoboard(gridDiv) {
-        // Don't think board is properly switching with computer as the number of registered hits is wrong.
-        // Maybe need to create a different class for computer vs player
+        // Convert's player interaction with grid into a guess by changing board array
         if (!gameboard) return;
     
         const [y, x] = classToInteger(gridDiv);            
@@ -566,9 +463,9 @@ const Player = () => {
         console.log(potentialComputerGuesses.length);
         if (this.opponent.gameboard.board[y][x] != null && this.opponent.gameboard.board[y][x].sunk) {
             updateTurnText("COMPUTER SANK A PLAYER'S SHIP")
-            console.log(`COMPUTER SANK ONE OF ${this.name.toUpperCase()}'S SHIP`);
 
-            // Algorithm to find all all parts of ship 
+            // Algorithm to find all all parts of a sunken ship 
+            // Allows for "sunk" to be added to each part of the sunken ship, not just the hit which sank the ship 
             const coordinates = findTouchingShips(this.opponent.gameboard.board, x, y, new Set());
             coordinates.forEach(coordinate => {
                 let x = parseInt(coordinate[1]);
@@ -578,30 +475,18 @@ const Player = () => {
                 this.opponent.nearbyShipSquaresHit(x, y, potentialComputerGuesses);
             })        
 
-            console.log(this.opponent.gameboard.board[y][x])
             this.opponent.updateClassListOnShipSunk(this.opponent.gameboard.board[y][x]);
 
+            // Game over check?
             if (this.opponent.gameboard.allShipsSunk()) {
                 triggerOverallOverlay.bind(this)();
             }
         }
-
-        // Logic to see if computer's previous guess was a hit to trigger nearby guesses
-        // A hit which sinks a ships will result in an error potentially
-        // Maybe write the code where if nearby coordinates is null then trigger computerGuess?
-        if (this.opponent.gameboard.board[y][x] != null /* && !this.opponent.gameboard.board[y][x].sunk */) {
-            prev = true;
-        } else {
-            prev = false;
-        }
     }
 
     function nearbyShipSquaresHit(x, y, potentialComputerGuesses = null) {
-        // This is displaying these on the wrong board with COMPUTER
-        // As they are displaying on the wrong board the guesses aren't been taken out of the potentialComputerGuesses
-        // Create array of surrounding coordinates
+        // Updates squares which neighbour a sunk ship to be guesses
         const surroundingCoordinates = findSurroundingCoordinates(x, y);
-
 
         // Iterate through array to determine if needs to be updated;
         for (let coordinates of surroundingCoordinates) {
@@ -613,13 +498,9 @@ const Player = () => {
                 const missedDiv = gridDivFromCoordinates.bind(this)(y, x);
                 missedDiv.textContent = "●";
                 missedDiv.id = "revealedMiss";
-                
-                // Need to remove missedDiv from potentialComputerGuesses
-                // MAY NEED TO CHANGE THIS AS PLAYER WILL CHANGE
-                // if (this.name === "player" && this.opponent.name === "computer")
+
                 if (this.opponent.name === "computer") {
                     removeComputerGuess(missedDiv, potentialComputerGuesses);
-                    console.log(potentialComputerGuesses.length);
                 }
             }
 
@@ -627,6 +508,7 @@ const Player = () => {
     }
 
     function findSurroundingCoordinates(x, y) {
+        // Find all coordinates surrounding input coordinates (Including diagonal)
         const surroundingCoordinates = [];
         for (let Y = y - 1; Y <= y + 1; Y++) {
             for (let X = x - 1; X <= x + 1; X++) {
@@ -655,8 +537,9 @@ const Player = () => {
     function findTouchingShips(gameboard, x, y, path) {
         if (path.has(`${y}${x}`) || Math.max(x, y) > 9 || Math.min(x, y) < 0 || gameboard[y][x] === null) return;
 
+        // CODE FOR MY OWN UNDERSTANDING
         // Previously had "path.add([y, x])"
-        //  This line attempts to add an array [y, x] to the Set. However, JavaScript considers two arrays to 
+        // This line attempts to add an array [y, x] to the Set. However, JavaScript considers two arrays to 
         // be equal only if they reference the same array object, not if their contents are the same. Since you 
         // are creating new array objects each time you use [y, x], they are not considered equal, and thus each 
         // attempt to add a new [y, x] array to the Set will succeed, resulting in duplicates.
@@ -715,6 +598,6 @@ const Player = () => {
         })
     }  
 
-    return {buildGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules}
+    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules}
 }
 export {Ship, Gameboard, Player};
