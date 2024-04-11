@@ -6,21 +6,21 @@ async function handleRandomiseButtonClick(button, player1, player2) {
     if (button.classList.contains("player1")) {
         player1.resetGrid()
         player1.positionShips(coordinates);
-        player1.buildGrid(true);
+        player1.buildHTMLGrid(true);
     } else {
         player2.resetGrid()
         player2.positionShips(coordinates);
-        player2.buildGrid(true);
+        player2.buildHTMLGrid(true);
     }
 }
 
 function handleResetButtonClick(button, player1, player2) {
     if (button.classList.contains("player1")) {
         player1.resetGrid();
-        player1.buildGrid(true);
+        player1.buildHTMLGrid(true);
     } else {
         player2.resetGrid();
-        player2.buildGrid(true);
+        player2.buildHTMLGrid(true);
     }
 }
 
