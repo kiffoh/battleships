@@ -25,15 +25,14 @@ async function initialiseGame() {
     // SHIP POSITION STAGE
     player1.updateTurnText(`${player1.name.toUpperCase()} PLACE YOUR SHIPS`);
 
-
     if (player2.name === "computer") {
         // As player1 will always position ships first
         player2.buildRules();
 
         player1.buildButtonContainer();
         
-        player1.buildGrid(true);
-        player2.buildGrid(false);
+        player1.buildHTMLGrid(true);
+        player2.buildHTMLGrid(false);
 
         changeOverlaysTo("blue", true);
         
@@ -44,8 +43,8 @@ async function initialiseGame() {
         player1.buildButtonContainer();
         player2.buildButtonContainer();
 
-        player1.buildGrid(true);
-        player2.buildGrid(true);
+        player1.buildHTMLGrid(true);
+        player2.buildHTMLGrid(true);
 
     }
 
@@ -74,7 +73,7 @@ async function initialiseGame() {
         const computerCoordinates = await randomise();
         player2.resetGrid()
         player2.positionShips(computerCoordinates);
-        player2.buildGrid(false);
+        player2.buildHTMLGrid(false);
     } else {
         // Register event listeners on both grids
         player1.registerGridDivEventListener();
