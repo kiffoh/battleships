@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="draggable-ship" style="height: 32px; width: 32px; border: 2px solid blue; position: relative;"></div>
+</body>
+
+<script>
+    function applyDraggableShips() {
+        const draggableShips = document.querySelectorAll('.draggable-ship');
+
+        let offsetX, offsetY, isDragging = false;
+        let draggedShip = null;
+
+        draggableShips.forEach(ship => {
+            ship.addEventListener('mousedown', startDrag);
+        });
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', stopDrag);
+
+        function startDrag(event) {
+            draggedShip = event.target;
+            offsetX = event.clientX - draggedShip.getBoundingClientRect().left;
+            offsetY = event.clientY - draggedShip.getBoundingClientRect().top;
+            isDragging = true;
+        }
+
+        function drag(event) {
+            if (isDragging && draggedShip) {
+                draggedShip.style.left = `${event.clientX - offsetX}px`;
+                draggedShip.style.top = `${event.clientY - offsetY}px`;
+            }
+        }
+
+        function stopDrag() {
+            isDragging = false;
+            draggedShip = null;
+        }
+    }
+    applyDraggableShips();
+</script>
+</html>
+
+
+

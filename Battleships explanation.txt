@@ -1,0 +1,3 @@
+Due to the way the turn system worked. When it was the computer's turn I used the this.opponent to access the computer's board. 
+This meant I had to return all the functions to be able to access them from the opposing Player() instigation. Explains why 
+there is seperate computer logic for each function and why I use this.opponent and this.opponent.board.
