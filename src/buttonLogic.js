@@ -66,7 +66,7 @@ function multiPlayerConfirmBtn(player1, player2) {
             player1.buildRules(true);
             player2.removeRules();
 
-            player2.updateTurnText(`${player2.name.toUpperCase()} PLACE YOUR SHIPS`);
+            player2.updateTurnText(`${player2.name.toUpperCase()} <span class="highlight-red">PLACE YOUR SHIPS</span>`);
         }
     }
 
