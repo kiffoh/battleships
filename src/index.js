@@ -23,7 +23,7 @@ async function initialiseGame() {
     player2.opponent = player1;
 
     // SHIP POSITION STAGE
-    player1.updateTurnText(`${player1.name.toUpperCase()} PLACE YOUR SHIPS`);
+    player1.updateTurnText(`${player1.name.toUpperCase()} <span class="highlight-red">PLACE YOUR SHIPS</span>`);
 
     if (player2.name === "computer") {
         // As player1 will always position ships first

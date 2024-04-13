@@ -331,7 +331,7 @@ const Player = () => {
         if (gridDiv.textContent === "") {
             if (gridDiv.classList.contains("ship-present")) {
                 gridDiv.textContent = "X";
-                updateTurnText(`${this.opponent.name.toUpperCase()} HIT`)
+                updateTurnText(`${this.opponent.name.toUpperCase()} <span class="highlight red">HIT</span>`)
 
                 if (gridDiv.classList.contains("hidden")) {
                     gridDiv.classList.remove("hidden");
@@ -339,7 +339,7 @@ const Player = () => {
                 }
             } else {
                 gridDiv.textContent = "●";
-                updateTurnText(`${this.opponent.name.toUpperCase()} MISSED`)
+                updateTurnText(`${this.opponent.name.toUpperCase()} <span class="highlight blue">MISSED</span>`)
 
                 this.showOverlay(true);
                 this.opponent.showOverlay(false);
@@ -360,14 +360,14 @@ const Player = () => {
         if (gridDiv.textContent === "") {
             if (gridDiv.classList.contains("ship-present")) {
                 gridDiv.textContent = "X";
-                updateTurnText("COMPUTER HIT")
+                updateTurnText(`COMPUTER <span class="highlight red">HIT</span>`)
                 console.log("COMPUTER HIT")
                 
                 computerGuess.bind(this)();
 
             } else {
                 gridDiv.textContent = "●";
-                updateTurnText("COMPUTER MISSED")
+                updateTurnText(`COMPUTER <span class="highlight blue">MISSED</span>`)
 
                 // In Computer vs Player the computer board needs to be accessed through the player class
                 // Therefore reverse to logic in player class
@@ -432,7 +432,7 @@ const Player = () => {
         gameboard.recieveAttack([x, y]);
     
         if (gameboard.board[y][x] != null && gameboard.board[y][x].sunk) {
-            updateTurnText(`${this.opponent.name.toUpperCase()} SANK ONE OF ${this.name.toUpperCase()}'S SHIP`)
+            updateTurnText(`${this.opponent.name.toUpperCase()} <span class="highlight orange">SANK</span> ONE OF ${this.name.toUpperCase()}'S SHIP`)
 
             // Algorithm to find all all parts of a sunken ship 
             // Allows for "sunk" to be added to each part of the sunken ship, not just the hit which sank the ship  
@@ -462,7 +462,7 @@ const Player = () => {
         this.opponent.gameboard.recieveAttack([x, y]);
         console.log(potentialComputerGuesses.length);
         if (this.opponent.gameboard.board[y][x] != null && this.opponent.gameboard.board[y][x].sunk) {
-            updateTurnText("COMPUTER SANK A PLAYER'S SHIP")
+            updateTurnText(`COMPUTER <span class="highlight orange">SANK</span> A PLAYER'S SHIP`)
 
             // Algorithm to find all all parts of a sunken ship 
             // Allows for "sunk" to be added to each part of the sunken ship, not just the hit which sank the ship 
@@ -567,7 +567,7 @@ const Player = () => {
 
     function updateTurnText(text) {
         const turnDiv = document.querySelector(".turn-text");
-        turnDiv.textContent = text;
+        turnDiv.innerHTML = text;
     }
 
     function triggerOverallOverlay() {

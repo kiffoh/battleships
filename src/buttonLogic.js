@@ -66,18 +66,7 @@ function multiPlayerConfirmBtn(player1, player2) {
             player1.buildRules(true);
             player2.removeRules();
 
-            player2.updateTurnText(`${player2.name.toUpperCase()} PLACE YOUR SHIPS`);
-
-            // Remove player1 input coordinates section & build player2's input coordinates section
-            player1.removeChooseCoordinatesDiv();
-            player1.removeGridNumbersAndButtons();
-
-            player2.buildPlayerChoosesCoordinatesDiv();
-
-            // Attach correct button logic to horizontal-or-vertical btn;
-            const player2handleHorizontalOrVerticalBtn = document.querySelector(".horizontal-or-vertical-btn");
-            player2handleHorizontalOrVerticalBtn.onclick = () => handleHorizontalOrVerticalClick(player2handleHorizontalOrVerticalBtn, player1);
-
+            player2.updateTurnText(`${player2.name.toUpperCase()} <span class="highlight-red">PLACE YOUR SHIPS</span>`);
         }
     }
 
