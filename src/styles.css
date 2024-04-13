@@ -254,9 +254,6 @@ h3 {
     grid-area: 3 / 2;
 }
 
-
-
-/* NEED TO FIX THIS OVERLAY */
 .grid-overlay {
     position: absolute;
     top: 0;
@@ -275,4 +272,18 @@ h3 {
 
 .draggable-ship.sunk {
     outline: 2px solid red;
+}
+
+
+/* COLOURS FOR SPAN'S IN TURN TEXT */
+.highlight.red {
+    color: lightcoral;
+}
+
+.highlight.orange {
+    color: orange;
+}
+
+.highlight.blue {
+    color: lightskyblue;
 }
