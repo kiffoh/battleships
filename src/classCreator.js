@@ -377,6 +377,11 @@ const Player = () => {
         }
     }
 
+    function shipSunk(gridDiv) {
+        const [y, x] = classToInteger(gridDiv);
+        return this.opponent.gameboard.board[y][x].sunk;        
+    }
+
     function computerGuessToHTML(gridDiv, localiseComputerGuess=false) {
         if (gridDiv.textContent === "") {
             if (gridDiv.classList.contains("ship-present")) {
@@ -384,8 +389,12 @@ const Player = () => {
                 updateTurnText("COMPUTER HIT")
 
                 computerHTMLtoboard.bind(this)(gridDiv);
-
-                localisedComputerGuess.bind(this)(gridDiv, true);
+                console.log(shipSunk.bind(this)(gridDiv))
+                if (shipSunk.bind(this)(gridDiv)) {
+                    computerGuess.bind(this)();
+                } else {
+                    localisedComputerGuess.bind(this)(gridDiv, true);
+                }
                 // computerGuess.bind(this)();
 
                 /*
