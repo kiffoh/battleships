@@ -117,6 +117,8 @@ const Player = () => {
 
     // Beneath are variables for computer guessing logic
     let potentialComputerGuesses = null;
+    let draggableShips;
+
     let localisedGuesses = null;
     let shipDirection = null;
 
