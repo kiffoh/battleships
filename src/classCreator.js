@@ -114,8 +114,13 @@ const Player = () => {
     const gameboard = Gameboard();
     const name = "";
     const opponent = null;
+
+    // Beneath are variables for computer guessing logic
     let potentialComputerGuesses = null;
     let localisedGuesses = null;
+    let shipDirection = null;
+
+    const direction = {vertical : ["beneath", "above"], horizontal : ["left", "right"]};
 
     function buildHTML() {
         // Function to build the top level HTML stucture for player's grids 
@@ -363,32 +368,20 @@ const Player = () => {
         return this.opponent.gameboard.board[y][x].sunk;        
     }
 
-    function computerGuessToHTML(gridDiv, localiseComputerGuess=false) {
+    // shipDirection variable is when the direction of the ship is known
+    function computerGuessToHTML(gridDiv, relativeLocation = false) {
         if (gridDiv.textContent === "") {
             if (gridDiv.classList.contains("ship-present")) {
                 gridDiv.textContent = "X";
                 updateTurnText("COMPUTER HIT")
 
                 computerHTMLtoboard.bind(this)(gridDiv);
-                console.log(shipSunk.bind(this)(gridDiv))
+                
                 if (shipSunk.bind(this)(gridDiv)) {
                     computerGuess.bind(this)();
                 } else {
-                    localisedComputerGuess.bind(this)(gridDiv, true);
+                    localisedComputerGuess.bind(this)(gridDiv, relativeLocation);
                 }
-                // computerGuess.bind(this)();
-
-                /*
-                // This way the computer shall keep regoing until it hits a dot
-                // Chooses local coordinates if previous was a hit && not sunk
-                // Don't know if I need a localiseComputerGuess as localisedComputerGuess will always be triggered in an event of a hit?
-                if (localiseComputerGuess) {
-                    localisedComputerGuess.bind(this)(gridDiv);
-                } else {
-                    computerGuess.bind(this)();
-                    localisedComputerGuess.bind(this)(gridDiv);
-                }
-                */
 
             } else {
                 gridDiv.textContent = "●";
@@ -404,36 +397,31 @@ const Player = () => {
         }
     }
 
-    async function localisedComputerGuess(gridDiv=null, hit) {
+    // Hit variable signifies to generate new localised guesses if localised guesses have already been generated
+    async function localisedComputerGuess(gridDiv=null, previousDirection=false) {
+        // First hit of a ship
         if (!localisedGuesses) {
             localisedGuesses = generateLocalComputerGuesses(gridDiv);
-        } else if (hit) {
+        } // Second hit or greater
+        else if (previousDirection) {
+            // Generate new nearby divs
             const newDivs = generateLocalComputerGuesses(gridDiv);
-            newDivs.forEach(div => localisedGuesses.push(div));
+            for (let potentialGuess in newDivs) {
+                localisedGuesses[potentialGuess] = newDivs[potentialGuess];
+            }
+
+            // Remove divs which are not in correct plane
+            removeLocalComputerGuesses(previousDirection);
         }
-        console.log(localisedGuesses);
 
         // Randomly adjusts the computer response time with minTime
         let minTime = await Math.max(150, Math.random() * 500) 
         await new Promise(resolve => setTimeout(resolve, minTime));
 
-        if (localisedGuesses.length === 0) {
-            computerGuess.bind(this);
-        } else {
-            const localGuess = localisedGuesses.shift()//[1];
-            console.log(localGuess);
-
-            removeComputerGuess(localGuess, potentialComputerGuesses);
-            
-            console.log(gridDiv);
-            computerGuessToHTML.bind(this)(localGuess);
-        }
-
-        // localisedGuesses = Object.entries(localisedGuesses)
-        
-
-        // Guess around the square
-        // computerGuessToHTML.bind(this)(localisedGuesses.shift());
+        // Performs an intelligent computer guess
+        const [ localGuess, relativeLocation ] = objectShift.bind(this)(localisedGuesses);
+        removeComputerGuess(localGuess, potentialComputerGuesses);
+        computerGuessToHTML.bind(this)(localGuess, relativeLocation);
     }
 
     function generateLocalComputerGuesses(gridDiv) {
@@ -445,15 +433,19 @@ const Player = () => {
             [y, x+1, "right"],
             [y, x-1, "left"],
         ] 
-        const nearbyGuesses = [];
-
+        
+        const nearbyGuesses = {};
         for (let coordinate of nearbyCoordinates) {
-            let [y, x, reference] = coordinate;
+            let [y, x, relativeLocation] = coordinate;
             
             // computerDivFromInteger returns null if not found
             // Therefore will be null if not in potentialComputerGuesses or if out of range
             const nearbyDiv = computerDivFromInteger(x, y)
-            if (nearbyDiv) nearbyGuesses.push(nearbyDiv);
+            
+            // Serialization: When you use an HTMLElement object as a key in an object, it is implicitly 
+            // converted to a string using its toString() method. This means that the actual object 
+            // reference is not used as the key, but rather its string representation.
+            if (nearbyDiv) nearbyGuesses[relativeLocation] = nearbyDiv;
         }
 
         return nearbyGuesses;      
@@ -470,6 +462,38 @@ const Player = () => {
         })
 
         return foundGridDiv;
+    }
+
+    function objectShift(object) {
+        // Get the first key
+        const relativeLocation = Object.keys(object)[0];
+        // Remove the first key-value pair
+        const nearbyDiv = object[relativeLocation];
+        delete object[relativeLocation];
+        return [ nearbyDiv, relativeLocation ];
+    }
+
+    function removeLocalComputerGuesses(relativeLocation) {
+        // If ship direction has not be determined, calculate shipDirection
+        if (!shipDirection) {
+            shipDirection = calculateShipDirection.bind(this)(relativeLocation);
+        }
+
+        // Remove any potentialGuesses which are not on the same plane as the shipDirection
+        for (const potentialDirection in localisedGuesses) {
+            if (!direction[shipDirection].includes(potentialDirection)) {
+                delete localisedGuesses[potentialDirection];
+            }
+        }
+    }
+
+    function calculateShipDirection(relativeLocation) {
+        if (relativeLocation === "above" || relativeLocation === "beneath") {
+            shipDirection = "vertical";
+        } else {
+            shipDirection = "horizontal";
+        }
+        return shipDirection;
     }
 
     async function computerGuess() {
@@ -563,6 +587,7 @@ const Player = () => {
         if (this.opponent.gameboard.board[y][x] != null && this.opponent.gameboard.board[y][x].sunk) {
             updateTurnText(`COMPUTER SANK ONE OF ${this.name.toUpperCase()}'S SHIP`)
             localisedGuesses = null;
+            shipDirection = null;
             
             // Algorithm to find all all parts of sunk ship to change border to red 
             const coordinates = findTouchingShips(this.opponent.gameboard.board, x, y, new Set());
