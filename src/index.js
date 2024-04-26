@@ -25,6 +25,8 @@ async function initialiseGame() {
     // SHIP POSITION STAGE
     player1.updateTurnText(`${player1.name.toUpperCase()} <span class="highlight-red">PLACE YOUR SHIPS</span>`);
 
+    
+
     if (player2.name === "computer") {
         // As player1 will always position ships first
         player2.buildRules();
@@ -36,6 +38,9 @@ async function initialiseGame() {
         
         player1.buildHTMLGrid(true);
         player2.buildHTMLGrid(false);
+
+        player1.buildShips();
+        player1.applyDraggableShips();
 
         changeOverlaysTo("blue", true);
         
