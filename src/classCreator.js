@@ -179,9 +179,9 @@ const Player = () => {
         selectDefaultShip();
     }
 
-    function selectDefaultShip() {
+    function selectDefaultShip(index=0) {
         if (draggableShips.length > 0) {
-            selectedShip = draggableShips[0];
+            selectedShip = draggableShips[index % draggableShips.length];
             selectedShip.classList.add("placing");
         }
     }
@@ -230,7 +230,6 @@ const Player = () => {
 
                 // Change the UI of the ships to be placed
                 makeDraggableShipInvisible();
-                selectDefaultShip();
             }
         }
 
@@ -257,6 +256,8 @@ const Player = () => {
                     draggableShips[i].classList.add("invisible");
                     console.log(draggableShips);
                     draggableShips.splice(i, 1);
+
+                    selectDefaultShip(i);
                     break;
                 }
             }
