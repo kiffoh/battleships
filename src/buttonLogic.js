@@ -7,12 +7,12 @@ async function handleRandomiseButtonClick(button, player1, player2) {
         player1.resetGrid()
         player1.positionShips(coordinates);
         player1.buildHTMLGrid(true);
-        player1.toggleShipsInvisible(true);
+        player1.toggleShipsInvisible();
     } else {
         player2.resetGrid()
         player2.positionShips(coordinates);
         player2.buildHTMLGrid(true);
-        player2.toggleShipsInvisible(true);
+        player2.toggleShipsInvisible();
     }
 }
 
