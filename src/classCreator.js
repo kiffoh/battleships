@@ -257,16 +257,11 @@ const Player = () => {
                     console.log(draggableShips);
                     draggableShips.splice(i, 1);
 
+                    // Moves the ship to be placed to the following ship
                     selectDefaultShip(i);
                     break;
                 }
             }
-
-            /*
-            if (draggableShips.length > 0) {
-                selectedShip = draggableShips[0];
-            }
-            */
         }        
         
         function dragLeave(e) {
@@ -278,15 +273,17 @@ const Player = () => {
         } 
     }
 
-    function toggleShipsInvisible(invisible) {
+    function toggleShipsInvisible() {
         draggableShips.forEach(ship => {
-            if (invisible = true) {
-                ship.classList.add("invisible");
-                ship.classList.remove("placing");
-            } else {
-                ship.classList.remove("invisible");
-            }
+            ship.classList.add("invisible");
+            ship.classList.remove("placing");
         })
+    }
+
+    function resetShips() {
+        removeShips.bind(this)();
+        buildShips.bind(this)();
+        applyDraggableShips.bind(this)();
     }
     
     function updateClassListOnShipSunk(ship) {
@@ -316,14 +313,12 @@ const Player = () => {
         confirmBtn.classList.add(`${this.name}`, `confirm-btn`);
         confirmBtn.textContent = "CONFIRM";
 
-        /* NOT A NEED FOR RESET YET
         const resetBtn = document.createElement("button");
         resetBtn.classList.add(`${this.name}`, `reset-btn`);
         resetBtn.textContent = "RESET";
-        */
 
         btnContainer.appendChild(randomiseBtn);
-        // btnContainer.appendChild(resetBtn);
+        btnContainer.appendChild(resetBtn);
         btnContainer.appendChild(confirmBtn);
 
         const gameboard = document.querySelector(`.${this.name}-grid.game-board`)
@@ -850,6 +845,6 @@ const Player = () => {
         })
     }  
 
-    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible}
+    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips}
 }
 export {Ship, Gameboard, Player};
