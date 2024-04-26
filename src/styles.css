@@ -231,6 +231,14 @@ h3 {
     outline: 2px solid red;
 }
 
+.draggable-ship.placing {
+    outline: 2px solid rgb(27, 152, 27);
+}
+
+.draggable-ship.invisible {
+    outline: 2px solid white;
+}
+
 
 /* COLOURS FOR SPAN'S IN TURN TEXT */
 .highlight.red {
