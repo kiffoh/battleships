@@ -20,9 +20,11 @@ function handleResetButtonClick(button, player1, player2) {
     if (button.classList.contains("player1")) {
         player1.resetGrid();
         player1.buildHTMLGrid(true);
+        player1.resetShips();
     } else {
         player2.resetGrid();
         player2.buildHTMLGrid(true);
+        player2.resetShips();
     }
 }
 
