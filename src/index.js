@@ -63,12 +63,11 @@ async function initialiseGame() {
         button.onclick = () => handleRandomiseButtonClick(button, player1, player2);
     }
 
-    /* COMMENTED OUT RESET AS THERE IS NOT A NEED FOR IT YET
+
     const resetButtons = document.querySelectorAll(".reset-btn");
     for (const button of resetButtons) {
         button.onclick = () => handleResetButtonClick(button, player1, player2);
     }
-    */
 
     await handleConfirmBtnClick(player1, player2);
 
