@@ -251,21 +251,21 @@ const Player = () => {
 
         function makeDraggableShipInvisible() {
             // Function to update the classList of the HTML element when the associated ship is being/is placed
-            const shipLength = parseInt(selectedShip.dataset.size);
-            console.log(shipLength);
 
             for (let i =0; i < draggableShips.length; i++) {
-                const dataSize = parseInt(draggableShips[i].dataset.size);
-                if (shipLength === dataSize) {
+                if (selectedShip === draggableShips[i]) {
                     draggableShips[i].classList.add("invisible");
                     console.log(draggableShips);
                     draggableShips.splice(i, 1);
                     break;
                 }
             }
+
+            /*
             if (draggableShips.length > 0) {
                 selectedShip = draggableShips[0];
             }
+            */
         }        
         
         function dragLeave(e) {
