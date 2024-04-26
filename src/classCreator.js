@@ -115,6 +115,8 @@ const Player = () => {
     const name = "";
     const opponent = null;
 
+    let selectedShip = null;
+
     // Beneath are variables for computer guessing logic
     let potentialComputerGuesses = null;
     let draggableShips;
@@ -172,8 +174,119 @@ const Player = () => {
 
         // Stores the draggableShips div in array for updateClassLisstOnShipSunk
         draggableShips = [...playerGridContainer.querySelectorAll(".draggable-ship")];
+
+        // Sets initial ship for ship placement
+        selectDefaultShip();
     }
 
+    function selectDefaultShip() {
+        if (draggableShips.length > 0) {
+            selectedShip = draggableShips[0];
+            selectedShip.classList.add("placing");
+        }
+    }
+
+    function applyDraggableShips() {
+        // const draggableShips = document.querySelectorAll('.draggable-ship');
+        draggableShips.forEach(ship => {
+            ship.addEventListener("mousedown", shipSelect);
+        });
+
+        // dragEnter needs to be an arrow function so that this can remain in the correct scope
+        // otherwise this becomes the gridDiv
+        const dragEnter = (e) => {
+            e.preventDefault();
+            if (draggableShips.length > 0) {
+                const [y, x] = classToInteger.bind(this)(e.target);
+                const shipSize = parseInt(selectedShip.dataset.size);
+                
+                // Loop through the squares to highlight based on ship size
+                for (let i = 0; i < shipSize; i++) {
+                    let gridDiv = gridDivFromCoordinates.bind(this)(y, x + i);
+                    if (gridDiv) {
+                        gridDiv.classList.add('highlight');
+                    }
+                }
+            }
+        }
+
+        const drop = (e) => {
+            e.preventDefault();
+            if (draggableShips.length > 0) {
+                const [y, x] = classToInteger.bind(this)(e.target);
+                const shipSize = parseInt(selectedShip.dataset.size);
+                
+                // Loop through the squares to highlight based on ship size
+                for (let i = 0; i < shipSize; i++) {
+                    let gridDiv = gridDivFromCoordinates.bind(this)(y, x + i);
+                    if (gridDiv) {
+                        // Place ship on HTML
+                        gridDiv.classList.add('ship-present', 'reveal');
+
+                        // Remove highlight effect from the grid element
+                        gridDiv.classList.remove("highlight");
+                    }
+                }
+
+                // Change the UI of the ships to be placed
+                makeDraggableShipInvisible();
+                selectDefaultShip();
+            }
+        }
+
+        const gridElements = document.querySelectorAll(`.${this.name}-grid.game-board.number`)
+        gridElements.forEach(gridElement => {
+            gridElement.addEventListener('mouseenter', dragEnter);
+            gridElement.addEventListener('mouseleave', dragLeave);
+            gridElement.addEventListener('mousedown', drop);
+        })
+
+        function shipSelect(e) {
+            if (selectedShip) {
+                selectedShip.classList.remove("placing");
+            }
+            selectedShip = e.target;
+            e.target.classList.add("placing");
+        }
+
+        function makeDraggableShipInvisible() {
+            // Function to update the classList of the HTML element when the associated ship is being/is placed
+            const shipLength = parseInt(selectedShip.dataset.size);
+            console.log(shipLength);
+
+            for (let i =0; i < draggableShips.length; i++) {
+                const dataSize = parseInt(draggableShips[i].dataset.size);
+                if (shipLength === dataSize) {
+                    draggableShips[i].classList.add("invisible");
+                    console.log(draggableShips);
+                    draggableShips.splice(i, 1);
+                    break;
+                }
+            }
+            if (draggableShips.length > 0) {
+                selectedShip = draggableShips[0];
+            }
+        }        
+        
+        function dragLeave(e) {
+            // Remove highlight effect from all squares
+            const highlightedSquares = document.querySelectorAll('.highlight');
+            highlightedSquares.forEach(square => {
+                square.classList.remove('highlight');
+            });
+        } 
+    }
+
+    function toggleShipsInvisible(invisible) {
+        draggableShips.forEach(ship => {
+            if (invisible = true) {
+                ship.classList.add("invisible");
+                ship.classList.remove("placing");
+            } else {
+                ship.classList.remove("invisible");
+            }
+        })
+    }
     
     function updateClassListOnShipSunk(ship) {
         // Function to update the classList of the HTML element when the associated ship is sunk
@@ -736,6 +849,6 @@ const Player = () => {
         })
     }  
 
-    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules}
+    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible}
 }
 export {Ship, Gameboard, Player};
