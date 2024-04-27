@@ -174,9 +174,6 @@ const Player = () => {
 
         // Stores the draggableShips div in array for updateClassLisstOnShipSunk
         draggableShips = [...playerGridContainer.querySelectorAll(".draggable-ship")];
-
-        // Sets initial ship for ship placement
-        selectDefaultShip();
     }
 
     function selectDefaultShip(index=0) {
@@ -187,7 +184,9 @@ const Player = () => {
     }
 
     function applyDraggableShips() {
-        // const draggableShips = document.querySelectorAll('.draggable-ship');
+        // Sets initial ship for ship placement
+        selectDefaultShip();
+        
         draggableShips.forEach(ship => {
             ship.addEventListener("mousedown", shipSelect);
         });
@@ -210,12 +209,25 @@ const Player = () => {
             }
         }
 
+        function dragLeave(e) {
+            // Remove highlight effect from all squares
+            const highlightedSquares = document.querySelectorAll('.highlight');
+            highlightedSquares.forEach(square => {
+                square.classList.remove('highlight');
+            });
+        } 
+
         const drop = (e) => {
             e.preventDefault();
             if (draggableShips.length > 0) {
                 const [y, x] = classToInteger.bind(this)(e.target);
                 const shipSize = parseInt(selectedShip.dataset.size);
-                
+
+                let minY = y;
+                let maxY = y;
+                let minX = x;
+                let maxX = x;
+
                 // Loop through the squares to highlight based on ship size
                 for (let i = 0; i < shipSize; i++) {
                     let gridDiv = gridDivFromCoordinates.bind(this)(y, x + i);
@@ -225,8 +237,13 @@ const Player = () => {
 
                         // Remove highlight effect from the grid element
                         gridDiv.classList.remove("highlight");
+
+                        // Gather coordinates
+                        maxX = Math.max(maxX, x + i)
                     }
                 }
+
+                gameboard.positionShips([[minX, maxX, minY, maxY]]);
 
                 // Change the UI of the ships to be placed
                 makeDraggableShipInvisible();
@@ -263,14 +280,6 @@ const Player = () => {
                 }
             }
         }        
-        
-        function dragLeave(e) {
-            // Remove highlight effect from all squares
-            const highlightedSquares = document.querySelectorAll('.highlight');
-            highlightedSquares.forEach(square => {
-                square.classList.remove('highlight');
-            });
-        } 
     }
 
     function toggleShipsInvisible() {
@@ -341,7 +350,7 @@ const Player = () => {
         gridContainer.removeChild(btnContainer);
     }
 
-    function hideShips() {
+    function hideGridShips() {
         // Used for local play to remove ships from screen
         const gameboard = document.querySelectorAll(`.${this.name}-grid.game-board.number`);
         gameboard.forEach(element => {
@@ -352,7 +361,7 @@ const Player = () => {
         })
     }
 
-    function buildRules(pvp) {
+    function buildRules(pvp=null) {
         // Display's rules whilst ships are being placed
         const playerOverlay = document.getElementById(`${this.name}GridOverlay`);
 
@@ -845,6 +854,6 @@ const Player = () => {
         })
     }  
 
-    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips}
+    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideGridShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips}
 }
 export {Ship, Gameboard, Player};
