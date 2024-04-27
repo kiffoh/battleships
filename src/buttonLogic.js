@@ -45,12 +45,12 @@ function singlePlayerConfirmBtn(player1, player2) {
         player1ConfirmBtn.onclick = () => {
             // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
             if (player1.allShipsPlaced()) {
+                
                 player1.removeButtons();
                 player1.removeShips();
                 changeOverlaysTo("partially-transparent", true)
 
                 player2.removeRules();
-
 
                 resolve();
             }

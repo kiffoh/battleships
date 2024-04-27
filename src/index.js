@@ -80,6 +80,13 @@ async function initialiseGame() {
         player2.positionShips(computerCoordinates);
         player2.buildHTMLGrid(false);
     } else {
+        // Resetting HTML Grid's to remove the eventListeners for placing ships
+        player1.resetHTMLGrid();
+        player1.buildHTMLGrid();
+
+        player2.resetHTMLGrid();
+        player2.buildHTMLGrid();
+
         // Register event listeners on both grids
         player1.registerGridDivEventListener();
     }
