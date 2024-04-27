@@ -76,7 +76,7 @@ function multiPlayerConfirmBtn(player1, player2) {
             player2.buildShips();
             player2.applyDraggableShips();
 
-            player2.updateTurnText(`${player2.name.toUpperCase()} <span class="highlight-red">PLACE YOUR SHIPS</span>`);
+            player2.updateTurnText(`${player2.name.toUpperCase()} <span class="highlighted green">PLACE YOUR SHIPS</span>`);
         }
     }
 

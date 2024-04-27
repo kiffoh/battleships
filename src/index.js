@@ -23,7 +23,7 @@ async function initialiseGame() {
     player2.opponent = player1;
 
     // SHIP POSITION STAGE
-    player1.updateTurnText(`${player1.name.toUpperCase()} <span class="highlight-red">PLACE YOUR SHIPS</span>`);
+    player1.updateTurnText(`${player1.name.toUpperCase()} <span class="highlighted green">PLACE YOUR SHIPS</span>`);
 
     player1.buildHTMLGrid(true);
     player1.buildShips();
