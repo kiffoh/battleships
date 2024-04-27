@@ -46,9 +46,11 @@ function singlePlayerConfirmBtn(player1, player2) {
             // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
             if (player1.allShipsPlaced()) {
                 player1.removeButtons();
+                player1.removeShips();
                 changeOverlaysTo("partially-transparent", true)
 
                 player2.removeRules();
+
 
                 resolve();
             }
@@ -68,7 +70,11 @@ function multiPlayerConfirmBtn(player1, player2) {
         // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
         if (player1.allShipsPlaced()) {
             player1.buildRules(true);
+            player1.removeShips();
+
             player2.removeRules();
+            player2.buildShips();
+            player2.applyDraggableShips();
 
             player2.updateTurnText(`${player2.name.toUpperCase()} <span class="highlight-red">PLACE YOUR SHIPS</span>`);
         }
@@ -84,15 +90,14 @@ function multiPlayerConfirmBtn(player1, player2) {
         player2ConfirmBtn.onclick = () => {
             // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
             if (player2.allShipsPlaced()) {
-                player1.removeButtons();
-                player2.removeButtons();
-                
                 player1.removeRules();
-        
-                // Hide both player's ships as the game is local
-                player1.hideShips();
-                player2.hideShips();
+                player1.removeButtons();
+                player1.hideGridShips();
 
+                player2.removeShips();
+                player2.removeButtons();
+                player2.hideGridShips();
+                
                 // Revert overlay colour back to original
                 changeOverlaysTo("partially-transparent");
                 
