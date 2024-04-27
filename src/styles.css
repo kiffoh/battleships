@@ -241,14 +241,22 @@ h3 {
 
 
 /* COLOURS FOR SPAN'S IN TURN TEXT */
-.highlight.red {
+/* HIT */
+.highlighted.red {
     color: lightcoral;
 }
 
-.highlight.orange {
+/* SUNK */
+.highlighted.orange {
     color: orange;
 }
 
-.highlight.blue {
+/* MISSED */
+.highlighted.blue {
     color: lightskyblue;
+}
+
+/* PLACING */
+.highlighted.green {
+    color: rgb(27, 152, 27);
 }
