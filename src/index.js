@@ -25,7 +25,9 @@ async function initialiseGame() {
     // SHIP POSITION STAGE
     player1.updateTurnText(`${player1.name.toUpperCase()} <span class="highlight-red">PLACE YOUR SHIPS</span>`);
 
-    
+    player1.buildHTMLGrid(true);
+    player1.buildShips();
+    player1.applyDraggableShips();
 
     if (player2.name === "computer") {
         // As player1 will always position ships first
@@ -33,11 +35,7 @@ async function initialiseGame() {
 
         player1.buildButtonContainer();
         
-        player1.buildHTMLGrid(true);
         player2.buildHTMLGrid(false);
-
-        player1.buildShips();
-        player1.applyDraggableShips();
 
         changeOverlaysTo("blue", true);
         
@@ -48,7 +46,6 @@ async function initialiseGame() {
         player1.buildButtonContainer();
         player2.buildButtonContainer();
 
-        player1.buildHTMLGrid(true);
         player2.buildHTMLGrid(true);
 
     }
@@ -66,6 +63,7 @@ async function initialiseGame() {
         button.onclick = () => handleResetButtonClick(button, player1, player2);
     }
 
+    // Game does not progress until handleConfirmBtnClick is fufilled
     await handleConfirmBtnClick(player1, player2);
 
     // Starting the game
