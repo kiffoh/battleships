@@ -144,6 +144,8 @@ const Player = () => {
         gridContainers.appendChild(playerContainer);
     }
 
+    /* SHIP PLACEMENT (/ UI SHIPS ON LHS OF GRID) FUNCTIONS */
+
     function buildShips() {
         // Function to build HTML ships for player
         const shipsContainer = document.createElement('div');
@@ -473,6 +475,45 @@ const Player = () => {
         playerOverlay.innerHTML = ``
     }
 
+    function progressFromShipPlacement(player2TurnTracker) {
+        // If VS COMPUTER, function is only called on Player 1!
+        if (this.opponent.name === "computer") {
+            removeButtons.bind(this)();
+            removeShips.bind(this)();
+            gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
+
+            this.opponent.removeRules();
+        } else {
+            // Called on Player1
+            if (player2TurnTracker === "player2TurnStart") {
+                removeButtons.bind(this)();
+                removeShips.bind(this)();
+                buildRules.bind(this)(true);
+                gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
+
+                this.opponent.removeRules();
+                this.opponent.buildShips();
+                this.opponent.applyDraggableShips();
+            } 
+            // Called on Player2
+            else if (player2TurnTracker === "player2TurnFinish") {
+                this.opponent.removeRules();
+                removeShips.bind(this)();
+                removeButtons.bind(this)();
+                
+                gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
+                
+                // Removes Ships on HTML board from sight as this mode is local Player vs Player
+                this.opponent.hideGridShips();
+                hideGridShips.bind(this)();
+            }
+            
+            
+        }
+    }
+
+    /* BUILDING GAME FUNCTIONS */
+
     function buildHTMLGrid(reveal) {
         // Build player's HTML grid based off player's board array
         const grid = document.getElementById(this.name + "Grid");
@@ -511,6 +552,8 @@ const Player = () => {
         const HTMLGrid = document.querySelector(`.${this.name}-grid.game-board`);
         HTMLGrid.innerHTML = "";
     }
+
+    /* GAME LOGIC */
 
     function registerGridDivEventListener() {
         // Allows for player interaction with grid
@@ -913,6 +956,6 @@ const Player = () => {
         })
     }  
 
-    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideGridShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips, resetHTMLGrid}
+    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideGridShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips, resetHTMLGrid, progressFromShipPlacement}
 }
 export {Ship, Gameboard, Player};
