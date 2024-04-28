@@ -71,51 +71,27 @@ body {
     color: red;
 }
 
+/* SHIP PLACING */
 div.player1-grid.number.highlight, div.player2-grid.number.highlight, div.computer-grid.number.highlight {
+    /* CHOSE BORDER AS IT IS EASIER TO SEE WHEN PLACING */
     border: 2px solid lightgreen;
 }
 
-/* CHOOSE COORDINATES CONTAINER */
-
-.chooses-coordinates-container{
-    grid-area: 2 / 1 / -2 / 1;
-    display: grid;
-    align-items: center;
-    padding-right: 1em;
-    min-width: 240px;
+div.player1-grid.number.not-valid, div.player2-grid.number.not-valid {
+    /* APPLYING BORDER ALLOWS USER TO DETERMINE WHAT IS BEHIND THE CURSOR
+    NECESSARY TO REDUCE WIDTH AND HEIGHT BY BORDER FOR NO BUGS */
+    border: 2px solid red;
+    width: 28px;
+    height: 28px;
 }
 
-h4 {
-    margin: 0;
-}
- 
-
-.coordinates-btn-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+div.player1-grid.number.right-border, div.player2-grid.number.right-border {
+    width: 30px;
+    border-right: 2px solid red;
 }
 
-.labelled-gameboard-container {
-    grid-area: 2 / 2;
-    
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr;
-    gap: 1em;
-}
-
-.horizontal-grid-numbers-container {
-    grid-area: 1 / 2;
-    display: flex;
-    justify-content: space-around;
-}
-
-.vertical-grid-numbers-container {
-    grid-area: 2 / 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+div.player1-grid.number.left-outline, div.player2-grid.number.left-outline {
+    border: 2px solid darkblue;
 }
 
 
