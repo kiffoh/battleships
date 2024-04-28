@@ -191,6 +191,47 @@ const Player = () => {
             ship.addEventListener("mousedown", shipSelect);
         });
 
+        
+        function checkIfPositionValid(y, x, shipSize) {
+            let valid = true;
+            let shipDivs = [];
+            
+            // Loop through the squares to highlight based on ship size
+            for (let i = 0; i < shipSize; i++) {
+                let gridDiv = gridDivFromCoordinates.bind(this)(y, x + i);
+                if (gridDiv) {
+                    shipDivs.push(gridDiv);
+                }
+                if (coordinateInvalid(y, x + i) === true) {
+                    valid = false;
+                }
+            }
+            return [valid, shipDivs];
+        }
+
+        // Helper function for checkIfPositionValid
+        function coordinateInvalid(y, x) {
+            if (y > 9 || x > 9 || gameboard.board[y][x] != null || gameboard.missed[y][x] != null) {
+                return true;
+            }
+            return false;
+        }
+
+        function nearbyShipSquaresHitForShipPlacement(x, y) {
+            // Updates squares which neighbour a sunk ship to be guesses
+            const surroundingCoordinates = findSurroundingCoordinates(x, y);
+    
+            // Iterate through array to determine if needs to be updated;
+            for (let coordinates of surroundingCoordinates) {
+                let x = coordinates[0];
+                let y = coordinates[1];
+    
+                if (gameboard.missed[y][x] === null) {
+                    gameboard.recieveAttack([x, y])
+                }
+            }
+        }
+
         // dragEnter needs to be an arrow function so that this can remain in the correct scope
         // otherwise this becomes the gridDiv
         const dragEnter = (e) => {
@@ -198,12 +239,30 @@ const Player = () => {
             if (draggableShips.length > 0) {
                 const [y, x] = classToInteger.bind(this)(e.target);
                 const shipSize = parseInt(selectedShip.dataset.size);
-                
-                // Loop through the squares to highlight based on ship size
-                for (let i = 0; i < shipSize; i++) {
-                    let gridDiv = gridDivFromCoordinates.bind(this)(y, x + i);
-                    if (gridDiv) {
+
+                // Returns if positionValid with the corresponding divs
+                let [valid, shipDivs] = checkIfPositionValid.bind(this)(y, x, shipSize);
+
+                if (valid === true) {
+                    for (let gridDiv of shipDivs) {
                         gridDiv.classList.add('highlight');
+                    }
+                } else {
+                    /*
+                    AT THE MOMENT THIS DOESN'T WORK
+                    let divRightBorder = gridDivFromCoordinates.bind(this)(y, x + shipSize - 1);
+                    if (divRightBorder && !divRightBorder.classList.contains('end')) {
+                        divRightBorder.classList.add('right-border');
+                    }
+                    
+                    let divForOutline = gridDivFromCoordinates.bind(this)(y, x + shipSize);
+                    if (divForOutline) {
+                        divForOutline.classList.add('left-outline');
+                    }
+                    */
+                    
+                    for (let gridDiv of shipDivs) {
+                        gridDiv.classList.add('not-valid');
                     }
                 }
             }
@@ -211,9 +270,13 @@ const Player = () => {
 
         function dragLeave(e) {
             // Remove highlight effect from all squares
-            const highlightedSquares = document.querySelectorAll('.highlight');
+            let highlightedSquares = document.querySelectorAll('.highlight');
+            if (highlightedSquares.length === 0) {
+                highlightedSquares = document.querySelectorAll('.not-valid');
+            }
+
             highlightedSquares.forEach(square => {
-                square.classList.remove('highlight');
+                square.classList.remove('highlight', 'not-valid', 'right-border', 'left-outline');
             });
         } 
 
@@ -228,25 +291,36 @@ const Player = () => {
                 let minX = x;
                 let maxX = x;
 
+                let [valid, shipDivs] = checkIfPositionValid.bind(this)(y, x, shipSize);
+
                 // Loop through the squares to highlight based on ship size
-                for (let i = 0; i < shipSize; i++) {
-                    let gridDiv = gridDivFromCoordinates.bind(this)(y, x + i);
-                    if (gridDiv) {
+                
+                if (valid) {
+                    for (let gridDiv of shipDivs) {
                         // Place ship on HTML
                         gridDiv.classList.add('ship-present', 'reveal');
 
+                        /*
+                        IF NOT USING BORDERS
+                        if (i === shipSize - 1) {
+                            gridDiv.classList.add('end');
+                        }
+                        */
+
                         // Remove highlight effect from the grid element
                         gridDiv.classList.remove("highlight");
-
-                        // Gather coordinates
-                        maxX = Math.max(maxX, x + i)
                     }
-                }
 
-                gameboard.positionShips([[minX, maxX, minY, maxY]]);
+                    maxX = x + shipSize - 1;
+                    gameboard.positionShips([[minX, maxX, minY, maxY]]);
 
-                // Change the UI of the ships to be placed
-                makeDraggableShipInvisible();
+                    // Change the UI of the ships to be placed
+                    makeDraggableShipInvisible();
+
+                    for (let i = 0; i < shipSize; i++) {
+                        nearbyShipSquaresHitForShipPlacement.bind(this)(x+i, y);
+                    }
+                }               
             }
         }
 
@@ -297,8 +371,7 @@ const Player = () => {
     
     function updateClassListOnShipSunk(ship) {
         // Function to update the classList of the HTML element when the associated ship is sunk
-        console.log(ship);
-        console.log(draggableShips);
+        // I compare the length opposed to the individual div as this means each ship is sunk from the top down which is more logical and less confusing
         for (let i =0; i < draggableShips.length; i++) {
             const dataSize = parseInt(draggableShips[i].dataset.size);
             if (ship.length === dataSize) {
