@@ -71,8 +71,27 @@ body {
     color: red;
 }
 
+/* SHIP PLACING */
 div.player1-grid.number.highlight, div.player2-grid.number.highlight, div.computer-grid.number.highlight {
+    /* CHOSE BORDER AS IT IS EASIER TO SEE WHEN PLACING */
     border: 2px solid lightgreen;
+}
+
+div.player1-grid.number.not-valid, div.player2-grid.number.not-valid {
+    /* APPLYING BORDER ALLOWS USER TO DETERMINE WHAT IS BEHIND THE CURSOR
+    NECESSARY TO REDUCE WIDTH AND HEIGHT BY BORDER FOR NO BUGS */
+    border: 2px solid red;
+    width: 28px;
+    height: 28px;
+}
+
+div.player1-grid.number.right-border, div.player2-grid.number.right-border {
+    width: 30px;
+    border-right: 2px solid red;
+}
+
+div.player1-grid.number.left-outline, div.player2-grid.number.left-outline {
+    border: 2px solid darkblue;
 }
 
 
