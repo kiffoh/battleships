@@ -501,6 +501,7 @@ const Player = () => {
         for (let y = 0; y <= 9; y++) {
             for (let x = 0; x <= 9; x++) {
                 gameboard.board[y][x] = null;
+                gameboard.missed[y][x] = null;
             }
         }
         resetHTMLGrid.bind(this)();

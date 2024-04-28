@@ -45,13 +45,16 @@ function singlePlayerConfirmBtn(player1, player2) {
         player1ConfirmBtn.onclick = () => {
             // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
             if (player1.allShipsPlaced()) {
-                
+
                 player1.removeButtons();
                 player1.removeShips();
                 changeOverlaysTo("partially-transparent", true)
 
                 player2.removeRules();
-
+                
+                console.log(player1.gameboard.missed)
+                player1.gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
+                console.log(player1.gameboard.missed)
                 resolve();
             }
         }
@@ -71,6 +74,7 @@ function multiPlayerConfirmBtn(player1, player2) {
         if (player1.allShipsPlaced()) {
             player1.buildRules(true);
             player1.removeShips();
+            player1.gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
 
             player2.removeRules();
             player2.buildShips();
@@ -97,6 +101,7 @@ function multiPlayerConfirmBtn(player1, player2) {
                 player2.removeShips();
                 player2.removeButtons();
                 player2.hideGridShips();
+                player2.gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
                 
                 // Revert overlay colour back to original
                 changeOverlaysTo("partially-transparent");
