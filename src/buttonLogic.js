@@ -45,16 +45,10 @@ function singlePlayerConfirmBtn(player1, player2) {
         player1ConfirmBtn.onclick = () => {
             // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
             if (player1.allShipsPlaced()) {
+                player1.progressFromShipPlacement();
 
-                player1.removeButtons();
-                player1.removeShips();
                 changeOverlaysTo("partially-transparent", true)
-
-                player2.removeRules();
                 
-                console.log(player1.gameboard.missed)
-                player1.gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
-                console.log(player1.gameboard.missed)
                 resolve();
             }
         }
@@ -72,13 +66,7 @@ function multiPlayerConfirmBtn(player1, player2) {
     player1ConfirmBtn.onclick = () => {
         // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
         if (player1.allShipsPlaced()) {
-            player1.buildRules(true);
-            player1.removeShips();
-            player1.gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
-
-            player2.removeRules();
-            player2.buildShips();
-            player2.applyDraggableShips();
+            player1.progressFromShipPlacement("player2TurnStart")
 
             player2.updateTurnText(`${player2.name.toUpperCase()} <span class="highlighted green">PLACE YOUR SHIPS</span>`);
         }
@@ -94,6 +82,8 @@ function multiPlayerConfirmBtn(player1, player2) {
         player2ConfirmBtn.onclick = () => {
             // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
             if (player2.allShipsPlaced()) {
+                player2.progressFromShipPlacement("player2TurnFinish")
+                /*
                 player1.removeRules();
                 player1.removeButtons();
                 player1.hideGridShips();
@@ -102,6 +92,7 @@ function multiPlayerConfirmBtn(player1, player2) {
                 player2.removeButtons();
                 player2.hideGridShips();
                 player2.gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
+                */
                 
                 // Revert overlay colour back to original
                 changeOverlaysTo("partially-transparent");
