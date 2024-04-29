@@ -309,7 +309,10 @@ const Player = () => {
                 } else {
                     for (let gridDiv of shipDivs) {
                         // Trigger animation with classList
-                        gridDiv.classList.add('shaking-animation');
+                        // not-valid also added here in the edge case where the user clicks the square directly
+                        // after dropping a ship on that square
+                        
+                        gridDiv.classList.add('shaking-animation','not-valid');
                         // Add event listener to remove shaking animation class when animation ends
                         gridDiv.addEventListener('animationend', () => {
                             gridDiv.classList.remove('shaking-animation');
