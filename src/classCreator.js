@@ -119,7 +119,9 @@ const Player = () => {
     const name = "";
     const opponent = null;
 
+
     let selectedShip = null;
+    let planeOfPlacingShip = "HORIZONTAL";
 
     // Beneath are variables for computer guessing logic
     let potentialComputerGuesses = null;
@@ -157,20 +159,20 @@ const Player = () => {
 
         shipsContainer.innerHTML = `
         <div class="ship-container-1">
-            <div class="draggable-ship" draggable="true" data-size="4"></div>
-            <div class="draggable-ship" draggable="true" data-size="3"></div>
-            <div class="draggable-ship" draggable="true" data-size="3"></div>
+            <div class="draggable-ship" data-size="4"></div>
+            <div class="draggable-ship" data-size="3"></div>
+            <div class="draggable-ship" data-size="3"></div>
         </div>
         <div class="ship-container-2">
-            <div class="draggable-ship" draggable="true" data-size="2"></div>
-            <div class="draggable-ship" draggable="true" data-size="2"></div>
-            <div class="draggable-ship" draggable="true" data-size="2"></div>
+            <div class="draggable-ship" data-size="2"></div>
+            <div class="draggable-ship" data-size="2"></div>
+            <div class="draggable-ship" data-size="2"></div>
         </div>
         <div class="ship-container-3">
-            <div class="draggable-ship" draggable="true" data-size="1"></div>
-            <div class="draggable-ship" draggable="true" data-size="1"></div>
-            <div class="draggable-ship" draggable="true" data-size="1"></div>
-            <div class="draggable-ship" draggable="true" data-size="1"></div>
+            <div class="draggable-ship" data-size="1"></div>
+            <div class="draggable-ship" data-size="1"></div>
+            <div class="draggable-ship" data-size="1"></div>
+            <div class="draggable-ship" data-size="1"></div>
         </div>
         `;
 
@@ -202,16 +204,33 @@ const Player = () => {
             let valid = true;
             let shipDivs = [];
             
+            // NEED TO change planeOfPlacingShip here as when I did it in the horizontalOrVerticalHandleClick 
+            // planeOfPlacingShip did not update in this scope - Maybe scope related
+            planeOfPlacingShip = document.querySelector(`.${this.name}.horizontal-or-vertical-btn`).textContent;
+            
             // Loop through the squares to highlight based on ship size
-            for (let i = 0; i < shipSize; i++) {
-                let gridDiv = gridDivFromCoordinates.bind(this)(y, x + i);
-                if (gridDiv) {
-                    shipDivs.push(gridDiv);
+            if (planeOfPlacingShip === "HORIZONTAL") {
+                for (let i = 0; i < shipSize; i++) {
+                    let gridDiv = gridDivFromCoordinates.bind(this)(y, x + i);
+                    if (gridDiv) {
+                        shipDivs.push(gridDiv);
+                    }
+                    if (coordinateInvalid(y, x + i) === true) {
+                        valid = false;
+                    }
                 }
-                if (coordinateInvalid(y, x + i) === true) {
-                    valid = false;
+            } else if (planeOfPlacingShip === "VERTICAL") {
+                for (let i = 0; i < shipSize; i++) {
+                    let gridDiv = gridDivFromCoordinates.bind(this)(y + i, x);
+                    if (gridDiv) {
+                        shipDivs.push(gridDiv);
+                    }
+                    if (coordinateInvalid(y + i, x) === true) {
+                        valid = false;
+                    }
                 }
             }
+            console.log(shipDivs);
             return [valid, shipDivs];
         }
 
@@ -296,22 +315,31 @@ const Player = () => {
                         // Remove highlight effect from the grid element
                         gridDiv.classList.remove("highlight");
                     }
+                    if (planeOfPlacingShip === "HORIZONTAL") {
+                        maxX = x + shipSize - 1;
+                        gameboard.positionShips([[minX, maxX, minY, maxY]]);
 
-                    maxX = x + shipSize - 1;
-                    gameboard.positionShips([[minX, maxX, minY, maxY]]);
+                        for (let i = 0; i < shipSize; i++) {
+                            nearbyShipSquaresHitForShipPlacement.bind(this)(x+i, y);
+                        }
+                    } else if (planeOfPlacingShip === "VERTICAL") {
+                        maxY = y + shipSize - 1;
+                        gameboard.positionShips([[minX, maxX, minY, maxY]]);
+
+                        for (let i = 0; i < shipSize; i++) {
+                            nearbyShipSquaresHitForShipPlacement.bind(this)(x, y+i);
+                        }
+                    }
+                    
 
                     // Change the UI of the ships to be placed
                     makeDraggableShipInvisible();
-
-                    for (let i = 0; i < shipSize; i++) {
-                        nearbyShipSquaresHitForShipPlacement.bind(this)(x+i, y);
-                    }
                 } else {
                     for (let gridDiv of shipDivs) {
                         // Trigger animation with classList
                         // not-valid also added here in the edge case where the user clicks the square directly
                         // after dropping a ship on that square
-                        
+
                         gridDiv.classList.add('shaking-animation','not-valid');
                         // Add event listener to remove shaking animation class when animation ends
                         gridDiv.addEventListener('animationend', () => {
@@ -320,13 +348,6 @@ const Player = () => {
                     }
                 }         
             } 
-        }
-
-        function triggerShakeAnimation(gridDiv) {
-            // Reset animation by setting animation property to 'none'
-            gridDiv.style.animation = 'none';
-            void gridDiv.offsetWidth; // Trigger reflow to restart the animation
-            gridDiv.style.animation = 'shakeAnimation 0.5s 1';
         }
 
         const gridElements = document.querySelectorAll(`.${this.name}-grid.game-board.number`)
@@ -391,6 +412,10 @@ const Player = () => {
         const btnContainer = document.createElement("div");
         btnContainer.classList.add("btn-container");
 
+        const horizontalOrVerticalBtn = document.createElement("button");
+        horizontalOrVerticalBtn.classList.add(`${this.name}`, `horizontal-or-vertical-btn`);
+        horizontalOrVerticalBtn.textContent = "HORIZONTAL";
+
         const randomiseBtn = document.createElement("button");
         randomiseBtn.classList.add(`${this.name}`, `randomise-btn`);
         randomiseBtn.textContent = "RANDOMISE";
@@ -403,6 +428,7 @@ const Player = () => {
         resetBtn.classList.add(`${this.name}`, `reset-btn`);
         resetBtn.textContent = "RESET";
 
+        btnContainer.appendChild(horizontalOrVerticalBtn);
         btnContainer.appendChild(randomiseBtn);
         btnContainer.appendChild(resetBtn);
         btnContainer.appendChild(confirmBtn);
@@ -464,7 +490,7 @@ const Player = () => {
             <p>(Watch the turn counter beneath the title if you get lost)</p>
             <p>First player to sink all of the opponents ships wins! Good Luck!</p>
             <br></br>
-            <p>Local play requires the opponent to not look at the screen whilst the player is positioning their ships!</p>
+            <p>Local play requires the opponent to not look at the screen whilst the other player is positioning their ships!</p>
         `;
         }
     }
@@ -480,6 +506,7 @@ const Player = () => {
     function progressFromShipPlacement(player2TurnTracker) {
         // If VS COMPUTER, function is only called on Player 1!
         if (this.opponent.name === "computer") {
+            // Remove Rules, Buttons and Ships
             removeButtons.bind(this)();
             removeShips.bind(this)();
             gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
@@ -488,9 +515,9 @@ const Player = () => {
         } else {
             // Called on Player1
             if (player2TurnTracker === "player2TurnStart") {
-                removeButtons.bind(this)();
-                removeShips.bind(this)();
+                // Remove Rules and Ships, keeps buttons for aethstetic reasons for how the rules look
                 buildRules.bind(this)(true);
+                removeShips.bind(this)();
                 gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
 
                 this.opponent.removeRules();
@@ -499,9 +526,11 @@ const Player = () => {
             } 
             // Called on Player2
             else if (player2TurnTracker === "player2TurnFinish") {
+                // Remove Rules, Buttons and Ships
                 this.opponent.removeRules();
+                this.opponent.removeButtons();
                 removeShips.bind(this)();
-                removeButtons.bind(this)();
+                removeButtons.bind(this)();                
 
                 gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
                 
@@ -1012,6 +1041,6 @@ const Player = () => {
         gameboard.ships.length = 0;
     }
 
-    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideGridShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips, resetHTMLGrid, progressFromShipPlacement, resetShipsArray}
+    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideGridShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips, resetHTMLGrid, progressFromShipPlacement, resetShipsArray, planeOfPlacingShip}
 }
 export {Ship, Gameboard, Player};

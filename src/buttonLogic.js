@@ -1,5 +1,14 @@
 import { randomise } from "./randomise";
 
+function handleHorizontalOrVerticalButtonClick(button, player1, player2) {
+    if (button.classList.contains("player1")) {
+        button.textContent = (button.textContent === "HORIZONTAL" ? "VERTICAL" : "HORIZONTAL");
+    } else {
+        button.textContent = (button.textContent === "HORIZONTAL" ? "VERTICAL" : "HORIZONTAL");
+    }
+    
+}
+
 // Define an async function to use await
 async function handleRandomiseButtonClick(button, player1, player2) {
     const coordinates = await randomise(); // Wait for randomise() to resolve
@@ -134,4 +143,4 @@ function hideShipsContainer(hide, playerName) {
     }
 }
 
-export { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, hideShipsContainer, changeOverlaysTo }
+export { handleHorizontalOrVerticalButtonClick, handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, hideShipsContainer, changeOverlaysTo }
