@@ -65,11 +65,15 @@ const Gameboard = () => {
         }
     }
 
-    function recieveAttack([x,y]) {
+    function recieveAttack([x,y], attackIs=null) {
         if (board[y][x] != null) {
             board[y][x].hit();
         }
-        missed[y][x] = "X";
+        if (attackIs === "revealedMiss") {
+            missed[y][x] = "●"
+        } else {
+            missed[y][x] = "X";
+        }
     }
 
     function allShipsSunk() {
@@ -347,7 +351,6 @@ const Player = () => {
             for (let i =0; i < draggableShips.length; i++) {
                 if (selectedShip === draggableShips[i]) {
                     draggableShips[i].classList.add("invisible");
-                    console.log(draggableShips);
                     draggableShips.splice(i, 1);
 
                     // Moves the ship to be placed to the following ship
@@ -500,7 +503,7 @@ const Player = () => {
                 this.opponent.removeRules();
                 removeShips.bind(this)();
                 removeButtons.bind(this)();
-                
+
                 gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
                 
                 // Removes Ships on HTML board from sight as this mode is local Player vs Player
@@ -555,15 +558,18 @@ const Player = () => {
 
     /* GAME LOGIC */
 
+    // Moved for removeEventListener but the bind(this) means the instance is not the same, so it cannot work
+    function clickHandler(gridDiv) {
+        clickToHTML.bind(this)(gridDiv);
+    }
+
     function registerGridDivEventListener() {
         // Allows for player interaction with grid
         const grid = document.getElementById(this.name + "Grid")
         const gridDivs = grid.querySelectorAll("*");
 
         gridDivs.forEach(gridDiv => {
-            gridDiv.addEventListener("click", () => {
-                clickToHTML.bind(this)(gridDiv);   
-            });
+            gridDiv.addEventListener("click", clickHandler.bind(this, gridDiv));
         })
     };
 
@@ -607,6 +613,7 @@ const Player = () => {
 
     // shipDirection variable is when the direction of the ship is known
     function computerGuessToHTML(gridDiv, relativeLocation = false) {
+        // Requires own function due to logic of a computer guesses
         if (gridDiv.textContent === "") {
             if (gridDiv.classList.contains("ship-present")) {
                 gridDiv.textContent = "X";
@@ -635,12 +642,12 @@ const Player = () => {
     }
 
     // Hit variable signifies to generate new localised guesses if localised guesses have already been generated
-    async function localisedComputerGuess(gridDiv=null, previousDirection=false) {
+    async function localisedComputerGuess(gridDiv=null, shipDirectionDiscovered=false) {
         // First hit of a ship
         if (!localisedGuesses) {
             localisedGuesses = generateLocalComputerGuesses(gridDiv);
         } // Second hit or greater
-        else if (previousDirection) {
+        else if (shipDirectionDiscovered) {
             // Generate new nearby divs
             const newDivs = generateLocalComputerGuesses(gridDiv);
             for (let potentialGuess in newDivs) {
@@ -648,7 +655,7 @@ const Player = () => {
             }
 
             // Remove divs which are not in correct plane
-            removeLocalComputerGuesses(previousDirection);
+            removeLocalComputerGuesses(shipDirectionDiscovered);
         }
 
         // Randomly adjusts the computer response time with minTime
@@ -656,9 +663,9 @@ const Player = () => {
         await new Promise(resolve => setTimeout(resolve, minTime));
 
         // Performs an intelligent computer guess
-        const [ localGuess, relativeLocation ] = objectShift.bind(this)(localisedGuesses);
+        const [ localGuess, relativeLocationToGuess ] = objectShift.bind(this)(localisedGuesses);
         removeComputerGuess(localGuess, potentialComputerGuesses);
-        computerGuessToHTML.bind(this)(localGuess, relativeLocation);
+        computerGuessToHTML.bind(this)(localGuess, relativeLocationToGuess);
     }
 
     function generateLocalComputerGuesses(gridDiv) {
@@ -734,9 +741,9 @@ const Player = () => {
     }
 
     async function computerGuess() {
-        let guessIndex = Math.floor(Math.random() * potentialComputerGuesses.length);
+        let guessIndex = await Math.floor(Math.random() * potentialComputerGuesses.length);
         while (guessIndex >= potentialComputerGuesses.length) {
-            guessIndex = Math.floor(Math.random() * potentialComputerGuesses.length);
+            guessIndex = await Math.floor(Math.random() * potentialComputerGuesses.length);
         }
         let guessedDiv = await potentialComputerGuesses[guessIndex];
         potentialComputerGuesses.splice(guessIndex, 1);
@@ -838,7 +845,8 @@ const Player = () => {
             this.opponent.updateClassListOnShipSunk(this.opponent.gameboard.board[y][x]);
 
             // Game over check?
-            if (this.opponent.gameboard.allShipsSunk()) {
+            console.log(this.opponent.gameboard)
+            if (this.opponent.gameboard.allShipsSunk() || potentialComputerGuesses.length === 0) {
                 triggerOverallOverlay.bind(this)();
             }
         }
@@ -866,7 +874,7 @@ const Player = () => {
             let y = coordinates[1];
 
             if (gameboard.missed[y][x] === null) {
-                gameboard.recieveAttack([x, y])
+                gameboard.recieveAttack.bind(this)([x, y], "revealedMiss")
                 const missedDiv = gridDivFromCoordinates.bind(this)(y, x);
                 missedDiv.textContent = "●";
                 missedDiv.id = "revealedMiss";
@@ -942,9 +950,46 @@ const Player = () => {
         turnDiv.innerHTML = text;
     }
 
+    function removeAllEventListeners() {
+        resetHTMLGrid.bind(this)
+        this.opponent.resetHTMLGrid();
+
+        buildHTMLGrid.bind(this);
+        this.opponent.buildHTMLGrid()
+        /*
+        const allGridDivs = Array.from(document.querySelectorAll(".game-board.number"));
+        
+        for (let i = allGridDivs.length - 1; i >= 0; i--) {
+            if (allGridDivs[i].classList.contains("reveal") || allGridDivs[i].id.includes("hit") || allGridDivs[i].id.includes("revealedMiss")) {
+                allGridDivs.splice(i, 1);
+            }
+        }
+        allGridDivs.forEach(gridDiv => {
+            gridDiv.removeEventListener("click", clickHandler.bind(this, gridDiv));
+        });
+        /*
+        const player1GridDivs = document.querySelectorAll(".player1-grid.game-board.number");
+        let player2GridDivs
+        if (this.opponent.name === "player2" || this.name === "player2") {
+            player2GridDivs = document.querySelectorAll(".player2-grid.game-board.number")
+        } else {
+            player2GridDivs = document.querySelectorAll(".computer-grid.game-board.number");
+        }
+        
+        player1GridDivs.forEach(gridDiv => {
+            gridDiv.removeEventListener("click", clickHandler.bind(this, gridDiv));
+        });
+        player2GridDivs.forEach(gridDiv => {
+            gridDiv.removeEventListener("click", clickHandler.bind(this, gridDiv));
+        });
+        */
+    }
+
     function triggerOverallOverlay() {
         const overlay = document.getElementById("gameEndingOverlay");
         overlay.style.display = "flex";
+
+        removeAllEventListeners.bind(this)();
 
         // Create a new div element to hold the player-selection HTML content
         const congratulationsTitle = document.querySelector(".winner-confirmation");
