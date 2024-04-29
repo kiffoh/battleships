@@ -613,16 +613,11 @@ const Player = () => {
 
     // shipDirection variable is when the direction of the ship is known
     function computerGuessToHTML(gridDiv, relativeLocation = false) {
-        console.log("Start of COMPUTERGUESSTOHTML", gridDiv);
-        console.log(`gridDiv as a string ${gridDiv}`)
         // Requires own function due to logic of a computer guesses
         if (gridDiv.classList.contains("ship-present")) {
             gridDiv.textContent = "X";
             updateTurnText(`COMPUTER <span class="highlighted red">HIT</span>`)
 
-            console.log("COMPUTERGUESSTOHTML")
-            console.log(`Length of Computer Guesses: ${potentialComputerGuesses.length}`)
-            console.log(`Current Computer Guess:`, gridDiv);
             computerHTMLToBoard.bind(this)(gridDiv);
             
             if (potentialComputerGuesses.length > 0) {
@@ -754,13 +749,7 @@ const Player = () => {
         }
         const guessedDiv = await potentialComputerGuesses[guessIndex];
 
-        
-
         potentialComputerGuesses.splice(guessIndex, 1);
-
-        console.log("JUST COMPUTERGUESS")
-        console.log(`Length of Computer Guesses: ${potentialComputerGuesses.length}`)
-        console.log(`Current Computer Guess`, guessedDiv);
         
         // Randomises adjusts the computer response time with minTime
         let minTime = await Math.max(150, Math.random() * 500) 
@@ -836,14 +825,13 @@ const Player = () => {
         }
     }
 
+    // Convert's computer's guess to board
     function computerHTMLToBoard(gridDiv) {
-        // Convert's player interaction with grid into a guess by changing board array
-
         if (!gameboard) return;
     
         const [y, x] = classToInteger(gridDiv);            
         this.opponent.gameboard.recieveAttack([x, y]);
-        // console.log(potentialComputerGuesses.length);
+        
         if (this.opponent.gameboard.board[y][x] != null && this.opponent.gameboard.board[y][x].sunk) {
             updateTurnText(`COMPUTER <span class="highlighted orange">SANK</span> ONE OF ${this.name.toUpperCase()}'S SHIP`)
             localisedGuesses = null;
@@ -862,7 +850,6 @@ const Player = () => {
             this.opponent.updateClassListOnShipSunk(this.opponent.gameboard.board[y][x]);
 
             // Game over check?
-            console.log("Opponent Gameboard:", this.opponent.gameboard)
             if (this.opponent.gameboard.allShipsSunk() || potentialComputerGuesses.length === 0) {
                 triggerOverallOverlay.bind(this)();
             }
