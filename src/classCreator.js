@@ -254,19 +254,6 @@ const Player = () => {
                         gridDiv.classList.add('highlight');
                     }
                 } else {
-                    /*
-                    AT THE MOMENT THIS DOESN'T WORK
-                    let divRightBorder = gridDivFromCoordinates.bind(this)(y, x + shipSize - 1);
-                    if (divRightBorder && !divRightBorder.classList.contains('end')) {
-                        divRightBorder.classList.add('right-border');
-                    }
-                    
-                    let divForOutline = gridDivFromCoordinates.bind(this)(y, x + shipSize);
-                    if (divForOutline) {
-                        divForOutline.classList.add('left-outline');
-                    }
-                    */
-                    
                     for (let gridDiv of shipDivs) {
                         gridDiv.classList.add('not-valid');
                     }
@@ -282,7 +269,7 @@ const Player = () => {
             }
 
             highlightedSquares.forEach(square => {
-                square.classList.remove('highlight', 'not-valid', 'right-border', 'left-outline');
+                square.classList.remove('highlight', 'not-valid', 'shaking-animation');
             });
         } 
 
@@ -306,13 +293,6 @@ const Player = () => {
                         // Place ship on HTML
                         gridDiv.classList.add('ship-present', 'reveal');
 
-                        /*
-                        IF NOT USING BORDERS
-                        if (i === shipSize - 1) {
-                            gridDiv.classList.add('end');
-                        }
-                        */
-
                         // Remove highlight effect from the grid element
                         gridDiv.classList.remove("highlight");
                     }
@@ -326,8 +306,24 @@ const Player = () => {
                     for (let i = 0; i < shipSize; i++) {
                         nearbyShipSquaresHitForShipPlacement.bind(this)(x+i, y);
                     }
-                }               
-            }
+                } else {
+                    for (let gridDiv of shipDivs) {
+                        // Trigger animation with classList
+                        gridDiv.classList.add('shaking-animation');
+                        // Add event listener to remove shaking animation class when animation ends
+                        gridDiv.addEventListener('animationend', () => {
+                            gridDiv.classList.remove('shaking-animation');
+                        }, { once: true }); // Remove event listener after animation ends
+                    }
+                }         
+            } 
+        }
+
+        function triggerShakeAnimation(gridDiv) {
+            // Reset animation by setting animation property to 'none'
+            gridDiv.style.animation = 'none';
+            void gridDiv.offsetWidth; // Trigger reflow to restart the animation
+            gridDiv.style.animation = 'shakeAnimation 0.5s 1';
         }
 
         const gridElements = document.querySelectorAll(`.${this.name}-grid.game-board.number`)
@@ -844,7 +840,7 @@ const Player = () => {
             this.opponent.updateClassListOnShipSunk(this.opponent.gameboard.board[y][x]);
 
             // Game over check?
-            if (this.opponent.gameboard.allShipsSunk() || potentialComputerGuesses.length === 0) {
+            if (this.opponent.gameboard.allShipsSunk()) {
                 triggerOverallOverlay.bind(this)();
             }
         }
