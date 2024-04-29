@@ -85,6 +85,22 @@ div.player1-grid.number.not-valid, div.player2-grid.number.not-valid {
     height: 28px;
 }
 
+.shaking-animation {
+    animation-name: shakeAnimation;
+    animation-duration: 0.25s;
+    animation-iteration-count: 1;
+}
+
+@keyframes shakeAnimation {
+    0% { transform: translateX(0); }
+    15% { transform: translateX(-5px); }
+    30% { transform: translateX(5px); }
+    45% { transform: translateX(-5px); }
+    60% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
+
 div.player1-grid.number.right-border, div.player2-grid.number.right-border {
     width: 30px;
     border-right: 2px solid red;
