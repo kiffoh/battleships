@@ -1,7 +1,7 @@
 import "./styles.css"
 import { Player } from "./classCreator";
 import { goesFirst, playerOrComputer } from "./goesFirst";
-import { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, changeOverlaysTo } from "./buttonLogic";
+import { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, changeOverlaysTo, handleHorizontalOrVerticalButtonClick } from "./buttonLogic";
 import { randomise } from "./randomise";
 
 async function initialiseGame() {
@@ -53,8 +53,13 @@ async function initialiseGame() {
 
     }
 
-    // Attach logic to each button (Place, Randomise, Reset, Confirm) for positioning stage
+    // Attach logic to each button (HorizontalOrVertical, Randomise, Reset, Confirm) for positioning stage
     // Use a for...of loop to iterate over the buttons 
+    const horizontalOrVerticalButtons = document.querySelectorAll(".horizontal-or-vertical-btn");
+    for (const button of horizontalOrVerticalButtons) {
+        button.onclick = () => handleHorizontalOrVerticalButtonClick(button, player1, player2);
+    }
+
     const randomiseButtons = document.querySelectorAll(".randomise-btn");
     for (const button of randomiseButtons) {
         button.onclick = () => handleRandomiseButtonClick(button, player1, player2);
@@ -75,10 +80,14 @@ async function initialiseGame() {
     if (player2.name === "computer") {
         player2.generateComputerGuesses();
 
+        // Generate position of computer's ships
         const computerCoordinates = await randomise();
-        player2.resetGrid()
         player2.positionShips(computerCoordinates);
-        player2.buildHTMLGrid(false);
+
+        // Resetting HTML Grid's to remove the eventListeners for placing ships
+        // false in buildHTMLGrid is to hide the ships from view
+        player2.resetGrid()
+        player2.buildHTMLGrid(false);        
     } else {
         // Resetting HTML Grid's to remove the eventListeners for placing ships
         player1.resetHTMLGrid();
