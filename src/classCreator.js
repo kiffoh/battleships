@@ -65,7 +65,7 @@ const Gameboard = () => {
         }
     }
 
-    function recieveAttack([x,y], attackIs=null) {
+    function recieveAttack([x,y]) {
         if (board[y][x] != null) {
             board[y][x].hit();
         } else {
@@ -588,6 +588,7 @@ const Player = () => {
             }
         }
         resetHTMLGrid.bind(this)();
+        resetShipsArray.bind(this)();
     }
 
     function resetHTMLGrid() {
@@ -608,7 +609,7 @@ const Player = () => {
         const gridDivs = grid.querySelectorAll("*");
 
         gridDivs.forEach(gridDiv => {
-             // Store the bound function reference as a property of the gridDiv
+            // Store the bound function reference as a property of the gridDiv
             const boundClickHandler = clickHandler.bind(this, gridDiv);
             gridDiv._boundClickHandler = boundClickHandler;
 
