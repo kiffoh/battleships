@@ -78,16 +78,16 @@ async function initialiseGame() {
     // GAMEPLAY STAGE
     // For turn with computer I only register the event listeners on the computer squares
     if (player2.name === "computer") {
-        player2.generateComputerGuesses();
-
-        // Generate position of computer's ships
-        const computerCoordinates = await randomise();
-        player2.positionShips(computerCoordinates);
-
         // Resetting HTML Grid's to remove the eventListeners for placing ships
         // false in buildHTMLGrid is to hide the ships from view
-        player2.resetGrid()
-        player2.buildHTMLGrid(false);        
+        player2.resetGrid()   
+        
+        // Generate position of computer's ships
+        player2.generateComputerGuesses();
+        const computerCoordinates = await randomise();
+        player2.positionShips(computerCoordinates);
+        
+        player2.buildHTMLGrid(false);
     } else {
         // Resetting HTML Grid's to remove the eventListeners for placing ships
         player1.resetHTMLGrid();
