@@ -68,9 +68,6 @@ const Gameboard = () => {
     function recieveAttack([x,y], attackIs=null) {
         if (board[y][x] != null) {
             board[y][x].hit();
-        }
-        if (attackIs === "revealedMiss") {
-            missed[y][x] = "●"
         } else {
             missed[y][x] = "X";
         }
@@ -330,7 +327,6 @@ const Player = () => {
                         }
                     }
                     
-
                     // Change the UI of the ships to be placed
                     makeDraggableShipInvisible();
                 } else {
@@ -508,7 +504,10 @@ const Player = () => {
             // Remove Rules, Buttons and Ships
             removeButtons.bind(this)();
             removeShips.bind(this)();
-            gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
+
+            // Need to reset missed gameboard as it was used to prevent invalid ship placement
+            // For ships too close together
+            resetMissed();
 
             this.opponent.removeRules();
         } else {
@@ -517,7 +516,10 @@ const Player = () => {
                 // Remove Rules and Ships, keeps buttons for aethstetic reasons for how the rules look
                 buildRules.bind(this)(true);
                 removeShips.bind(this)();
-                gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
+
+                // Need to reset missed gameboard as it was used to prevent invalid ship placement
+                // For ships too close together
+                resetMissed();
 
                 this.opponent.removeRules();
                 this.opponent.buildShips();
@@ -531,7 +533,9 @@ const Player = () => {
                 removeShips.bind(this)();
                 removeButtons.bind(this)();                
 
-                gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
+                // Need to reset missed gameboard as it was used to prevent invalid ship placement
+                // For ships too close together
+                resetMissed();
                 
                 // Removes Ships on HTML board from sight as this mode is local Player vs Player
                 this.opponent.hideGridShips();
@@ -539,6 +543,14 @@ const Player = () => {
             }
             
             
+        }
+    }
+
+    function resetMissed() {
+        for (let x = 0; x <= 9; x++) {
+            for (let y = 0; y <= 9; y++) {
+                gameboard.missed[y][x] = null;
+            }
         }
     }
 
@@ -596,7 +608,11 @@ const Player = () => {
         const gridDivs = grid.querySelectorAll("*");
 
         gridDivs.forEach(gridDiv => {
-            gridDiv.addEventListener("click", clickHandler.bind(this, gridDiv));
+             // Store the bound function reference as a property of the gridDiv
+            const boundClickHandler = clickHandler.bind(this, gridDiv);
+            gridDiv._boundClickHandler = boundClickHandler;
+
+            gridDiv.addEventListener("click", boundClickHandler);
         })
     };
 
@@ -828,9 +844,10 @@ const Player = () => {
         // Convert's player interaction with grid into a guess by changing board array
         if (!gameboard) return;
     
-        const [y, x] = classToInteger(gridDiv);             
+        const [y, x] = classToInteger(gridDiv);
+        
         gameboard.recieveAttack([x, y]);
-    
+
         if (gameboard.board[y][x] != null && gameboard.board[y][x].sunk) {
             updateTurnText(`${this.opponent.name.toUpperCase()} <span class="highlighted orange">SANK</span> ONE OF ${this.name.toUpperCase()}'S SHIP`)
      
@@ -842,7 +859,7 @@ const Player = () => {
                 let shipDiv = gridDivFromCoordinates.bind(this)(y, x);
                 shipDiv.classList.add("sunk");
                 nearbyShipSquaresHit.bind(this)(x, y);
-            })        
+            })
 
             updateClassListOnShipSunk.bind(this)(gameboard.board[y][x]);
 
@@ -898,14 +915,14 @@ const Player = () => {
     function nearbyShipSquaresHit(x, y, potentialComputerGuesses = null) {
         // Updates squares which neighbour a sunk ship to be guesses
         const surroundingCoordinates = findSurroundingCoordinates(x, y);
-
+        
         // Iterate through array to determine if needs to be updated;
         for (let coordinates of surroundingCoordinates) {
             let x = coordinates[0];
             let y = coordinates[1];
 
             if (gameboard.missed[y][x] === null) {
-                gameboard.recieveAttack.bind(this)([x, y], "revealedMiss")
+                gameboard.recieveAttack.bind(this)([x, y])
                 const missedDiv = gridDivFromCoordinates.bind(this)(y, x);
                 missedDiv.textContent = "●";
                 missedDiv.id = "revealedMiss";
@@ -982,38 +999,12 @@ const Player = () => {
     }
 
     function removeAllEventListeners() {
-        resetHTMLGrid.bind(this)
-        this.opponent.resetHTMLGrid();
-
-        buildHTMLGrid.bind(this);
-        this.opponent.buildHTMLGrid()
-        /*
         const allGridDivs = Array.from(document.querySelectorAll(".game-board.number"));
-        
-        for (let i = allGridDivs.length - 1; i >= 0; i--) {
-            if (allGridDivs[i].classList.contains("reveal") || allGridDivs[i].id.includes("hit") || allGridDivs[i].id.includes("revealedMiss")) {
-                allGridDivs.splice(i, 1);
-            }
-        }
+
         allGridDivs.forEach(gridDiv => {
-            gridDiv.removeEventListener("click", clickHandler.bind(this, gridDiv));
+            // Remove the event listener using the stored bound function reference
+            gridDiv.removeEventListener("click", gridDiv._boundClickHandler);
         });
-        /*
-        const player1GridDivs = document.querySelectorAll(".player1-grid.game-board.number");
-        let player2GridDivs
-        if (this.opponent.name === "player2" || this.name === "player2") {
-            player2GridDivs = document.querySelectorAll(".player2-grid.game-board.number")
-        } else {
-            player2GridDivs = document.querySelectorAll(".computer-grid.game-board.number");
-        }
-        
-        player1GridDivs.forEach(gridDiv => {
-            gridDiv.removeEventListener("click", clickHandler.bind(this, gridDiv));
-        });
-        player2GridDivs.forEach(gridDiv => {
-            gridDiv.removeEventListener("click", clickHandler.bind(this, gridDiv));
-        });
-        */
     }
 
     function triggerOverallOverlay() {
@@ -1021,11 +1012,11 @@ const Player = () => {
         overlay.style.display = "flex";
 
         // Reset potentialComputerGuesses length to prevent the computer from guessing further
-        if (potentialComputerGuesses.length > 0) {
+        if (potentialComputerGuesses) {
             potentialComputerGuesses.length = 0;
         }
 
-        // removeAllEventListeners.bind(this)();
+        removeAllEventListeners.bind(this)();
 
         // Create a new div element to hold the player-selection HTML content
         const congratulationsTitle = document.querySelector(".winner-confirmation");
