@@ -74,7 +74,7 @@ body {
 /* SHIP PLACING */
 div.player1-grid.number.highlight, div.player2-grid.number.highlight, div.computer-grid.number.highlight {
     /* CHOSE BORDER AS IT IS EASIER TO SEE WHEN PLACING */
-    border: 2px solid lightgreen;
+    border: 2px solid rgb(38, 209, 38);
 }
 
 div.player1-grid.number.not-valid, div.player2-grid.number.not-valid {
@@ -100,15 +100,6 @@ div.player1-grid.number.not-valid, div.player2-grid.number.not-valid {
     75% { transform: translateX(-5px); }
     100% { transform: translateX(0); }
   }
-
-div.player1-grid.number.right-border, div.player2-grid.number.right-border {
-    width: 30px;
-    border-right: 2px solid red;
-}
-
-div.player1-grid.number.left-outline, div.player2-grid.number.left-outline {
-    border: 2px solid darkblue;
-}
 
 
 /* DRAGGABLE SHIPS */
@@ -271,7 +262,7 @@ h3 {
 }
 
 .draggable-ship.placing {
-    outline: 2px solid rgb(27, 152, 27);
+    outline: 2px solid rgb(38, 209, 38);
 }
 
 .draggable-ship.invisible {
@@ -297,5 +288,5 @@ h3 {
 
 /* PLACING */
 .highlighted.green {
-    color: rgb(27, 152, 27);
+    color: rgb(38, 209, 38);
 }
