@@ -230,7 +230,6 @@ const Player = () => {
                     }
                 }
             }
-            console.log(shipDivs);
             return [valid, shipDivs];
         }
 
@@ -803,7 +802,8 @@ const Player = () => {
             potentialComputerGuesses.push(div);
         })
     }
-        
+    
+    // Used for the removal of div's nearby to a ship when a ship is sunk
     function removeComputerGuess(divToRemove, potentialComputerGuesses) {
         for (let i = 0; i < potentialComputerGuesses.length; i++) {
             if (potentialComputerGuesses[i] === divToRemove) {
@@ -859,9 +859,8 @@ const Player = () => {
     
         const [y, x] = classToInteger(gridDiv);            
         this.opponent.gameboard.recieveAttack([x, y]);
-        
         if (this.opponent.gameboard.board[y][x] != null && this.opponent.gameboard.board[y][x].sunk) {
-            updateTurnText(`COMPUTER <span class="highlighted orange">SANK</span> ONE OF ${this.name.toUpperCase()}'S SHIP`)
+            updateTurnText(`COMPUTER <span class="highlighted orange">SANK</span> ONE OF ${this.opponent.name.toUpperCase()}'S SHIP`)
             localisedGuesses = null;
             shipDirection = null;
             
@@ -1022,7 +1021,7 @@ const Player = () => {
         overlay.style.display = "flex";
 
         // Reset potentialComputerGuesses length to prevent the computer from guessing further
-        if (potentialComputerGuesses) {
+        if (potentialComputerGuesses.length > 0) {
             potentialComputerGuesses.length = 0;
         }
 
