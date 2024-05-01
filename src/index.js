@@ -12,6 +12,7 @@ async function initialiseGame(previousOpponent=null) {
     // WELCOME STAGE
     let opponent = (!previousOpponent) ? await playerOrComputer() : previousOpponent;
     if (opponent === "player") opponent = "player2";
+    console.log(opponent);
     
     // Initialising the player classes
     const player1 = Player();
@@ -119,8 +120,12 @@ async function initialiseGame(previousOpponent=null) {
     const resetWholeGame = document.querySelector(".reset-btn");
     resetWholeGame.addEventListener("click", initialiseGame);
 
+    /*
     const refreshGame = document.querySelector(".refresh-btn");
-    refreshGame.addEventListener("click", initialiseGame(player2.name));
+    refreshGame.addEventListener("click", () => {
+        initialiseGame(player2.name);
+    });
+    */
 }
 
 initialiseGame();
