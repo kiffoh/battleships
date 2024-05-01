@@ -16,8 +16,8 @@ async function initialiseGame() {
     const player2 = Player();
     player2.name = `${opponent}`;
 
-    player1.buildHTML();
-    player2.buildHTML();
+    player1.buildHTMLDivContainers();
+    player2.buildHTMLDivContainers();
     
     player1.opponent = player2;
     player2.opponent = player1;
@@ -76,7 +76,7 @@ async function initialiseGame() {
     // For turn with computer I only register the event listeners on the computer squares
     if (player2.name === "computer") {
         // Resetting HTML Grid's to remove the eventListeners for placing ships
-        // false in buildHTMLGrid is to hide the ships from view
+        // Necessary as HTMLGrid needed to be built to show the rules
         player2.resetGrid()   
         
         // Generate position of computer's ships
@@ -84,6 +84,7 @@ async function initialiseGame() {
         const computerCoordinates = await randomise();
         player2.positionShips(computerCoordinates);
         
+        // false hide's the ships from user view
         player2.buildHTMLGrid(false);
     } else {
         // Resetting HTML Grid's to remove the eventListeners for placing ships

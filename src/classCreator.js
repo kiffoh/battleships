@@ -116,21 +116,24 @@ const Player = () => {
     const name = "";
     const opponent = null;
 
-
+    // Variables for ship placement section
     let selectedShip = null;
     let planeOfPlacingShip = "HORIZONTAL";
-
-    // Beneath are variables for computer guessing logic
-    let potentialComputerGuesses = null;
     let draggableShips;
 
+    // For computer guessing logic
+    let potentialComputerGuesses = null;
+
+    // For localised computer guessing logic
     let localisedGuesses = null;
     let shipDirection = null;
-
     const direction = {vertical : ["beneath", "above"], horizontal : ["left", "right"]};
 
-    function buildHTML() {
-        // Function to build the top level HTML stucture for player's grids 
+    /* INITIALISATION AND HTML BUILDING & RESETTING FUNCTIONS */
+
+    // Function to build the top level HTML stucture for player's grids 
+    function buildHTMLDivContainers() {
+        
         const gridContainers = document.querySelector(".grid-containers");
         const playerContainer = document.createElement("div");
         playerContainer.classList.add(`${this.name}-grid-container`);
@@ -147,10 +150,131 @@ const Player = () => {
         gridContainers.appendChild(playerContainer);
     }
 
+    // Build player's HTML grid based off player's board array
+    function buildHTMLGrid(reveal) {
+        const grid = document.getElementById(this.name + "Grid");
+        for (let y = 0; y <= 9; y++) {
+            for (let x = 0; x <= 9; x++) {
+                const gridDiv = document.createElement("div");
+                gridDiv.classList = `${grid.classList} number ${y}${x}`;
+    
+                if (gameboard.board[y][x] != null) {
+                    gridDiv.classList.add("ship-present");
+                    if (reveal) {
+                        gridDiv.classList.add("reveal");
+                    } else {
+                        gridDiv.classList.add("hidden");
+                    }
+                }
+                
+                grid.appendChild(gridDiv);
+
+            }
+        }
+    }
+
+    function resetHTMLGrid() {
+        const HTMLGrid = document.querySelector(`.${this.name}-grid.game-board`);
+        HTMLGrid.innerHTML = "";
+    }
+
+    // Reset board array
+    function resetGrid() {
+        for (let y = 0; y <= 9; y++) {
+            for (let x = 0; x <= 9; x++) {
+                gameboard.board[y][x] = null;
+                gameboard.missed[y][x] = null;
+            }
+        }
+        resetHTMLGrid.bind(this)();
+        resetShipsArray.bind(this)();
+    }
+
+    function resetShipsArray() {
+        gameboard.ships.length = 0;
+    }
+
+    // Display's rules
+    function buildRules(pvp=null) {
+        const playerOverlay = document.getElementById(`${this.name}GridOverlay`);
+
+        this.showOverlay(true);
+
+        playerOverlay.innerHTML = `
+            <h3 class="rules-title">RULES</h3>
+            <p>Try and deduce where the enemy ships are and sink them first!</p>
+            <br></br>
+            <p>Each player deploys their ships (of lengths varying from 1 to 4 squares) secretly on a their square grid.</p>
+            <p>Every turn each player shoots at the other's grid by clicking on a location to a response of "HIT", "MISS" or "SUNK".</p>
+            <p>(Watch the turn counter beneath the title if you get lost)</p>
+            <p>First player to sink all of the opponents ships wins! Good Luck!</p>
+        `;
+
+        if (pvp) {
+            playerOverlay.innerHTML = `
+            <h3 class="rules-title">RULES</h3>
+            <p>Try and deduce where the enemy ships are and sink them first!</p>
+            <br></br>
+            <p>Each player deploys their ships (of lengths varying from 1 to 4 squares) secretly on a their square grid.</p>
+            <p>Every turn each player shoots at the other's grid by clicking on a location to a response of "HIT", "MISS" or "SUNK".</p>
+            <p>(Watch the turn counter beneath the title if you get lost)</p>
+            <p>First player to sink all of the opponents ships wins! Good Luck!</p>
+            <br></br>
+            <p>Local play requires the opponent to not look at the screen whilst the other player is positioning their ships!</p>
+        `;
+        }
+    }
+
+    function removeRules() {
+        const playerOverlay = document.getElementById(`${this.name}GridOverlay`);
+
+        this.showOverlay(false);
+
+        playerOverlay.innerHTML = ``
+    }
+
+
     /* SHIP PLACEMENT (/ UI SHIPS ON LHS OF GRID) FUNCTIONS */
 
+    // Buttons for SHIP POSITIONING STAGE
+    function buildButtonContainer() {
+        const btnContainer = document.createElement("div");
+        btnContainer.classList.add("btn-container");
+
+        const horizontalOrVerticalBtn = document.createElement("button");
+        horizontalOrVerticalBtn.classList.add(`${this.name}`, `horizontal-or-vertical-btn`);
+        horizontalOrVerticalBtn.textContent = "HORIZONTAL";
+
+        const randomiseBtn = document.createElement("button");
+        randomiseBtn.classList.add(`${this.name}`, `randomise-btn`);
+        randomiseBtn.textContent = "RANDOMISE";
+
+        const confirmBtn = document.createElement("button");
+        confirmBtn.classList.add(`${this.name}`, `confirm-btn`);
+        confirmBtn.textContent = "CONFIRM";
+
+        const resetBtn = document.createElement("button");
+        resetBtn.classList.add(`${this.name}`, `reset-btn`);
+        resetBtn.textContent = "RESET";
+
+        btnContainer.appendChild(horizontalOrVerticalBtn);
+        btnContainer.appendChild(randomiseBtn);
+        btnContainer.appendChild(resetBtn);
+        btnContainer.appendChild(confirmBtn);
+
+        const gameboard = document.querySelector(`.${this.name}-grid.game-board`)
+        gameboard.insertAdjacentElement("afterend", btnContainer);
+    }
+
+    function removeButtons() {
+        const gridContainer = document.querySelector(`.${this.name}-grid-container`);
+        const btnContainer = gridContainer.querySelector(`.btn-container`);
+
+        gridContainer.removeChild(btnContainer);
+    }
+
+    // builds ships to be placed
     function buildShips() {
-        // Function to build HTML ships for player
         const shipsContainer = document.createElement('div');
         shipsContainer.classList.add('ships-container');
 
@@ -180,6 +304,28 @@ const Player = () => {
         // Stores the draggableShips div in array for updateClassLisstOnShipSunk
         draggableShips = [...playerGridContainer.querySelectorAll(".draggable-ship")];
     }
+
+    function removeShips() {
+        const gridContainer = document.querySelector(`.${this.name}-grid-container`);
+        const shipsContainer = gridContainer.querySelector(`.ships-container`);
+
+        if (shipsContainer) {
+            gridContainer.removeChild(shipsContainer);
+        }
+    }
+    
+    function hideGridShips() {
+        // Used for local play to remove ships from screen
+        const gameboard = document.querySelectorAll(`.${this.name}-grid.game-board.number`);
+        gameboard.forEach(element => {
+            if (element.classList.contains("reveal")) {
+                element.classList.remove("reveal");
+                element.classList.add("hidden");
+            }
+        })
+    }
+
+    
 
     function selectDefaultShip(index=0) {
         if (draggableShips.length > 0) {
@@ -402,102 +548,6 @@ const Player = () => {
         }
     }
 
-    function buildButtonContainer() {
-        // Buttons for SHIP POSITIONING STAGE
-        const btnContainer = document.createElement("div");
-        btnContainer.classList.add("btn-container");
-
-        const horizontalOrVerticalBtn = document.createElement("button");
-        horizontalOrVerticalBtn.classList.add(`${this.name}`, `horizontal-or-vertical-btn`);
-        horizontalOrVerticalBtn.textContent = "HORIZONTAL";
-
-        const randomiseBtn = document.createElement("button");
-        randomiseBtn.classList.add(`${this.name}`, `randomise-btn`);
-        randomiseBtn.textContent = "RANDOMISE";
-
-        const confirmBtn = document.createElement("button");
-        confirmBtn.classList.add(`${this.name}`, `confirm-btn`);
-        confirmBtn.textContent = "CONFIRM";
-
-        const resetBtn = document.createElement("button");
-        resetBtn.classList.add(`${this.name}`, `reset-btn`);
-        resetBtn.textContent = "RESET";
-
-        btnContainer.appendChild(horizontalOrVerticalBtn);
-        btnContainer.appendChild(randomiseBtn);
-        btnContainer.appendChild(resetBtn);
-        btnContainer.appendChild(confirmBtn);
-
-        const gameboard = document.querySelector(`.${this.name}-grid.game-board`)
-        gameboard.insertAdjacentElement("afterend", btnContainer);
-    }
-
-    function removeShips() {
-        const gridContainer = document.querySelector(`.${this.name}-grid-container`);
-        const shipsContainer = gridContainer.querySelector(`.ships-container`);
-
-        if (shipsContainer) {
-            gridContainer.removeChild(shipsContainer);
-        }
-    }
-
-    function removeButtons() {
-        const gridContainer = document.querySelector(`.${this.name}-grid-container`);
-        const btnContainer = gridContainer.querySelector(`.btn-container`);
-
-        gridContainer.removeChild(btnContainer);
-    }
-
-    function hideGridShips() {
-        // Used for local play to remove ships from screen
-        const gameboard = document.querySelectorAll(`.${this.name}-grid.game-board.number`);
-        gameboard.forEach(element => {
-            if (element.classList.contains("reveal")) {
-                element.classList.remove("reveal");
-                element.classList.add("hidden");
-            }
-        })
-    }
-
-    function buildRules(pvp=null) {
-        // Display's rules whilst ships are being placed
-        const playerOverlay = document.getElementById(`${this.name}GridOverlay`);
-
-        this.showOverlay(true);
-
-        playerOverlay.innerHTML = `
-            <h3 class="rules-title">RULES</h3>
-            <p>Try and deduce where the enemy ships are and sink them first!</p>
-            <br></br>
-            <p>Each player deploys their ships (of lengths varying from 1 to 4 squares) secretly on a their square grid.</p>
-            <p>Every turn each player shoots at the other's grid by clicking on a location to a response of "HIT", "MISS" or "SUNK".</p>
-            <p>(Watch the turn counter beneath the title if you get lost)</p>
-            <p>First player to sink all of the opponents ships wins! Good Luck!</p>
-        `;
-
-        if (pvp) {
-            playerOverlay.innerHTML = `
-            <h3 class="rules-title">RULES</h3>
-            <p>Try and deduce where the enemy ships are and sink them first!</p>
-            <br></br>
-            <p>Each player deploys their ships (of lengths varying from 1 to 4 squares) secretly on a their square grid.</p>
-            <p>Every turn each player shoots at the other's grid by clicking on a location to a response of "HIT", "MISS" or "SUNK".</p>
-            <p>(Watch the turn counter beneath the title if you get lost)</p>
-            <p>First player to sink all of the opponents ships wins! Good Luck!</p>
-            <br></br>
-            <p>Local play requires the opponent to not look at the screen whilst the other player is positioning their ships!</p>
-        `;
-        }
-    }
-
-    function removeRules() {
-        const playerOverlay = document.getElementById(`${this.name}GridOverlay`);
-
-        this.showOverlay(false);
-
-        playerOverlay.innerHTML = ``
-    }
-
     function progressFromShipPlacement(player2TurnTracker) {
         // If VS COMPUTER, function is only called on Player 1!
         if (this.opponent.name === "computer") {
@@ -552,48 +602,6 @@ const Player = () => {
                 gameboard.missed[y][x] = null;
             }
         }
-    }
-
-    /* BUILDING GAME FUNCTIONS */
-
-    function buildHTMLGrid(reveal) {
-        // Build player's HTML grid based off player's board array
-        const grid = document.getElementById(this.name + "Grid");
-        for (let y = 0; y <= 9; y++) {
-            for (let x = 0; x <= 9; x++) {
-                const gridDiv = document.createElement("div");
-                gridDiv.classList = `${grid.classList} number ${y}${x}`;
-    
-                if (gameboard.board[y][x] != null) {
-                    gridDiv.classList.add("ship-present");
-                    if (reveal) {
-                        gridDiv.classList.add("reveal");
-                    } else {
-                        gridDiv.classList.add("hidden");
-                    }
-                }
-                
-                grid.appendChild(gridDiv);
-
-            }
-        }
-    }
-
-    function resetGrid() {
-        // Reset board array
-        for (let y = 0; y <= 9; y++) {
-            for (let x = 0; x <= 9; x++) {
-                gameboard.board[y][x] = null;
-                gameboard.missed[y][x] = null;
-            }
-        }
-        resetHTMLGrid.bind(this)();
-        resetShipsArray.bind(this)();
-    }
-
-    function resetHTMLGrid() {
-        const HTMLGrid = document.querySelector(`.${this.name}-grid.game-board`);
-        HTMLGrid.innerHTML = "";
     }
 
     /* GAME LOGIC */
@@ -653,177 +661,10 @@ const Player = () => {
     function shipSunk(gridDiv) {
         const [y, x] = classToInteger(gridDiv);
         return this.opponent.gameboard.board[y][x].sunk;        
-    }
-
-    // shipDirection variable is when the direction of the ship is known
-    function computerGuessToHTML(gridDiv, relativeLocation = false) {
-        // Requires own function due to logic of a computer guesses
-        if (gridDiv.classList.contains("ship-present")) {
-            gridDiv.textContent = "X";
-            updateTurnText(`COMPUTER <span class="highlighted red">HIT</span>`)
-
-            computerHTMLToBoard.bind(this)(gridDiv);
-            
-            if (potentialComputerGuesses.length > 0) {
-                if (shipSunk.bind(this)(gridDiv)) {
-                    computerGuess.bind(this)();
-                } else {
-                    localisedComputerGuess.bind(this)(gridDiv, relativeLocation);
-                }
-            }
-
-        } else {
-            gridDiv.textContent = "●";
-            updateTurnText(`COMPUTER <span class="highlighted blue">MISSED</span>`)
-
-            computerHTMLToBoard.bind(this)(gridDiv);
-
-            // In Computer vs Player the computer board needs to be accessed through the player class
-            // Therefore reverse to logic in player class
-            this.showOverlay(false);
-            this.opponent.showOverlay(true);
-            gridDiv.id = "hit";
-        }
-
-    }
-
-    // Hit variable signifies to generate new localised guesses if localised guesses have already been generated
-    async function localisedComputerGuess(gridDiv=null, shipDirectionDiscovered=false) {
-        // First hit of a ship
-        if (!localisedGuesses) {
-            localisedGuesses = generateLocalComputerGuesses(gridDiv);
-        } // Second hit or greater
-        else if (shipDirectionDiscovered) {
-            // Generate new nearby divs
-            const newDivs = generateLocalComputerGuesses(gridDiv);
-            for (let potentialGuess in newDivs) {
-                localisedGuesses[potentialGuess] = newDivs[potentialGuess];
-            }
-
-            // Remove divs which are not in correct plane
-            removeLocalComputerGuesses(shipDirectionDiscovered);
-        }
-
-        // Randomly adjusts the computer response time with minTime
-        let minTime = await Math.max(150, Math.random() * 500) 
-        await new Promise(resolve => setTimeout(resolve, minTime));
-
-        // Performs an intelligent computer guess
-        const [ localGuess, relativeLocationToGuess ] = objectShift.bind(this)(localisedGuesses);
-        removeComputerGuess(localGuess, potentialComputerGuesses);
-        computerGuessToHTML.bind(this)(localGuess, relativeLocationToGuess);
-    }
-
-    function generateLocalComputerGuesses(gridDiv) {
-        // Recieved [y, x] to match up with the gameboard
-        const [y, x] = classToInteger(gridDiv);
-        const nearbyCoordinates = [
-            [y+1, x, "beneath"],
-            [y-1, x, "above"],
-            [y, x+1, "right"],
-            [y, x-1, "left"],
-        ] 
-        
-        const nearbyGuesses = {};
-        for (let coordinate of nearbyCoordinates) {
-            let [y, x, relativeLocation] = coordinate;
-            
-            // computerDivFromInteger returns null if not found
-            // Therefore will be null if not in potentialComputerGuesses or if out of range
-            const nearbyDiv = computerDivFromInteger(x, y)
-            
-            // Serialization: When you use an HTMLElement object as a key in an object, it is implicitly 
-            // converted to a string using its toString() method. This means that the actual object 
-            // reference is not used as the key, but rather its string representation.
-            if (nearbyDiv) nearbyGuesses[relativeLocation] = nearbyDiv;
-        }
-
-        return nearbyGuesses;      
-    }
-
-    // Similar logic to gridDivFromCoordinates
-    function computerDivFromInteger(x, y) {
-        let foundGridDiv = null;
-
-        potentialComputerGuesses.forEach(gridDiv => {
-            if (gridDiv.classList.contains(`${y}${x}`)) {
-                foundGridDiv = gridDiv;                
-            }
-        })
-
-        return foundGridDiv;
-    }
-
-    function objectShift(object) {
-        // Get the first key
-        const relativeLocation = Object.keys(object)[0];
-        // Remove the first key-value pair
-        const nearbyDiv = object[relativeLocation];
-        delete object[relativeLocation];
-        return [ nearbyDiv, relativeLocation ];
-    }
-
-    function removeLocalComputerGuesses(relativeLocation) {
-        // If ship direction has not be determined, calculate shipDirection
-        if (!shipDirection) {
-            shipDirection = calculateShipDirection.bind(this)(relativeLocation);
-        }
-
-        // Remove any potentialGuesses which are not on the same plane as the shipDirection
-        for (const potentialDirection in localisedGuesses) {
-            if (!direction[shipDirection].includes(potentialDirection)) {
-                delete localisedGuesses[potentialDirection];
-            }
-        }
-    }
-
-    function calculateShipDirection(relativeLocation) {
-        if (relativeLocation === "above" || relativeLocation === "beneath") {
-            shipDirection = "vertical";
-        } else {
-            shipDirection = "horizontal";
-        }
-        return shipDirection;
-    }
-
-    async function computerGuess() {
-        let guessIndex = await Math.floor(Math.random() * potentialComputerGuesses.length);
-        while (guessIndex >= potentialComputerGuesses.length) {
-            guessIndex = await Math.floor(Math.random() * potentialComputerGuesses.length);
-        }
-        const guessedDiv = await potentialComputerGuesses[guessIndex];
-
-        potentialComputerGuesses.splice(guessIndex, 1);
-        
-        // Randomises adjusts the computer response time with minTime
-        let minTime = await Math.max(150, Math.random() * 500) 
-        await new Promise(resolve => setTimeout(resolve, minTime));
-
-        computerGuessToHTML.bind(this)(guessedDiv);
-    }
-    
-    // Generating computer guesses on initialisation
-    function generateComputerGuesses() {
-        potentialComputerGuesses = []
-        const computerGrid = document.getElementById(`${this.opponent.name}Grid`)
-        const computerGridDivs = computerGrid.querySelectorAll("*");
-        computerGridDivs.forEach(div => {
-            potentialComputerGuesses.push(div);
-        })
-    }
-    
-    // Used for the removal of div's nearby to a ship when a ship is sunk
-    function removeComputerGuess(divToRemove, potentialComputerGuesses) {
-        for (let i = 0; i < potentialComputerGuesses.length; i++) {
-            if (potentialComputerGuesses[i] === divToRemove) {
-                potentialComputerGuesses.splice(i, 1);
-                break;
-            } 
-        }
     }   
 
+    // Used for interaction between DOM and board array
     function classToInteger(gridDiv) {
-        // Used for interaction between DOM and board array
         const classListString = gridDiv.getAttribute("class");
         const numbers = "0123456789"
         for (let className of classListString.split(" ")) {
@@ -833,8 +674,8 @@ const Player = () => {
         }
     }
 
+    // Convert's player interaction with grid into a guess by changing board array
     function HTMLtoboard(gridDiv) {
-        // Convert's player interaction with grid into a guess by changing board array
         if (!gameboard) return;
     
         const [y, x] = classToInteger(gridDiv);
@@ -859,37 +700,6 @@ const Player = () => {
 
             // Game over check?
             if (gameboard.allShipsSunk()) {
-                triggerOverallOverlay.bind(this)();
-            }
-        }
-    }
-
-    // Convert's computer's guess to board
-    function computerHTMLToBoard(gridDiv) {
-        if (!gameboard) return;
-    
-        const [y, x] = classToInteger(gridDiv);            
-        this.opponent.gameboard.recieveAttack([x, y]);
-        if (this.opponent.gameboard.board[y][x] != null && this.opponent.gameboard.board[y][x].sunk) {
-            updateTurnText(`COMPUTER <span class="highlighted orange">SANK</span> ONE OF ${this.opponent.name.toUpperCase()}'S SHIP`)
-            localisedGuesses = null;
-            shipDirection = null;
-
-            // Algorithm to find all all parts of sunk ship to change border to red 
-            // Allows for "sunk" to be added to each part of the sunken ship, not just the hit which sank the ship 
-            const coordinates = findTouchingShips(this.opponent.gameboard.board, x, y, new Set());
-            coordinates.forEach(coordinate => {
-                let x = parseInt(coordinate[1]);
-                let y = parseInt(coordinate[0]);
-                let shipDiv = this.opponent.gridDivFromCoordinates(y, x);
-                shipDiv.classList.add("sunk");
-                this.opponent.nearbyShipSquaresHit(x, y, potentialComputerGuesses);
-            })        
-
-            this.opponent.updateClassListOnShipSunk(this.opponent.gameboard.board[y][x]);
-
-            // Game over check?
-            if (this.opponent.gameboard.allShipsSunk()) {
                 triggerOverallOverlay.bind(this)();
             }
         }
@@ -981,6 +791,208 @@ const Player = () => {
         turnDiv.innerHTML = text;
     }
 
+    /* COMPUTER GUESSING LOGIC */
+    
+    async function computerGuess() {
+        let guessIndex = await Math.floor(Math.random() * potentialComputerGuesses.length);
+        while (guessIndex >= potentialComputerGuesses.length) {
+            guessIndex = await Math.floor(Math.random() * potentialComputerGuesses.length);
+        }
+        const guessedDiv = await potentialComputerGuesses[guessIndex];
+
+        potentialComputerGuesses.splice(guessIndex, 1);
+        
+        // Randomises adjusts the computer response time with minTime
+        let minTime = await Math.max(150, Math.random() * 500) 
+        await new Promise(resolve => setTimeout(resolve, minTime));
+
+        computerGuessToHTML.bind(this)(guessedDiv);
+    }
+    
+    // Generating computer guesses on initialisation
+    function generateComputerGuesses() {
+        potentialComputerGuesses = []
+        const computerGrid = document.getElementById(`${this.opponent.name}Grid`)
+        const computerGridDivs = computerGrid.querySelectorAll("*");
+        computerGridDivs.forEach(div => {
+            potentialComputerGuesses.push(div);
+        })
+    }
+    
+    // Used for the removal of div's nearby to a ship when a ship is sunk
+    function removeComputerGuess(divToRemove, potentialComputerGuesses) {
+        for (let i = 0; i < potentialComputerGuesses.length; i++) {
+            if (potentialComputerGuesses[i] === divToRemove) {
+                potentialComputerGuesses.splice(i, 1);
+                break;
+            } 
+        }
+    }
+
+    // Requires own function due to logic of a computer guesses
+    // relativeLocationOfDiv is when the plane of the ship (vertical or horizontal) is known
+    function computerGuessToHTML(gridDiv, relativeLocationOfDiv = false) {
+        if (gridDiv.classList.contains("ship-present")) {
+            gridDiv.textContent = "X";
+            updateTurnText(`COMPUTER <span class="highlighted red">HIT</span>`)
+
+            computerHTMLToBoard.bind(this)(gridDiv);
+            
+            if (potentialComputerGuesses.length > 0) {
+                if (shipSunk.bind(this)(gridDiv)) {
+                    computerGuess.bind(this)();
+                } else {
+                    localisedComputerGuess.bind(this)(gridDiv, relativeLocationOfDiv);
+                }
+            }
+
+        } else {
+            gridDiv.textContent = "●";
+            updateTurnText(`COMPUTER <span class="highlighted blue">MISSED</span>`)
+
+            computerHTMLToBoard.bind(this)(gridDiv);
+
+            // In Computer vs Player the computer board needs to be accessed through the player class
+            // Therefore reverse to logic in player class
+            this.showOverlay(false);
+            this.opponent.showOverlay(true);
+            gridDiv.id = "hit";
+        }
+
+    }
+
+    // Convert's computer's guess to board
+    function computerHTMLToBoard(gridDiv) {
+        if (!gameboard) return;
+    
+        const [y, x] = classToInteger(gridDiv);            
+        this.opponent.gameboard.recieveAttack([x, y]);
+        if (this.opponent.gameboard.board[y][x] != null && this.opponent.gameboard.board[y][x].sunk) {
+            updateTurnText(`COMPUTER <span class="highlighted orange">SANK</span> ONE OF ${this.opponent.name.toUpperCase()}'S SHIP`)
+            localisedGuesses = null;
+            shipDirection = null;
+
+            // Algorithm to find all all parts of sunk ship to change border to red 
+            // Allows for "sunk" to be added to each part of the sunken ship, not just the hit which sank the ship 
+            const coordinates = findTouchingShips(this.opponent.gameboard.board, x, y, new Set());
+            coordinates.forEach(coordinate => {
+                let x = parseInt(coordinate[1]);
+                let y = parseInt(coordinate[0]);
+                let shipDiv = this.opponent.gridDivFromCoordinates(y, x);
+                shipDiv.classList.add("sunk");
+                this.opponent.nearbyShipSquaresHit(x, y, potentialComputerGuesses);
+            })        
+
+            this.opponent.updateClassListOnShipSunk(this.opponent.gameboard.board[y][x]);
+
+            // Game over check?
+            if (this.opponent.gameboard.allShipsSunk()) {
+                triggerOverallOverlay.bind(this)();
+            }
+        }
+    }
+
+    async function localisedComputerGuess(gridDiv=null, discoveredShipDirection=false) {
+        // First hit of a ship
+        if (!localisedGuesses) {
+            localisedGuesses = generateLocalComputerGuesses(gridDiv);
+        } // Second hit or greater
+        else if (discoveredShipDirection) {
+            // Generate new nearby divs
+            const newDivs = generateLocalComputerGuesses(gridDiv);
+            for (let potentialGuess in newDivs) {
+                localisedGuesses[potentialGuess] = newDivs[potentialGuess];
+            }
+
+            // Remove divs which are not in correct plane
+            removeLocalComputerGuesses(discoveredShipDirection);
+        }
+
+        // Randomly adjusts the computer response time with minTime
+        let minTime = await Math.max(150, Math.random() * 500) 
+        await new Promise(resolve => setTimeout(resolve, minTime));
+
+        // Performs an intelligent computer guess
+        const [ localGuess, relativeLocationOfDiv ] = objectShift.bind(this)(localisedGuesses);
+        removeComputerGuess(localGuess, potentialComputerGuesses);
+        computerGuessToHTML.bind(this)(localGuess, relativeLocationOfDiv);
+    }
+
+    function generateLocalComputerGuesses(gridDiv) {
+        // Recieved [y, x] to match up with the gameboard
+        const [y, x] = classToInteger(gridDiv);
+        const nearbyCoordinates = [
+            [y+1, x, "beneath"],
+            [y-1, x, "above"],
+            [y, x+1, "right"],
+            [y, x-1, "left"],
+        ] 
+        
+        const nearbyGuesses = {};
+        for (let coordinate of nearbyCoordinates) {
+            let [y, x, relativeLocationOfDiv] = coordinate;
+            
+            // computerDivFromInteger returns null if not found
+            // Therefore will be null if not in potentialComputerGuesses or if out of range
+            const nearbyDiv = computerDivFromInteger(x, y)
+            
+            // Serialization: When you use an HTMLElement object as a key in an object, it is implicitly 
+            // converted to a string using its toString() method. This means that the actual object 
+            // reference is not used as the key, but rather its string representation.
+            if (nearbyDiv) nearbyGuesses[relativeLocationOfDiv] = nearbyDiv;
+        }
+
+        return nearbyGuesses;      
+    }
+
+    // Similar logic to gridDivFromCoordinates
+    function computerDivFromInteger(x, y) {
+        let foundGridDiv = null;
+
+        potentialComputerGuesses.forEach(gridDiv => {
+            if (gridDiv.classList.contains(`${y}${x}`)) {
+                foundGridDiv = gridDiv;                
+            }
+        })
+
+        return foundGridDiv;
+    }
+
+    function objectShift(object) {
+        // Get the first key
+        const relativeLocationOfDiv = Object.keys(object)[0];
+        // Remove the first key-value pair
+        const nearbyDiv = object[relativeLocationOfDiv];
+        delete object[relativeLocationOfDiv];
+        return [ nearbyDiv, relativeLocationOfDiv ];
+    }
+
+    function removeLocalComputerGuesses(relativeLocationOfDiv) {
+        // If ship direction has not be determined, calculate shipDirection
+        if (!shipDirection) {
+            shipDirection = calculateShipDirection.bind(this)(relativeLocationOfDiv);
+        }
+
+        // Remove any potentialGuesses which are not on the same plane as the shipDirection
+        for (const potentialDirection in localisedGuesses) {
+            if (!direction[shipDirection].includes(potentialDirection)) {
+                delete localisedGuesses[potentialDirection];
+            }
+        }
+    }
+
+    function calculateShipDirection(relativeLocationOfDiv) {
+        if (relativeLocationOfDiv === "above" || relativeLocationOfDiv === "beneath") {
+            shipDirection = "vertical";
+        } else {
+            shipDirection = "horizontal";
+        }
+        return shipDirection;
+    }
+
+
+    /* Game ending functions */
+
     function removeAllEventListeners() {
         const allGridDivs = Array.from(document.querySelectorAll(".game-board.number"));
 
@@ -1028,10 +1040,8 @@ const Player = () => {
         })
     }
     
-    function resetShipsArray() {
-        gameboard.ships.length = 0;
-    }
+    
 
-    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTML, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideGridShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips, resetHTMLGrid, progressFromShipPlacement, resetShipsArray, planeOfPlacingShip}
+    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTMLDivContainers, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideGridShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips, resetHTMLGrid, progressFromShipPlacement, resetShipsArray, planeOfPlacingShip}
 }
 export {Ship, Gameboard, Player};
