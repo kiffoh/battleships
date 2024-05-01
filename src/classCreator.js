@@ -133,7 +133,6 @@ const Player = () => {
 
     // Function to build the top level HTML stucture for player's grids 
     function buildHTMLDivContainers() {
-        
         const gridContainers = document.querySelector(".grid-containers");
         const playerContainer = document.createElement("div");
         playerContainer.classList.add(`${this.name}-grid-container`);
@@ -1029,18 +1028,24 @@ const Player = () => {
         const resetBtn = document.querySelector(".reset-btn")
         const refreshBtn = document.querySelector(".refresh-btn");
 
-        newGameBtns = [resetBtn, refreshBtn];
+        resetBtn.addEventListener("click", () => {
+            overlay.style.display = "none";
+            const resetHTML = document.querySelector(".grid-containers");
 
-        newGameBtns.forEach(btn => {
-            btn.addEventListener("click", () => {
-                overlay.style.display = "none";
-                const resetHTML = document.querySelector(".grid-containers");
+            resetHTML.innerHTML = "";
 
-                resetHTML.innerHTML = "";
+            resetShipsArray.bind(this)();
+            this.opponent.resetShipsArray();
+        })
 
-                resetShipsArray.bind(this)();
-                this.opponent.resetShipsArray();
-            })
+        refreshBtn.addEventListener("click", () => {
+            overlay.style.display = "none";
+            const resetHTML = document.querySelector(".grid-containers");
+
+            resetHTML.innerHTML = "";
+
+            resetShipsArray.bind(this)();
+            this.opponent.resetShipsArray();
         })
     }
     
