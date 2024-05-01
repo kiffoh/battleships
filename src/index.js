@@ -4,12 +4,15 @@ import { goesFirst, playerOrComputer } from "./goesFirst";
 import { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, changeOverlaysTo, handleHorizontalOrVerticalButtonClick } from "./buttonLogic";
 import { randomise } from "./randomise";
 
-async function initialiseGame() {
+let player1WinningCounter = null;
+let player2WinningCounter = null;
+
+async function initialiseGame(previousOpponent=null) {
 
     // WELCOME STAGE
-    let opponent = await playerOrComputer();
+    let opponent = (!previousOpponent) ? await playerOrComputer() : previousOpponent;
     if (opponent === "player") opponent = "player2";
-
+    
     // Initialising the player classes
     const player1 = Player();
     player1.name = "player1";
@@ -118,6 +121,9 @@ async function initialiseGame() {
     // Reset the game - ONLY VISUALISES WHEN GAME IS FINISHED
     const resetWholeGame = document.querySelector(".reset-btn");
     resetWholeGame.addEventListener("click", initialiseGame);
+
+    const refreshGame = document.querySelector(".refresh-btn");
+    refreshGame.addEventListener("click", initialiseGame(player2.name));
 }
 
 initialiseGame();
