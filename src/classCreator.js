@@ -1028,15 +1028,20 @@ const Player = () => {
         congratulationsTitle.textContent = `Congratulations ${winner.toUpperCase()} wins!        `
 
         const resetBtn = document.querySelector(".reset-btn")
+        const refreshBtn = document.querySelector(".refresh-btn");
 
-        resetBtn.addEventListener("click", () => {
-            overlay.style.display = "none";
-            const resetHTML = document.querySelector(".grid-containers");
+        newGameBtns = [resetBtn, refreshBtn];
 
-            resetHTML.innerHTML = "";
+        newGameBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                overlay.style.display = "none";
+                const resetHTML = document.querySelector(".grid-containers");
 
-            resetShipsArray.bind(this)();
-            this.opponent.resetShipsArray();
+                resetHTML.innerHTML = "";
+
+                resetShipsArray.bind(this)();
+                this.opponent.resetShipsArray();
+            })
         })
     }
     
