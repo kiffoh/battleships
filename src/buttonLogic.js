@@ -92,16 +92,6 @@ function multiPlayerConfirmBtn(player1, player2) {
             // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
             if (player2.allShipsPlaced()) {
                 player2.progressFromShipPlacement("player2TurnFinish")
-                /*
-                player1.removeRules();
-                player1.removeButtons();
-                player1.hideGridShips();
-
-                player2.removeShips();
-                player2.removeButtons();
-                player2.hideGridShips();
-                player2.gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
-                */
                 
                 // Revert overlay colour back to original
                 changeOverlaysTo("partially-transparent");
