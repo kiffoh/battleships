@@ -15,6 +15,9 @@ async function initialiseGame() {
         opponent = await playerOrComputer();
         if (opponent === "player") opponent = "player2";
 
+        const resetHTML = document.querySelector(".grid-containers");
+
+        resetHTML.innerHTML = "";
     } 
     /*
     else {
