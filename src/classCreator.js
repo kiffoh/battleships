@@ -147,6 +147,7 @@ const Player = () => {
                 <div class="grid-overlay" id="${this.name}GridOverlay"></div>
         `
         gridContainers.appendChild(playerContainer);
+
     }
 
     // Build player's HTML grid based off player's board array
@@ -279,7 +280,7 @@ const Player = () => {
 
         shipsContainer.innerHTML = `
         <div class="ship-container-1">
-            <div class="draggable-ship" data-size="4"></div>
+            <div class="draggable-ship" data-size="4"></div> 
             <div class="draggable-ship" data-size="3"></div>
             <div class="draggable-ship" data-size="3"></div>
         </div>
@@ -1026,11 +1027,13 @@ const Player = () => {
         // Add the inner HTML content for the player-selection div
         congratulationsTitle.textContent = `Congratulations ${winner.toUpperCase()} wins!        `
 
+    /*
         const resetBtn = document.querySelector(".reset-btn")
         const refreshBtn = document.querySelector(".refresh-btn");
 
         resetBtn.addEventListener("click", () => {
             overlay.style.display = "none";
+
             const resetHTML = document.querySelector(".grid-containers");
 
             resetHTML.innerHTML = "";
@@ -1041,13 +1044,29 @@ const Player = () => {
 
         refreshBtn.addEventListener("click", () => {
             overlay.style.display = "none";
-            const resetHTML = document.querySelector(".grid-containers");
-
-            resetHTML.innerHTML = "";
 
             resetShipsArray.bind(this)();
             this.opponent.resetShipsArray();
+
+            /*
+            const resetHTML = document.querySelector(".grid-containers");
+
+            resetHTML.innerHTML = ""; 
+            
+
+            resetHTMLGrid.bind(this);
+            this.opponent.resetHTMLGrid();
+            
+            /* 
+            removeShips.bind(this);
+            this.oppponent.removeShips();
+            
+            UNDERNEATH DONE IN RESETGRID
+            resetShipsArray.bind(this)();
+            this.opponent.resetShipsArray();
+            
         })
+        */
     }
     
     

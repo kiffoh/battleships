@@ -115,6 +115,13 @@ div.player1-grid.number.not-valid, div.player2-grid.number.not-valid {
     padding: 1em;
 }
 
+.inside-ship {
+    width: 32px;
+    height: 32px;
+    border: 2px solid darkblue;
+    position: relative;
+}
+
 .draggable-ship[data-size="1"], .draggable-ship.vertical[data-size="1"] {
     width: 32px;
     height: 32px;
@@ -163,6 +170,7 @@ div.player1-grid.number.not-valid, div.player2-grid.number.not-valid {
     outline: 2px solid darkblue;
     position: relative;
 }
+
 
 h3.title {
     grid-area: 1 / 2;

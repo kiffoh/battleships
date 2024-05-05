@@ -6,14 +6,28 @@ import { randomise } from "./randomise";
 
 let player1WinningCounter = null;
 let player2WinningCounter = null;
+let opponent = null;
 
-async function initialiseGame(previousOpponent=null) {
+async function initialiseGame() {
 
     // WELCOME STAGE
-    let opponent = (!previousOpponent) ? await playerOrComputer() : previousOpponent;
-    if (opponent === "player") opponent = "player2";
-    console.log(opponent);
-    
+    if (opponent === null) {
+        opponent = await playerOrComputer();
+        if (opponent === "player") opponent = "player2";
+
+    } 
+    /*
+    else {
+        // Initialising the player classes
+        player1 = Player();
+        player1.name = "player1";
+        player2 = Player();
+        player2.name = `${opponent}`;
+    }
+    */
+
+    // let opponent = await playerOrComputer()
+
     // Initialising the player classes
     const player1 = Player();
     player1.name = "player1";
@@ -51,7 +65,6 @@ async function initialiseGame(previousOpponent=null) {
         player2.buildButtonContainer();
 
         player2.buildHTMLGrid(true);
-
     }
 
     // Attach logic to each button (HorizontalOrVertical, Randomise, Reset, Confirm) for positioning stage
@@ -118,14 +131,47 @@ async function initialiseGame(previousOpponent=null) {
     
     // Reset the game - ONLY VISUALISES WHEN GAME IS FINISHED
     const resetWholeGame = document.querySelector(".reset-btn");
-    resetWholeGame.addEventListener("click", initialiseGame);
+    resetWholeGame.addEventListener("click", () => {
+        opponent = null;
 
-    /*
+        const overlay = document.getElementById("gameEndingOverlay");
+        overlay.style.display = "none";
+
+        const resetHTML = document.querySelector(".grid-containers");
+
+        resetHTML.innerHTML = "";
+
+        player1.resetShipsArray();
+        player2.resetShipsArray();
+
+        initialiseGame();
+    });
+
     const refreshGame = document.querySelector(".refresh-btn");
     refreshGame.addEventListener("click", () => {
-        initialiseGame(player2.name);
+        /*
+        let player2name = player2.name;
+        console.log(typeof player2.name)
+        console.log(typeof player2name);
+        
+        player1.resetGrid();
+        player1.removeShips();
+        player2.resetGrid();
+        player2.removeShips();
+        */
+
+        const overlay = document.getElementById("gameEndingOverlay");
+        overlay.style.display = "none";
+
+        const resetHTML = document.querySelector(".grid-containers");
+
+        resetHTML.innerHTML = "";
+
+        player1.resetShipsArray();
+        player2.resetShipsArray();
+         
+        initialiseGame();
     });
-    */
 }
 
 initialiseGame();
