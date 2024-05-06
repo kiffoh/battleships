@@ -47,6 +47,16 @@ function playerOrComputer() {
             </div>
             <div class="player-selection-overlay"></div>            
         </div>
+        <div class="game-rules-overlay" id="gameRulesOverlay">
+            <h3 class="game-rules-title">GAME RULES</h3>
+            <p>Try and work out where the enemy ships are and sink them first!</p>
+            <p>Each player places their ships, of 1 to 4 squares in size, secretly on a their square grid.</p>
+            <p>Player's take turns shooting at the opponents grid by clicking on a square to a response of "HIT", "MISS" or "SUNK".</p>
+            <p>First player to sink all of their opponents ships wins! Good Luck!</p>
+            <p>Player vs Player is local play which means the screen is shared.<p>
+            <p>Local play requires the opponent to not look at the screen whilst the other player is positioning their ships!</p>
+            <p>TIP: Watch the turn counter beneath the title if you get lost.</p>
+        </div>
         `;
 
     // Append the player-selection div to the grid-overlay div

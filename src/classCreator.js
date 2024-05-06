@@ -201,18 +201,19 @@ const Player = () => {
         this.showOverlay(true);
 
         playerOverlay.innerHTML = `
-            <h3 class="rules-title">RULES</h3>
-            <p>Try and deduce where the enemy ships are and sink them first!</p>
-            <br></br>
-            <p>Each player deploys their ships (of lengths varying from 1 to 4 squares) secretly on a their square grid.</p>
-            <p>Every turn each player shoots at the other's grid by clicking on a location to a response of "HIT", "MISS" or "SUNK".</p>
-            <p>(Watch the turn counter beneath the title if you get lost)</p>
-            <p>First player to sink all of the opponents ships wins! Good Luck!</p>
+            <h3 class="rules-title">RULES FOR SHIP PLACEMENT</h3>
+            <p>Try and work out where the enemy ships are and sink them first!</p>
+            <p>Each player places their ships, of 1 to 4 squares in size, secretly on a their square grid.</p>
+            <p>Player's take turns shooting at the opponents grid by clicking on a square to a response of "HIT", "MISS" or "SUNK".</p>
+            <p>First player to sink all of their opponents ships wins! Good Luck!</p>
+            <p>Player vs Player is local play which means the screen is shared.</p>
+            <p>Local play requires the opponent to not look at the screen whilst the other player is positioning their ships!</p>
+            <p>TIP: Watch the turn counter beneath the title if you get lost.</p>
         `;
 
         if (pvp) {
             playerOverlay.innerHTML = `
-            <h3 class="rules-title">RULES</h3>
+            <h3 class="rules-title">RULES FOR SHIP PLACEMENT</h3>
             <p>Try and deduce where the enemy ships are and sink them first!</p>
             <br></br>
             <p>Each player deploys their ships (of lengths varying from 1 to 4 squares) secretly on a their square grid.</p>
@@ -241,6 +242,10 @@ const Player = () => {
         const btnContainer = document.createElement("div");
         btnContainer.classList.add("btn-container");
 
+        const placingDiv = document.createElement("div");
+        placingDiv.innerHTML = 'PLACING:'
+        placingDiv.classList.add(`placing-div`);
+
         const horizontalOrVerticalBtn = document.createElement("button");
         horizontalOrVerticalBtn.classList.add(`${this.name}`, `horizontal-or-vertical-btn`);
         horizontalOrVerticalBtn.textContent = "HORIZONTAL";
@@ -257,6 +262,7 @@ const Player = () => {
         resetBtn.classList.add(`${this.name}`, `reset-btn`);
         resetBtn.textContent = "RESET";
 
+        btnContainer.appendChild(placingDiv);
         btnContainer.appendChild(horizontalOrVerticalBtn);
         btnContainer.appendChild(randomiseBtn);
         btnContainer.appendChild(resetBtn);
@@ -564,7 +570,7 @@ const Player = () => {
             // Called on Player1
             if (player2TurnTracker === "player2TurnStart") {
                 // Remove Rules and Ships, keeps buttons for aethstetic reasons for how the rules look
-                buildRules.bind(this)(true);
+                buildRules.bind(this)();
                 removeShips.bind(this)();
 
                 // Need to reset missed gameboard as it was used to prevent invalid ship placement

@@ -1,6 +1,23 @@
 body {
     user-select: none;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
+
+header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+}
+
+h1.title {
+    text-align: center;
+    /*
+    position: relative;
+    left: 50%;
+    */
+    color: rgb(73, 110, 235);
+}
+
+
 
 .player1-grid.number, .player2-grid.number, .computer-grid.number {
     background-color: white;
@@ -11,10 +28,31 @@ body {
 }
 
 .centered-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%; /* Adjust as needed */
+    display: grid;
+    grid-template-rows: 2fr auto 3fr;
+    height: 100%; 
     background-color: rgb(255, 255, 255);
+
+    gap: 2em;
+}
+
+.game-rules-btn {
+    position: absolute;
+    left: 90%;
+    top: 3.4%;
+
+    color: rgb(73, 110, 235);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: large;
+    padding: 4px 8px;
+}
+
+.game-rules-overlay {
+    text-align: center;
+}
+
+.game-rules-title {
+    color: rgb(73, 110, 235);
 }
 
 #gameEndingOverlay {
@@ -25,9 +63,14 @@ body {
 
 }
 
-.reset-btn-div {
+.reset-btn-div, .refresh-btn-div {
     text-align: center;
     padding: 16px;
+}
+
+.game-end-btn-container {
+    display: flex;
+    justify-content: center;
 }
 
 .welcome-title {
@@ -35,6 +78,8 @@ body {
     flex: 4;
     justify-content: center;
     align-items: flex-end;
+
+    color: rgb(73, 110, 235);
 }
 
 .player-selection {
@@ -57,6 +102,11 @@ body {
 .player-2-btn-container, .computer-btn-container {
     display: flex;
     justify-content: center;
+}
+
+.player-2-btn, .computer-btn{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: large;
 }
 
 #hit, #revealedMiss {
@@ -201,10 +251,6 @@ h3.title {
     justify-content: space-evenly;
 }
 
-h1 {
-    text-align: center;
-}
-
 /* ONLY colour player grid */
 .ship-present.reveal {
     outline: 2px solid darkblue;
@@ -217,11 +263,22 @@ h1 {
     align-items: center;
     justify-content: center;
     margin-top: 32px;
+
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-.start-button, .reset-btn, .randomise-btn, .confirm-btn, .horizontal-or-vertical-btn {
+.start-button, .reset-btn, .randomise-btn, .confirm-btn, .horizontal-or-vertical-btn, .refresh-btn {
     font-size: large;
     padding: 4px 8px;
+
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.placing-div {
+    font-size: large;
+    color: rgb(73, 110, 235);
+    display: flex;
+    align-items: center;
 }
 
 .horizontal-or-vertical-btn {

@@ -65,13 +65,20 @@ async function initialiseGame() {
         
     } else {
         // As player1 will always position ships first
-        player2.buildRules(true);
+        player2.buildRules();
 
         player1.buildButtonContainer();
         player2.buildButtonContainer();
 
         player2.buildHTMLGrid(true);
     }
+
+    const gameRulesBtn = document.querySelector(".game-rules-btn");
+    gameRulesBtn.addEventListener("click", () => {
+        const gameRulesOverlay = document.querySelector(".game-rules-overlay");
+        
+        gameRulesOverlay.style.display = (gameRulesOverlay.style.display === "none" ? "block" : "none");
+    })
 
     // Attach logic to each button (HorizontalOrVertical, Randomise, Reset, Confirm) for positioning stage
     // Use a for...of loop to iterate over the buttons 
