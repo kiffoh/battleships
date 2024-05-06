@@ -195,35 +195,23 @@ const Player = () => {
     }
 
     // Display's rules
-    function buildRules(pvp=null) {
+    function buildRules() {
         const playerOverlay = document.getElementById(`${this.name}GridOverlay`);
 
         this.showOverlay(true);
 
         playerOverlay.innerHTML = `
             <h3 class="rules-title">RULES FOR SHIP PLACEMENT</h3>
-            <p>Try and work out where the enemy ships are and sink them first!</p>
-            <p>Each player places their ships, of 1 to 4 squares in size, secretly on a their square grid.</p>
-            <p>Player's take turns shooting at the opponents grid by clicking on a square to a response of "HIT", "MISS" or "SUNK".</p>
-            <p>First player to sink all of their opponents ships wins! Good Luck!</p>
-            <p>Player vs Player is local play which means the screen is shared.</p>
-            <p>Local play requires the opponent to not look at the screen whilst the other player is positioning their ships!</p>
-            <p>TIP: Watch the turn counter beneath the title if you get lost.</p>
+            <p>Click on the grid to place your ships! </p>
+            <p>You can change the ship you want to place by clicking on another.</p>
+            <p>Legal placements will highlight green.</p>
+            <p>Illegal placements will highlight as red.</p>
+            <p>You cannot place a ship within a square of an already placed ship, or if the ship length means it is positioned outside the grid.</p>
+            <p>Button descriptions:</p>
+            <p>PLACING: Displays the current direction of the ship to be placed. Click the direction of the ship, HORIZONTAL / VERTICAL, to change the direction.</p>
+            <p>RANDOMISE: Places all ships onto the board in a random manner.</p>
+            <p>RESET: Removes all ships from the grid to the starting position.</p>
         `;
-
-        if (pvp) {
-            playerOverlay.innerHTML = `
-            <h3 class="rules-title">RULES FOR SHIP PLACEMENT</h3>
-            <p>Try and deduce where the enemy ships are and sink them first!</p>
-            <br></br>
-            <p>Each player deploys their ships (of lengths varying from 1 to 4 squares) secretly on a their square grid.</p>
-            <p>Every turn each player shoots at the other's grid by clicking on a location to a response of "HIT", "MISS" or "SUNK".</p>
-            <p>(Watch the turn counter beneath the title if you get lost)</p>
-            <p>First player to sink all of the opponents ships wins! Good Luck!</p>
-            <br></br>
-            <p>Local play requires the opponent to not look at the screen whilst the other player is positioning their ships!</p>
-        `;
-        }
     }
 
     function removeRules() {
