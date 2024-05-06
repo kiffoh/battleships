@@ -50,26 +50,20 @@ async function initialiseGame() {
     player1.buildShips();
     player1.applyDraggableShips();
 
-    if (player2.name === "computer") {
-        // As player1 will always position ships first
-        player2.buildRules();
+    // As player1 will always position ships first
+    player2.buildRules();
 
-        player1.buildButtonContainer();
+    player1.buildButtonContainer();
+    // player2 button container always built so there is enough space for the ship placement rules
+    player2.buildButtonContainer();
 
-        const player1handleHorizontalOrVerticalBtn = document.querySelector(".horizontal-or-vertical-btn");
-        player1handleHorizontalOrVerticalBtn.onclick = () => handleHorizontalOrVerticalClick(player1handleHorizontalOrVerticalBtn, player1);
-        
+    if (player2.name === "computer") {        
         player2.buildHTMLGrid(false);
 
+        // Change the overlay colour for ship placement rules, true signals it is vs a computer
         changeOverlaysTo("blue", true);
         
     } else {
-        // As player1 will always position ships first
-        player2.buildRules();
-
-        player1.buildButtonContainer();
-        player2.buildButtonContainer();
-
         player2.buildHTMLGrid(true);
     }
 
