@@ -56,6 +56,8 @@ function singlePlayerConfirmBtn(player1, player2) {
             if (player1.allShipsPlaced()) {
                 player1.progressFromShipPlacement();
 
+                player2.removeButtons();
+
                 changeOverlaysTo("partially-transparent", true)
                 
                 resolve();
@@ -67,7 +69,7 @@ function singlePlayerConfirmBtn(player1, player2) {
 }
 
 function multiPlayerConfirmBtn(player1, player2) {
-    // Change the overlay colour for ship placement
+    // Change the overlay colour for ship placement rules
     changeOverlaysTo("blue");
 
     const player1ConfirmBtn = document.querySelector(".player1.confirm-btn");
