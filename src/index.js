@@ -15,21 +15,13 @@ async function initialiseGame() {
         opponent = await playerOrComputer();
         if (opponent === "player") opponent = "player2";
 
+        player1WinningCounter = 0;
+        player2WinningCounter = 0;
+
         const resetHTML = document.querySelector(".grid-containers");
 
         resetHTML.innerHTML = "";
-    } 
-    /*
-    else {
-        // Initialising the player classes
-        player1 = Player();
-        player1.name = "player1";
-        player2 = Player();
-        player2.name = `${opponent}`;
     }
-    */
-
-    // let opponent = await playerOrComputer()
 
     // Initialising the player classes
     const player1 = Player();
@@ -42,6 +34,12 @@ async function initialiseGame() {
     
     player1.opponent = player2;
     player2.opponent = player1;
+
+    player1.winningCounter = player1WinningCounter;
+    player2.winningCounter = player2WinningCounter;
+
+    console.log("p1 WC:",player1WinningCounter)
+    console.log("p2 WC:",player2WinningCounter)
 
     // SHIP POSITION STAGE
     player1.updateTurnText(`${player1.name.toUpperCase()} <span class="highlighted green">PLACE YOUR SHIPS</span>`);
@@ -156,6 +154,8 @@ async function initialiseGame() {
 
     const refreshGame = document.querySelector(".refresh-btn");
     refreshGame.addEventListener("click", () => {
+        player1WinningCounter = player1.winningCounter;
+        player2WinningCounter = player2.winningCounter;
         /*
         let player2name = player2.name;
         console.log(typeof player2.name)
