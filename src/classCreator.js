@@ -115,6 +115,7 @@ const Player = () => {
     const gameboard = Gameboard();
     const name = "";
     const opponent = null;
+    let winningCounter = null;
 
     // Variables for ship placement section
     let selectedShip = null;
@@ -1007,64 +1008,33 @@ const Player = () => {
 
         removeAllEventListeners.bind(this)();
 
-        // Create a new div element to hold the player-selection HTML content
+        // Obtain the div element which will hold the player-selection HTML content
         const congratulationsTitle = document.querySelector(".winner-confirmation");
 
         let winner;
 
         if (this.gameboard.allShipsSunk()) {
             winner = this.opponent.name;
+            this.opponent.winningCounter++;
         } else {
             winner = this.name;
+            winningCounter++;
         }
 
         // Add the inner HTML content for the player-selection div
-        congratulationsTitle.textContent = `Congratulations ${winner.toUpperCase()} wins!        `
+        congratulationsTitle.textContent = `Congratulations ${winner.toUpperCase()} wins!`
 
-    /*
-        const resetBtn = document.querySelector(".reset-btn")
-        const refreshBtn = document.querySelector(".refresh-btn");
 
-        resetBtn.addEventListener("click", () => {
-            overlay.style.display = "none";
-
-            const resetHTML = document.querySelector(".grid-containers");
-
-            resetHTML.innerHTML = "";
-
-            resetShipsArray.bind(this)();
-            this.opponent.resetShipsArray();
-        })
-
-        refreshBtn.addEventListener("click", () => {
-            overlay.style.display = "none";
-
-            resetShipsArray.bind(this)();
-            this.opponent.resetShipsArray();
-
-            /*
-            const resetHTML = document.querySelector(".grid-containers");
-
-            resetHTML.innerHTML = ""; 
-            
-
-            resetHTMLGrid.bind(this);
-            this.opponent.resetHTMLGrid();
-            
-            /* 
-            removeShips.bind(this);
-            this.oppponent.removeShips();
-            
-            UNDERNEATH DONE IN RESETGRID
-            resetShipsArray.bind(this)();
-            this.opponent.resetShipsArray();
-            
-        })
-        */
+        const currentScore = document.querySelector(".current-score#gameEnd");
+        if (this.name === "player1") {
+            currentScore.textContent = `${this.name.toUpperCase()}: ${this.winningCounter}     -     ${this.opponent.name.toUpperCase()}: ${this.opponent.winningCounter}`;
+        } else {
+            currentScore.textContent = `${this.opponent.name.toUpperCase()}: ${this.opponent.winningCounter}     -     ${this.name.toUpperCase()}: ${this.winningCounter}`;
+        }
     }
     
     
 
-    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTMLDivContainers, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideGridShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips, resetHTMLGrid, progressFromShipPlacement, resetShipsArray, planeOfPlacingShip}
+    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTMLDivContainers, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideGridShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips, resetHTMLGrid, progressFromShipPlacement, resetShipsArray, planeOfPlacingShip, winningCounter}
 }
 export {Ship, Gameboard, Player};
