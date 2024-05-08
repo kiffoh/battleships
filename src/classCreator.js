@@ -202,14 +202,14 @@ const Player = () => {
         playerOverlay.innerHTML = `
             <h3 class="rules-title">RULES FOR SHIP PLACEMENT</h3>
             <p>Click on the grid to place your ships! </p>
-            <p>You can change the ship you want to place by clicking on another.</p>
-            <p>Legal placements will highlight green.</p>
-            <p>Illegal placements will highlight as red.</p>
-            <p>You cannot place a ship within a square of an already placed ship, or if the ship length means it is positioned outside the grid.</p>
-            <p>Button descriptions:</p>
-            <p>PLACING: Displays the current direction of the ship to be placed. Click the direction of the ship, HORIZONTAL / VERTICAL, to change the direction.</p>
-            <p>RANDOMISE: Places all ships onto the board in a random manner.</p>
-            <p>RESET: Removes all ships from the grid to the starting position.</p>
+            <p>You can <strong>change the ship</strong> you want to place by <strong>clicking on another</strong>.</p>
+            <p><span class="highlighted green"><strong>Legal</strong></span> placements highlight <strong><span class="highlighted green">green</span></strong>. <span class="highlighted red"><strong>Illegal</strong></span> placements highlight <span class="highlighted red"><strong>red</strong></span>.</p>
+            <p>You <strong>cannot place</strong> a ship within <strong>a square</strong> of an <strong>already placed ship</strong>, or if the ship <strong>length</strong> means it is positioned <strong>outside the grid</strong>.</p>
+            <br></br>
+            <p><strong>Button descriptions:</strong></p>
+            <p><strong>PLACING:</strong> Displays the <strong>current direction</strong> of the ship to be placed. <strong>Click</strong> the direction of the ship, HORIZONTAL / VERTICAL, to <strong>change</strong> the direction.</p>
+            <p><strong>RANDOMISE:</strong> Places all ships onto the board in a random manner.</p>
+            <p><strong>RESET:</strong> Removes all ships from the grid to the starting position.</p>
         `;
     }
 
