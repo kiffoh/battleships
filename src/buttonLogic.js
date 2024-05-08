@@ -1,5 +1,33 @@
 import { randomise } from "./randomise";
 
+function handleGameRulesButtonClick() {
+    const gameRulesOverlay = document.querySelector(".game-rules-overlay");
+
+        // Body is used to prevent the scroll bar whilst the animation takes place
+        // Scroll bar causes unwanted movement of other divs
+        const body = document.querySelector("body");
+        
+        if (gameRulesOverlay.style.display === "none") {
+            gameRulesOverlay.style.display = "block";
+            body.style.overflow = "hidden";
+            gameRulesOverlay.classList.add("rules-load-in");
+
+            gameRulesOverlay.addEventListener("animationend", () => {
+                gameRulesOverlay.classList.remove("rules-load-in");
+                body.style.overflow = "auto";
+            }, { once: true })
+        } else {
+            body.style.overflow = "hidden";
+            gameRulesOverlay.classList.add("rules-load-out");
+
+            gameRulesOverlay.addEventListener("animationend", () => {
+                gameRulesOverlay.classList.remove("rules-load-out");
+                gameRulesOverlay.style.display = "none";
+                body.style.overflow = "auto";
+            }, { once: true })
+        }
+}
+
 function handleHorizontalOrVerticalButtonClick(button, player1, player2) {
     if (button.classList.contains("player1")) {
         button.textContent = (button.textContent === "HORIZONTAL" ? "VERTICAL" : "HORIZONTAL");
@@ -145,4 +173,4 @@ function hideShipsContainer(hide, playerName) {
     }
 }
 
-export { handleHorizontalOrVerticalButtonClick, handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, hideShipsContainer, changeOverlaysTo }
+export { handleGameRulesButtonClick, handleHorizontalOrVerticalButtonClick, handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, hideShipsContainer, changeOverlaysTo }

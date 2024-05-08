@@ -1,7 +1,7 @@
 import "./styles.css"
 import { Player } from "./classCreator";
 import { goesFirst, playerOrComputer } from "./goesFirst";
-import { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, changeOverlaysTo, handleHorizontalOrVerticalButtonClick } from "./buttonLogic";
+import { handleGameRulesButtonClick, handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, changeOverlaysTo, handleHorizontalOrVerticalButtonClick } from "./buttonLogic";
 import { randomise } from "./randomise";
 
 let player1WinningCounter = null;
@@ -28,9 +28,6 @@ async function initialiseGame() {
     player1.name = "player1";
     const player2 = Player();
     player2.name = `${opponent}`;
-
-    player1.buildHTMLDivContainers();
-    player2.buildHTMLDivContainers();
     
     player1.opponent = player2;
     player2.opponent = player1;
@@ -38,8 +35,8 @@ async function initialiseGame() {
     player1.winningCounter = player1WinningCounter;
     player2.winningCounter = player2WinningCounter;
 
-    console.log("p1 WC:",player1WinningCounter)
-    console.log("p2 WC:",player2WinningCounter)
+    player1.buildHTMLDivContainers();
+    player2.buildHTMLDivContainers();
 
     // SHIP POSITION STAGE
     player1.updateTurnText(`${player1.name.toUpperCase()} <span class="highlighted green">PLACE YOUR SHIPS</span>`);
@@ -67,9 +64,7 @@ async function initialiseGame() {
 
     const gameRulesBtn = document.querySelector(".game-rules-btn");
     gameRulesBtn.addEventListener("click", () => {
-        const gameRulesOverlay = document.querySelector(".game-rules-overlay");
-        
-        gameRulesOverlay.style.display = (gameRulesOverlay.style.display === "none" ? "block" : "none");
+        handleGameRulesButtonClick();
     })
 
     // Attach logic to each button (HorizontalOrVertical, Randomise, Reset, Confirm) for positioning stage
