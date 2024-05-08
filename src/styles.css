@@ -13,7 +13,19 @@ h1.title, .winner-confirmation {
     color: rgb(73, 110, 235);
 }
 
+.player1-winning-counter {
+    position: relative;
+    left: 45%;
+    grid-area: 1 / 2;
+    color: rgb(38, 209, 38);
+}
 
+.player2-winning-counter, .computer-winning-counter {
+    position: relative;
+    right: 45%;
+    grid-area: 1 / 2;
+    color: rgb(38, 209, 38);
+}
 
 .player1-grid.number, .player2-grid.number, .computer-grid.number {
     background-color: white;
@@ -45,6 +57,39 @@ h1.title, .winner-confirmation {
 
 .game-rules-overlay {
     text-align: center;
+}
+
+.rules-load-in {
+    animation: fadeIn 1s ease;
+    animation-iteration-count: 1;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(50%); /* Slide in from bottom */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.rules-load-out {
+    animation: fadeOut 1s ease;
+    animation-iteration-count: 1;
+}
+
+@keyframes fadeOut {
+    0% { 
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% { 
+        transform: translateY(50%);  /* Slide out from bottom */
+        opacity: 0;
+    }
 }
 
 .game-rules-title {
@@ -179,42 +224,18 @@ div.player1-grid.number.not-valid, div.player2-grid.number.not-valid {
     width: 32px;
     height: 64px;
     outline: 2px solid darkblue;
-    position: relative;
-}
-
-.draggable-ship.vertical[data-size="2"] {
-    width: 64px;
-    height: 32px;
-    outline: 2px solid darkblue;
-    position: relative;
 }
 
 .draggable-ship[data-size="3"] {
     width: 32px;
     height: 96px;
     outline: 2px solid darkblue;
-    position: relative;
-}
-
-.draggable-ship.vertical[data-size="3"] {
-    width: 96px;
-    height: 32px;
-    outline: 2px solid darkblue;
-    position: relative;
 }
 
 .draggable-ship[data-size="4"] {
     width: 32px;
     height: 128px;
     outline: 2px solid darkblue;
-    position: relative;
-}
-
-.draggable-ship.vertical[data-size="4"] {
-    width: 128px;
-    height: 32px;
-    outline: 2px solid darkblue;
-    position: relative;
 }
 
 
@@ -288,6 +309,7 @@ h3 {
 
 /* GRID CONTAINERS */
 .player1-grid-container, .player2-grid-container, .computer-grid-container {
+    /* position: relative NEEDED TO CONTAIN OVERLAY to just the grid container*/
     position: relative;
     display: grid;
     grid-template-columns: auto 1fr;
