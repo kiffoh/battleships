@@ -139,13 +139,11 @@ const Player = () => {
         playerContainer.classList.add(`${this.name}-grid-container`);
         playerContainer.id = `${this.name}Container`;
 
-        playerContainer.innerHTML = 
-        `
+        playerContainer.innerHTML = `
         <h3 class="${this.name} title">${this.name.toUpperCase()}</h3>
-                <div class="${this.name}-grid game-board" id="${this.name}Grid">
-
-                </div>
-                <div class="grid-overlay" id="${this.name}GridOverlay"></div>
+        <h3 class="${this.name}-winning-counter">${this.winningCounter}</h3>
+        <div class="${this.name}-grid game-board" id="${this.name}Grid"></div>
+        <div class="grid-overlay" id="${this.name}GridOverlay"></div>
         `
         gridContainers.appendChild(playerContainer);
 
