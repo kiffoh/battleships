@@ -65,6 +65,17 @@ function handleResetButtonClick(button, player1, player2) {
     }
 }
 
+/*
+function animateGrid(player) {
+    console.log(document.querySelectorAll(`.${player.name}-grid.game-board > *`))
+    anime({
+        targets: `.${player.name}-grid.game-board.number`,
+        backgroundColor: "lightblue",
+        delay: anime.stagger(200, {grid: [10, 10],})
+      });
+}
+*/
+
 async function handleConfirmBtnClick(player1, player2) {
     if (player2.name === "computer") {
         await singlePlayerConfirmBtn(player1, player2);
@@ -89,6 +100,8 @@ function singlePlayerConfirmBtn(player1, player2) {
                 changeOverlaysTo("partially-transparent", true)
                 
                 resolve();
+            } else {
+                triggerConfirmButtonError(player1);
             }
         }
     })
@@ -108,6 +121,8 @@ function multiPlayerConfirmBtn(player1, player2) {
             player1.progressFromShipPlacement("player2TurnStart")
 
             player2.updateTurnText(`${player2.name.toUpperCase()} <span class="highlighted green">PLACE YOUR SHIPS</span>`);
+        } else {
+            triggerConfirmButtonError(player1);
         }
     }
 
@@ -122,28 +137,29 @@ function multiPlayerConfirmBtn(player1, player2) {
             // Calling allShipsPlaced checks if the game is ready to be progressed to next stage
             if (player2.allShipsPlaced()) {
                 player2.progressFromShipPlacement("player2TurnFinish")
-                /*
-                player1.removeRules();
-                player1.removeButtons();
-                player1.hideGridShips();
-
-                player2.removeShips();
-                player2.removeButtons();
-                player2.hideGridShips();
-                player2.gameboard.missed = Array.from({length: 10}, () => Array(10).fill(null));
-                */
                 
                 // Revert overlay colour back to original
                 changeOverlaysTo("partially-transparent");
                 
                 // Resolve the promise when the player 2 confirmation button is clicked
                 resolve();
+            } else {
+                triggerConfirmButtonError(player2);
             }
         }
     });
     
     // Return the promise
     return moveOnPromise;
+}
+
+function triggerConfirmButtonError(player) {
+    const confirmBtn = document.querySelector(`.${player.name}.confirm-btn`);
+    confirmBtn.classList.add("denied");
+
+    confirmBtn.addEventListener("animationend", () => {
+        confirmBtn.classList.remove("denied");
+    })
 }
 
 function changeOverlaysTo(colour, computer=false) {
