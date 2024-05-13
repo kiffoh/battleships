@@ -65,6 +65,17 @@ function handleResetButtonClick(button, player1, player2) {
     }
 }
 
+/*
+function animateGrid(player) {
+    console.log(document.querySelectorAll(`.${player.name}-grid.game-board > *`))
+    anime({
+        targets: `.${player.name}-grid.game-board.number`,
+        backgroundColor: "lightblue",
+        delay: anime.stagger(200, {grid: [10, 10],})
+      });
+}
+*/
+
 async function handleConfirmBtnClick(player1, player2) {
     if (player2.name === "computer") {
         await singlePlayerConfirmBtn(player1, player2);
@@ -89,6 +100,8 @@ function singlePlayerConfirmBtn(player1, player2) {
                 changeOverlaysTo("partially-transparent", true)
                 
                 resolve();
+            } else {
+                triggerConfirmButtonError(player1);
             }
         }
     })
@@ -108,6 +121,8 @@ function multiPlayerConfirmBtn(player1, player2) {
             player1.progressFromShipPlacement("player2TurnStart")
 
             player2.updateTurnText(`${player2.name.toUpperCase()} <span class="highlighted green">PLACE YOUR SHIPS</span>`);
+        } else {
+            triggerConfirmButtonError(player1);
         }
     }
 
@@ -128,12 +143,23 @@ function multiPlayerConfirmBtn(player1, player2) {
                 
                 // Resolve the promise when the player 2 confirmation button is clicked
                 resolve();
+            } else {
+                triggerConfirmButtonError(player2);
             }
         }
     });
     
     // Return the promise
     return moveOnPromise;
+}
+
+function triggerConfirmButtonError(player) {
+    const confirmBtn = document.querySelector(`.${player.name}.confirm-btn`);
+    confirmBtn.classList.add("denied");
+
+    confirmBtn.addEventListener("animationend", () => {
+        confirmBtn.classList.remove("denied");
+    })
 }
 
 function changeOverlaysTo(colour, computer=false) {
