@@ -1,3 +1,7 @@
+:root {
+    --distance: 0; /* Variable for animation of the gridOverlay's */
+  }
+
 body {
     user-select: none;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
@@ -213,7 +217,7 @@ div.player1-grid.number.not-valid, div.player2-grid.number.not-valid {
     position: relative;
 }
 
-.draggable-ship[data-size="1"], .draggable-ship.vertical[data-size="1"] {
+.draggable-ship[data-size="1"] {
     width: 32px;
     height: 32px;
     outline: 2px solid darkblue;
@@ -260,6 +264,27 @@ h3.title {
     padding-left: 1em;
     padding-right: 1em;
     color: rgb(237, 233, 233);
+    z-index: 1;
+}
+
+.player1-overlay-unload {
+    animation: player1OverlayUnload 0.1s ;
+    animation-iteration-count: 1;
+}
+
+@keyframes player1OverlayUnload {
+    100% { transform: translateX(var(--distance))}
+}
+
+
+.player2-overlay-unload, .computer-overlay-unload {
+    animation: player2OverlayUnload 0.1s ;
+    animation-iteration-count: 1;
+}
+
+
+@keyframes player2OverlayUnload {
+    100% { transform: translateX(calc(-1 * var(--distance))); }
 }
 
 .grid-containers {
@@ -307,6 +332,40 @@ h3 {
     text-align: center;
 }
 
+.confirm-btn.denied {
+    animation: denied 0.25s;
+    animation-iteration-count: 1;
+}
+
+@keyframes denied {
+    0% { transform: translateX(0); 
+        color: rgb(129, 0, 0);}
+    15% { transform: translateX(-5px); }
+    30% { transform: translateX(5px);
+        color: rgb(255, 0, 0); }
+    45% { transform: translateX(-5px); }
+    60% { transform: translateX(5px);
+        color: rgb(255, 0, 0); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); 
+        color: rgb(129, 0, 0);}
+    0% {
+        color: rgb(129, 0, 0);
+    }
+
+    35% {
+        color: rgb(255, 0, 0);
+    }
+
+    65% {
+        color: rgb(255, 0, 0);
+    }
+
+    100% {
+        color: rgb(129, 0, 0);
+    }
+}
+
 /* GRID CONTAINERS */
 .player1-grid-container, .player2-grid-container, .computer-grid-container {
     /* position: relative NEEDED TO CONTAIN OVERLAY to just the grid container*/
@@ -317,6 +376,8 @@ h3 {
     gap: 1em;
 
     padding-right: 1em; /* Keeps the athestetic with the overlay even */
+    z-index: auto;
+
 }
 
 .btn-container {
