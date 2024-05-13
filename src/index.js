@@ -1,26 +1,42 @@
 import "./styles.css"
 import { Player } from "./classCreator";
 import { goesFirst, playerOrComputer } from "./goesFirst";
-import { handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, changeOverlaysTo, handleHorizontalOrVerticalButtonClick } from "./buttonLogic";
+import { handleGameRulesButtonClick, handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, changeOverlaysTo, handleHorizontalOrVerticalButtonClick } from "./buttonLogic";
 import { randomise } from "./randomise";
+
+let player1WinningCounter = null;
+let player2WinningCounter = null;
+let opponent = null;
 
 async function initialiseGame() {
 
     // WELCOME STAGE
-    let opponent = await playerOrComputer();
-    if (opponent === "player") opponent = "player2";
+    if (opponent === null) {
+        opponent = await playerOrComputer();
+        if (opponent === "player") opponent = "player2";
+
+        player1WinningCounter = 0;
+        player2WinningCounter = 0;
+
+        const resetHTML = document.querySelector(".grid-containers");
+
+        resetHTML.innerHTML = "";
+    }
 
     // Initialising the player classes
     const player1 = Player();
     player1.name = "player1";
     const player2 = Player();
     player2.name = `${opponent}`;
-
-    player1.buildHTMLDivContainers();
-    player2.buildHTMLDivContainers();
     
     player1.opponent = player2;
     player2.opponent = player1;
+
+    player1.winningCounter = player1WinningCounter;
+    player2.winningCounter = player2WinningCounter;
+
+    player1.buildHTMLDivContainers();
+    player2.buildHTMLDivContainers();
 
     // SHIP POSITION STAGE
     player1.updateTurnText(`${player1.name.toUpperCase()} <span class="highlighted green">PLACE YOUR SHIPS</span>`);
@@ -29,26 +45,27 @@ async function initialiseGame() {
     player1.buildShips();
     player1.applyDraggableShips();
 
-    if (player2.name === "computer") {
-        // As player1 will always position ships first
-        player2.buildRules();
+    // As player1 will always position ships first
+    player2.buildRules();
 
-        player1.buildButtonContainer();
-        
+    player1.buildButtonContainer();
+    // player2 button container always built so there is enough space for the ship placement rules
+    player2.buildButtonContainer();
+
+    if (player2.name === "computer") {        
         player2.buildHTMLGrid(false);
 
+        // Change the overlay colour for ship placement rules, true signals it is vs a computer
         changeOverlaysTo("blue", true);
         
     } else {
-        // As player1 will always position ships first
-        player2.buildRules(true);
-
-        player1.buildButtonContainer();
-        player2.buildButtonContainer();
-
         player2.buildHTMLGrid(true);
-
     }
+
+    const gameRulesBtn = document.querySelector(".game-rules-btn");
+    gameRulesBtn.addEventListener("click", () => {
+        handleGameRulesButtonClick();
+    })
 
     // Attach logic to each button (HorizontalOrVertical, Randomise, Reset, Confirm) for positioning stage
     // Use a for...of loop to iterate over the buttons 
@@ -114,7 +131,39 @@ async function initialiseGame() {
     
     // Reset the game - ONLY VISUALISES WHEN GAME IS FINISHED
     const resetWholeGame = document.querySelector(".reset-btn");
-    resetWholeGame.addEventListener("click", initialiseGame);
+    resetWholeGame.addEventListener("click", () => {
+        opponent = null;
+
+        const overlay = document.getElementById("gameEndingOverlay");
+        overlay.style.display = "none";
+
+        const resetHTML = document.querySelector(".grid-containers");
+
+        resetHTML.innerHTML = "";
+
+        player1.resetShipsArray();
+        player2.resetShipsArray();
+
+        initialiseGame();
+    });
+
+    const refreshGame = document.querySelector(".refresh-btn");
+    refreshGame.addEventListener("click", () => {
+        player1WinningCounter = player1.winningCounter;
+        player2WinningCounter = player2.winningCounter;
+
+        const overlay = document.getElementById("gameEndingOverlay");
+        overlay.style.display = "none";
+
+        const resetHTML = document.querySelector(".grid-containers");
+
+        resetHTML.innerHTML = "";
+
+        player1.resetShipsArray();
+        player2.resetShipsArray();
+         
+        initialiseGame();
+    });
 }
 
 initialiseGame();

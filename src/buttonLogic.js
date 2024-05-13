@@ -1,5 +1,33 @@
 import { randomise } from "./randomise";
 
+function handleGameRulesButtonClick() {
+    const gameRulesOverlay = document.querySelector(".game-rules-overlay");
+
+        // Body is used to prevent the scroll bar whilst the animation takes place
+        // Scroll bar causes unwanted movement of other divs
+        const body = document.querySelector("body");
+        
+        if (gameRulesOverlay.style.display === "none") {
+            gameRulesOverlay.style.display = "block";
+            body.style.overflow = "hidden";
+            gameRulesOverlay.classList.add("rules-load-in");
+
+            gameRulesOverlay.addEventListener("animationend", () => {
+                gameRulesOverlay.classList.remove("rules-load-in");
+                body.style.overflow = "auto";
+            }, { once: true })
+        } else {
+            body.style.overflow = "hidden";
+            gameRulesOverlay.classList.add("rules-load-out");
+
+            gameRulesOverlay.addEventListener("animationend", () => {
+                gameRulesOverlay.classList.remove("rules-load-out");
+                gameRulesOverlay.style.display = "none";
+                body.style.overflow = "auto";
+            }, { once: true })
+        }
+}
+
 function handleHorizontalOrVerticalButtonClick(button, player1, player2) {
     if (button.classList.contains("player1")) {
         button.textContent = (button.textContent === "HORIZONTAL" ? "VERTICAL" : "HORIZONTAL");
@@ -37,6 +65,7 @@ function handleResetButtonClick(button, player1, player2) {
     }
 }
 
+
 async function handleConfirmBtnClick(player1, player2) {
     if (player2.name === "computer") {
         await singlePlayerConfirmBtn(player1, player2);
@@ -56,9 +85,13 @@ function singlePlayerConfirmBtn(player1, player2) {
             if (player1.allShipsPlaced()) {
                 player1.progressFromShipPlacement();
 
+                player2.removeButtons();
+
                 changeOverlaysTo("partially-transparent", true)
                 
                 resolve();
+            } else {
+                triggerConfirmButtonError(player1);
             }
         }
     })
@@ -67,7 +100,7 @@ function singlePlayerConfirmBtn(player1, player2) {
 }
 
 function multiPlayerConfirmBtn(player1, player2) {
-    // Change the overlay colour for ship placement
+    // Change the overlay colour for ship placement rules
     changeOverlaysTo("blue");
 
     const player1ConfirmBtn = document.querySelector(".player1.confirm-btn");
@@ -78,6 +111,8 @@ function multiPlayerConfirmBtn(player1, player2) {
             player1.progressFromShipPlacement("player2TurnStart")
 
             player2.updateTurnText(`${player2.name.toUpperCase()} <span class="highlighted green">PLACE YOUR SHIPS</span>`);
+        } else {
+            triggerConfirmButtonError(player1);
         }
     }
 
@@ -98,12 +133,23 @@ function multiPlayerConfirmBtn(player1, player2) {
                 
                 // Resolve the promise when the player 2 confirmation button is clicked
                 resolve();
+            } else {
+                triggerConfirmButtonError(player2);
             }
         }
     });
     
     // Return the promise
     return moveOnPromise;
+}
+
+function triggerConfirmButtonError(player) {
+    const confirmBtn = document.querySelector(`.${player.name}.confirm-btn`);
+    confirmBtn.classList.add("denied");
+
+    confirmBtn.addEventListener("animationend", () => {
+        confirmBtn.classList.remove("denied");
+    })
 }
 
 function changeOverlaysTo(colour, computer=false) {
@@ -133,4 +179,4 @@ function hideShipsContainer(hide, playerName) {
     }
 }
 
-export { handleHorizontalOrVerticalButtonClick, handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, hideShipsContainer, changeOverlaysTo }
+export { handleGameRulesButtonClick, handleHorizontalOrVerticalButtonClick, handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, hideShipsContainer, changeOverlaysTo }

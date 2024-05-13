@@ -115,6 +115,7 @@ const Player = () => {
     const gameboard = Gameboard();
     const name = "";
     const opponent = null;
+    let winningCounter = null;
 
     // Variables for ship placement section
     let selectedShip = null;
@@ -133,21 +134,19 @@ const Player = () => {
 
     // Function to build the top level HTML stucture for player's grids 
     function buildHTMLDivContainers() {
-        
         const gridContainers = document.querySelector(".grid-containers");
         const playerContainer = document.createElement("div");
         playerContainer.classList.add(`${this.name}-grid-container`);
         playerContainer.id = `${this.name}Container`;
 
-        playerContainer.innerHTML = 
-        `
+        playerContainer.innerHTML = `
         <h3 class="${this.name} title">${this.name.toUpperCase()}</h3>
-                <div class="${this.name}-grid game-board" id="${this.name}Grid">
-
-                </div>
-                <div class="grid-overlay" id="${this.name}GridOverlay"></div>
+        <h3 class="${this.name}-winning-counter">${this.winningCounter}</h3>
+        <div class="${this.name}-grid game-board" id="${this.name}Grid"></div>
+        <div class="grid-overlay" id="${this.name}GridOverlay"></div>
         `
         gridContainers.appendChild(playerContainer);
+
     }
 
     // Build player's HTML grid based off player's board array
@@ -195,34 +194,23 @@ const Player = () => {
     }
 
     // Display's rules
-    function buildRules(pvp=null) {
+    function buildRules() {
         const playerOverlay = document.getElementById(`${this.name}GridOverlay`);
 
         this.showOverlay(true);
 
         playerOverlay.innerHTML = `
-            <h3 class="rules-title">RULES</h3>
-            <p>Try and deduce where the enemy ships are and sink them first!</p>
+            <h3 class="rules-title">RULES FOR SHIP PLACEMENT</h3>
+            <p>Click on the grid to place your ships! </p>
+            <p>You can <strong>change the ship</strong> you want to place by <strong>clicking on another</strong>.</p>
+            <p><span class="highlighted green"><strong>Legal</strong></span> placements highlight <strong><span class="highlighted green">green</span></strong>. <span class="highlighted red"><strong>Illegal</strong></span> placements highlight <span class="highlighted red"><strong>red</strong></span>.</p>
+            <p>You <strong>cannot place</strong> a ship within <strong>a square</strong> of an <strong>already placed ship</strong>, or if the ship <strong>length</strong> means it is positioned <strong>outside the grid</strong>.</p>
             <br></br>
-            <p>Each player deploys their ships (of lengths varying from 1 to 4 squares) secretly on a their square grid.</p>
-            <p>Every turn each player shoots at the other's grid by clicking on a location to a response of "HIT", "MISS" or "SUNK".</p>
-            <p>(Watch the turn counter beneath the title if you get lost)</p>
-            <p>First player to sink all of the opponents ships wins! Good Luck!</p>
+            <p><strong>Button descriptions:</strong></p>
+            <p><strong>PLACING:</strong> Displays the <strong>current direction</strong> of the ship to be placed. <strong>Click</strong> the direction of the ship, HORIZONTAL / VERTICAL, to <strong>change</strong> the direction.</p>
+            <p><strong>RANDOMISE:</strong> Places all ships onto the board in a random manner.</p>
+            <p><strong>RESET:</strong> Removes all ships from the grid to the starting position.</p>
         `;
-
-        if (pvp) {
-            playerOverlay.innerHTML = `
-            <h3 class="rules-title">RULES</h3>
-            <p>Try and deduce where the enemy ships are and sink them first!</p>
-            <br></br>
-            <p>Each player deploys their ships (of lengths varying from 1 to 4 squares) secretly on a their square grid.</p>
-            <p>Every turn each player shoots at the other's grid by clicking on a location to a response of "HIT", "MISS" or "SUNK".</p>
-            <p>(Watch the turn counter beneath the title if you get lost)</p>
-            <p>First player to sink all of the opponents ships wins! Good Luck!</p>
-            <br></br>
-            <p>Local play requires the opponent to not look at the screen whilst the other player is positioning their ships!</p>
-        `;
-        }
     }
 
     function removeRules() {
@@ -241,6 +229,10 @@ const Player = () => {
         const btnContainer = document.createElement("div");
         btnContainer.classList.add("btn-container");
 
+        const placingDiv = document.createElement("div");
+        placingDiv.innerHTML = 'PLACING:'
+        placingDiv.classList.add(`placing-div`);
+
         const horizontalOrVerticalBtn = document.createElement("button");
         horizontalOrVerticalBtn.classList.add(`${this.name}`, `horizontal-or-vertical-btn`);
         horizontalOrVerticalBtn.textContent = "HORIZONTAL";
@@ -257,6 +249,7 @@ const Player = () => {
         resetBtn.classList.add(`${this.name}`, `reset-btn`);
         resetBtn.textContent = "RESET";
 
+        btnContainer.appendChild(placingDiv);
         btnContainer.appendChild(horizontalOrVerticalBtn);
         btnContainer.appendChild(randomiseBtn);
         btnContainer.appendChild(resetBtn);
@@ -280,7 +273,7 @@ const Player = () => {
 
         shipsContainer.innerHTML = `
         <div class="ship-container-1">
-            <div class="draggable-ship" data-size="4"></div>
+            <div class="draggable-ship" data-size="4"></div> 
             <div class="draggable-ship" data-size="3"></div>
             <div class="draggable-ship" data-size="3"></div>
         </div>
@@ -564,7 +557,7 @@ const Player = () => {
             // Called on Player1
             if (player2TurnTracker === "player2TurnStart") {
                 // Remove Rules and Ships, keeps buttons for aethstetic reasons for how the rules look
-                buildRules.bind(this)(true);
+                buildRules.bind(this)();
                 removeShips.bind(this)();
 
                 // Need to reset missed gameboard as it was used to prevent invalid ship placement
@@ -1013,35 +1006,33 @@ const Player = () => {
 
         removeAllEventListeners.bind(this)();
 
-        // Create a new div element to hold the player-selection HTML content
+        // Obtain the div element which will hold the player-selection HTML content
         const congratulationsTitle = document.querySelector(".winner-confirmation");
 
         let winner;
 
         if (this.gameboard.allShipsSunk()) {
             winner = this.opponent.name;
+            this.opponent.winningCounter++;
         } else {
             winner = this.name;
+            winningCounter++;
         }
 
         // Add the inner HTML content for the player-selection div
-        congratulationsTitle.textContent = `Congratulations ${winner.toUpperCase()} wins!        `
+        congratulationsTitle.textContent = `Congratulations ${winner.toUpperCase()} wins!`
 
-        const resetBtn = document.querySelector(".reset-btn")
 
-        resetBtn.addEventListener("click", () => {
-            overlay.style.display = "none";
-            const resetHTML = document.querySelector(".grid-containers");
-
-            resetHTML.innerHTML = "";
-
-            resetShipsArray.bind(this)();
-            this.opponent.resetShipsArray();
-        })
+        const currentScore = document.querySelector(".current-score#gameEnd");
+        if (this.name === "player1") {
+            currentScore.textContent = `${this.name.toUpperCase()}: ${this.winningCounter}     -     ${this.opponent.name.toUpperCase()}: ${this.opponent.winningCounter}`;
+        } else {
+            currentScore.textContent = `${this.opponent.name.toUpperCase()}: ${this.opponent.winningCounter}     -     ${this.name.toUpperCase()}: ${this.winningCounter}`;
+        }
     }
     
     
 
-    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTMLDivContainers, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideGridShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips, resetHTMLGrid, progressFromShipPlacement, resetShipsArray, planeOfPlacingShip}
+    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTMLDivContainers, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideGridShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips, resetHTMLGrid, progressFromShipPlacement, resetShipsArray, planeOfPlacingShip, winningCounter}
 }
 export {Ship, Gameboard, Player};
