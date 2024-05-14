@@ -679,6 +679,7 @@ const Player = () => {
             updateTurnText(`${this.opponent.name.toUpperCase()} <span class="highlighted orange">SANK</span> ONE OF ${this.name.toUpperCase()}'S SHIP`)
      
             // Algorithm to find all all parts of sunk ship to change border to red
+            // Allows for "sunk" to be added to each part of the sunken ship, not just the hit which sank the ship  
             const coordinates = findTouchingShips(gameboard.board, x, y, new Set());
             coordinates.forEach(coordinate => {
                 let x = parseInt(coordinate[1]);

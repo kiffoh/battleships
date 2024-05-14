@@ -151,16 +151,6 @@ async function initialiseGame() {
     refreshGame.addEventListener("click", () => {
         player1WinningCounter = player1.winningCounter;
         player2WinningCounter = player2.winningCounter;
-        /*
-        let player2name = player2.name;
-        console.log(typeof player2.name)
-        console.log(typeof player2name);
-        
-        player1.resetGrid();
-        player1.removeShips();
-        player2.resetGrid();
-        player2.removeShips();
-        */
 
         const overlay = document.getElementById("gameEndingOverlay");
         overlay.style.display = "none";

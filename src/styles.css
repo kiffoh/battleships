@@ -264,27 +264,6 @@ h3.title {
     padding-left: 1em;
     padding-right: 1em;
     color: rgb(237, 233, 233);
-    z-index: 1;
-}
-
-.player1-overlay-unload {
-    animation: player1OverlayUnload 0.1s ;
-    animation-iteration-count: 1;
-}
-
-@keyframes player1OverlayUnload {
-    100% { transform: translateX(var(--distance))}
-}
-
-
-.player2-overlay-unload, .computer-overlay-unload {
-    animation: player2OverlayUnload 0.1s ;
-    animation-iteration-count: 1;
-}
-
-
-@keyframes player2OverlayUnload {
-    100% { transform: translateX(calc(-1 * var(--distance))); }
 }
 
 .grid-containers {

@@ -65,16 +65,6 @@ function handleResetButtonClick(button, player1, player2) {
     }
 }
 
-/*
-function animateGrid(player) {
-    console.log(document.querySelectorAll(`.${player.name}-grid.game-board > *`))
-    anime({
-        targets: `.${player.name}-grid.game-board.number`,
-        backgroundColor: "lightblue",
-        delay: anime.stagger(200, {grid: [10, 10],})
-      });
-}
-*/
 
 async function handleConfirmBtnClick(player1, player2) {
     if (player2.name === "computer") {
