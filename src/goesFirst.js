@@ -86,6 +86,10 @@ function playerOrComputer() {
     // Variable to hold the chosen player
     let chosenPlayer2 = null;
 
+    // Body is used to prevent the scroll bar whilst the animation takes place
+    // Scroll bar causes unwanted movement of other divs
+    const body = document.querySelector("body");
+
     // Elements obtained to display correct div depending on player selection stage
     const playerSelectionDiv = document.querySelector(".player-selection");
     const monikerSelectionDiv = document.querySelector(".moniker-selection");
@@ -120,9 +124,6 @@ function playerOrComputer() {
     const chosenPlayerConfirmBtn = document.querySelector(".confirm-player-or-computer-btn");
     chosenPlayerConfirmBtn.addEventListener("click", () => {
         if (chosenPlayer2) {
-            playerSelectionDiv.style.display = "none";
-            monikerSelectionDiv.style.display = "flex";
-
             if (chosenPlayer2 === "computer") {
                 // Make internal equal computer
                 player2MonikerText.style.display = "none";
@@ -133,6 +134,23 @@ function playerOrComputer() {
                 player2MonikerText.style.display = "block";
                 player2MonikerValue = player2MonikerText.value;
             }
+
+            // Trigger animation to the next stage (moniker-selection)
+            playerSelectionDiv.classList.add("player-selection-leave");
+            body.style.overflow = "hidden";
+
+            playerSelectionDiv.addEventListener("animationend", () => {
+                playerSelectionDiv.style.display = "none";
+                playerSelectionDiv.classList.remove("player-selection-leave");
+
+                monikerSelectionDiv.style.display = "flex";
+                monikerSelectionDiv.classList.add("moniker-selection-enter");
+            }, { once: true });
+
+            monikerSelectionDiv.addEventListener("animationend", () => {
+                monikerSelectionDiv.classList.remove("moniker-selection-enter");
+                body.style.overflow = "auto";
+            }, { once: true });
         } else {
             chosenPlayerConfirmBtn.classList.add("denied");
 
@@ -154,8 +172,22 @@ function playerOrComputer() {
     // Allows user to re-select a different opponent after leaving player selection screen
     const backBtn = document.querySelector(".back-btn");
     backBtn.addEventListener("click", () => {
-        monikerSelectionDiv.style.display = "none";
-        playerSelectionDiv.style.display = "flex";
+        // Trigger animation to revert to previous stage (player-selection)
+        monikerSelectionDiv.classList.add("moniker-selection-leave");
+        body.style.overflow = "hidden";
+
+        monikerSelectionDiv.addEventListener("animationend", () => {
+            monikerSelectionDiv.style.display = "none";
+            monikerSelectionDiv.classList.remove("moniker-selection-leave");
+
+            playerSelectionDiv.style.display = "flex";
+            playerSelectionDiv.classList.add("player-selection-enter");
+        }, { once: true });
+
+        playerSelectionDiv.addEventListener("animationend", () => {
+            playerSelectionDiv.classList.remove("player-selection-enter");
+            body.style.overflow = "auto";
+        }, { once: true });
     })
 
     // Promise moves the player to the next stage of the game

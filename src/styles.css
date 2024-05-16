@@ -138,10 +138,53 @@ h1.title, .winner-confirmation {
     align-items: center;
 }
 
+.player-selection-enter {
+    animation: player-selection-enter 0.25s ease-out;
+    animation-iteration-count: 1;
+}
+
+@keyframes player-selection-enter {
+    0% { transform: translateX(-100%); }
+    40% { transform: translateX(5%); }
+    100% { transform: translateX(0); }
+}
+
+.player-selection-leave {
+    animation: player-selection-leave 0.25s ease-in;
+    animation-iteration-count: 1;
+}
+
+@keyframes player-selection-leave {
+    50% { transform: translateX(5%); }
+    100% { transform: translateX(-100%); }
+}
+
+.moniker-selection-enter {
+    animation: moniker-selection-enter 0.25s ease-out;
+    animation-iteration-count: 1;
+}
+
+@keyframes moniker-selection-enter {
+    0% { transform: translateX(100%); }
+    40% { transform: translateX(-5%); }
+    100% { transform: translateX(0); }
+}
+
+.moniker-selection-leave {
+    animation: moniker-selection-leave 0.25s ease-in;
+    animation-iteration-count: 1;
+}
+
+@keyframes moniker-selection-leave {
+    50% { transform: translateX(-5%); }
+    100% { transform: translateX(100%); }
+}
+
 .player-selection-container {
     display: flex;
     gap: 1em;
     flex-direction: column;
+    min-height: 82px;
 }
 
 .player-2-btn-container, .computer-btn-container {
