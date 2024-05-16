@@ -1,3 +1,5 @@
+import { updatePlayerSelectionDistanceVariable, updateMonikerSelectionDistanceVariable } from "./distance";
+
 function goesFirst(players) {
     let number = Math.random();
     let index = Math.round(number);
@@ -83,6 +85,13 @@ function playerOrComputer() {
     // Append the player-selection div to the grid-overlay div
     gridOverlay.appendChild(centeredContainerDiv);
 
+    // Code to appropriately position the confirm buttons
+    updatePlayerSelectionDistanceVariable();
+
+
+    window.addEventListener("resize", updatePlayerSelectionDistanceVariable);
+    window.addEventListener("resize", updateMonikerSelectionDistanceVariable);
+
     // Variable to hold the chosen player
     let chosenPlayer2 = null;
 
@@ -144,6 +153,9 @@ function playerOrComputer() {
                 playerSelectionDiv.classList.remove("player-selection-leave");
 
                 monikerSelectionDiv.style.display = "flex";
+
+                // Called here as the monikerSelectionDiv has a leftOffset
+                updateMonikerSelectionDistanceVariable();
                 monikerSelectionDiv.classList.add("moniker-selection-enter");
             }, { once: true });
 
@@ -181,6 +193,9 @@ function playerOrComputer() {
             monikerSelectionDiv.classList.remove("moniker-selection-leave");
 
             playerSelectionDiv.style.display = "flex";
+
+            // Called here as the playerSelectionDiv has a leftOffset
+            updatePlayerSelectionDistanceVariable();
             playerSelectionDiv.classList.add("player-selection-enter");
         }, { once: true });
 
@@ -209,6 +224,10 @@ function playerOrComputer() {
             resolve({ chosenPlayer2, player1MonikerValue, player2MonikerValue });
             gridOverlay.innerHTML = "";
             gridOverlay.style.display = "none";
+
+            // Remove event listeners after they have served their purpose
+            window.removeEventListener("resize", updatePlayerSelectionDistanceVariable);
+            window.removeEventListener("resize", updateMonikerSelectionDistanceVariable);
         });
     });
 

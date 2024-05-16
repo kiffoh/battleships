@@ -1,5 +1,6 @@
 :root {
-    --distance: 0; /* Variable for animation of the gridOverlay's */
+    --player-selection-distance: 0; /* Variable for animation of the gridOverlay's */
+    --moniker-selection-distance: 0;
   }
 
 body {
@@ -204,6 +205,8 @@ h1.title, .winner-confirmation {
 
 .player2-name-is-computer {
     display: none;
+    position: relative;
+    left: -1em;
 }
 
 .player1-moniker-text, .player2-moniker-text {
@@ -213,8 +216,7 @@ h1.title, .winner-confirmation {
 
 .confirm-player-or-computer-btn-container {
     position: absolute;
-    left: 65%;
-    top: 1%;
+    left: var(--player-selection-distance);
 }
 
 .confirm-player-or-computer-btn {
@@ -231,7 +233,7 @@ h1.title, .winner-confirmation {
     gap: 1em;
     justify-items: center;
     position: absolute;
-    left: 70%;
+    left: var(--moniker-selection-distance);
 }
 
 .back-btn {
