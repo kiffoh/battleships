@@ -127,7 +127,7 @@ h1.title, .winner-confirmation {
     color: rgb(73, 110, 235);
 }
 
-.player-selection {
+.player-selection, .moniker-selection {
     display: flex;
     justify-content: center;
     gap: 2em;
@@ -135,7 +135,7 @@ h1.title, .winner-confirmation {
     /* height: 100%; */
     width: 100%;
     flex: 5;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .player-selection-container {
@@ -152,6 +152,37 @@ h1.title, .winner-confirmation {
 .player-2-btn, .computer-btn{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: large;
+}
+
+.player-2-btn {
+    width: 103.95px;
+}
+
+.player2-name-is-computer {
+    display: none;
+}
+
+.player1-moniker-text, .player2-moniker-text {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: large;
+}
+
+.confirm-player-or-computer-btn {
+    margin: 18.72px;
+}
+
+.moniker-selection {
+    display: none;
+}
+
+.moniker-btns-container {
+    display: grid;
+    gap: 1em;
+    justify-items: center;
+}
+
+.back-btn {
+    width: 92.09px;
 }
 
 #hit, #revealedMiss {
@@ -289,7 +320,7 @@ h3.title {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-.start-button, .reset-btn, .randomise-btn, .confirm-btn, .horizontal-or-vertical-btn, .refresh-btn {
+.start-button, .reset-btn, .randomise-btn, .confirm-btn, .horizontal-or-vertical-btn, .refresh-btn, .confirm-player-or-computer-btn, .back-btn, .confirm-moniker-btn {
     font-size: large;
     padding: 4px 8px;
 
@@ -311,7 +342,7 @@ h3 {
     text-align: center;
 }
 
-.confirm-btn.denied {
+.confirm-btn.denied, .confirm-player-or-computer-btn.denied {
     animation: denied 0.25s;
     animation-iteration-count: 1;
 }
