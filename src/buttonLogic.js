@@ -110,7 +110,7 @@ function multiPlayerConfirmBtn(player1, player2) {
         if (player1.allShipsPlaced()) {
             player1.progressFromShipPlacement("player2TurnStart")
 
-            player2.updateTurnText(`${player2.name.toUpperCase()} <span class="highlighted green">PLACE YOUR SHIPS</span>`);
+            player2.updateTurnText(`${player2.moniker} <span class="highlighted green">PLACE YOUR SHIPS</span>`);
         } else {
             triggerConfirmButtonError(player1);
         }

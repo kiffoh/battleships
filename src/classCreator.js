@@ -114,6 +114,7 @@ const Gameboard = () => {
 const Player = () => {
     const gameboard = Gameboard();
     const name = "";
+    const moniker = "";
     const opponent = null;
     let winningCounter = null;
 
@@ -138,9 +139,9 @@ const Player = () => {
         const playerContainer = document.createElement("div");
         playerContainer.classList.add(`${this.name}-grid-container`);
         playerContainer.id = `${this.name}Container`;
-
+        console.log(this.name, this.moniker)
         playerContainer.innerHTML = `
-        <h3 class="${this.name} title">${this.name.toUpperCase()}</h3>
+        <h3 class="${this.name} title">${this.moniker}</h3>
         <h3 class="${this.name}-winning-counter">${this.winningCounter}</h3>
         <div class="${this.name}-grid game-board" id="${this.name}Grid"></div>
         <div class="grid-overlay" id="${this.name}GridOverlay"></div>
@@ -623,7 +624,7 @@ const Player = () => {
         if (gridDiv.textContent === "") {
             if (gridDiv.classList.contains("ship-present")) {
                 gridDiv.textContent = "X";
-                updateTurnText(`${this.opponent.name.toUpperCase()} <span class="highlighted red">HIT</span>`)
+                updateTurnText(`${this.opponent.moniker} <span class="highlighted red">HIT</span>`)
 
                 if (gridDiv.classList.contains("hidden")) {
                     gridDiv.classList.remove("hidden");
@@ -631,7 +632,7 @@ const Player = () => {
                 }
             } else {
                 gridDiv.textContent = "●";
-                updateTurnText(`${this.opponent.name.toUpperCase()} <span class="highlighted blue">MISSED</span>`)
+                updateTurnText(`${this.opponent.moniker} <span class="highlighted blue">MISSED</span>`)
 
                 this.showOverlay(true);
                 this.opponent.showOverlay(false);
@@ -676,7 +677,7 @@ const Player = () => {
         gameboard.recieveAttack([x, y]);
 
         if (gameboard.board[y][x] != null && gameboard.board[y][x].sunk) {
-            updateTurnText(`${this.opponent.name.toUpperCase()} <span class="highlighted orange">SANK</span> ONE OF ${this.name.toUpperCase()}'S SHIP`)
+            updateTurnText(`${this.opponent.moniker} <span class="highlighted orange">SANK</span> ONE OF ${this.moniker}'s SHIPS`)
      
             // Algorithm to find all all parts of sunk ship to change border to red
             // Allows for "sunk" to be added to each part of the sunken ship, not just the hit which sank the ship  
@@ -861,7 +862,7 @@ const Player = () => {
         const [y, x] = classToInteger(gridDiv);            
         this.opponent.gameboard.recieveAttack([x, y]);
         if (this.opponent.gameboard.board[y][x] != null && this.opponent.gameboard.board[y][x].sunk) {
-            updateTurnText(`COMPUTER <span class="highlighted orange">SANK</span> ONE OF ${this.opponent.name.toUpperCase()}'S SHIP`)
+            updateTurnText(`COMPUTER <span class="highlighted orange">SANK</span> ONE OF ${this.opponent.moniker}'s SHIPS`)
             localisedGuesses = null;
             shipDirection = null;
 
@@ -1012,22 +1013,22 @@ const Player = () => {
         let winner;
 
         if (this.gameboard.allShipsSunk()) {
-            winner = this.opponent.name;
+            winner = this.opponent.moniker;
             this.opponent.winningCounter++;
         } else {
-            winner = this.name;
+            winner = this.moniker;
             winningCounter++;
         }
 
         // Add the inner HTML content for the player-selection div
-        congratulationsTitle.textContent = `Congratulations ${winner.toUpperCase()} wins!`
+        congratulationsTitle.textContent = `Congratulations ${winner} wins!`
 
 
         const currentScore = document.querySelector(".current-score#gameEnd");
         if (this.name === "player1") {
-            currentScore.textContent = `${this.name.toUpperCase()}: ${this.winningCounter}     -     ${this.opponent.name.toUpperCase()}: ${this.opponent.winningCounter}`;
+            currentScore.textContent = `${this.moniker}: ${this.winningCounter}     -     ${this.opponent.moniker}: ${this.opponent.winningCounter}`;
         } else {
-            currentScore.textContent = `${this.opponent.name.toUpperCase()}: ${this.opponent.winningCounter}     -     ${this.name.toUpperCase()}: ${this.winningCounter}`;
+            currentScore.textContent = `${this.opponent.moniker}: ${this.opponent.winningCounter}     -     ${this.moniker}: ${this.winningCounter}`;
         }
     }
     
