@@ -7,13 +7,17 @@ import { randomise } from "./randomise";
 let player1WinningCounter = null;
 let player2WinningCounter = null;
 let opponent = null;
+let player1Moniker = null;
+let player2Moniker = null;
 
 async function initialiseGame() {
 
     // WELCOME STAGE
     if (opponent === null) {
-        opponent = await playerOrComputer();
-        if (opponent === "player") opponent = "player2";
+        const { chosenPlayer2, player1MonikerValue, player2MonikerValue } = await playerOrComputer();
+        opponent = chosenPlayer2 === "player" ? "player2" : "computer";
+        player1Moniker = player1MonikerValue;
+        player2Moniker = player2MonikerValue;
 
         player1WinningCounter = 0;
         player2WinningCounter = 0;
@@ -26,8 +30,11 @@ async function initialiseGame() {
     // Initialising the player classes
     const player1 = Player();
     player1.name = "player1";
+    player1.moniker = player1Moniker;
+
     const player2 = Player();
     player2.name = `${opponent}`;
+    player2.moniker = player2Moniker;
     
     player1.opponent = player2;
     player2.opponent = player1;
@@ -39,7 +46,7 @@ async function initialiseGame() {
     player2.buildHTMLDivContainers();
 
     // SHIP POSITION STAGE
-    player1.updateTurnText(`${player1.name.toUpperCase()} <span class="highlighted green">PLACE YOUR SHIPS</span>`);
+    player1.updateTurnText(`${player1.moniker} <span class="highlighted green">PLACE YOUR SHIPS</span>`);
 
     player1.buildHTMLGrid(true);
     player1.buildShips();
