@@ -76,7 +76,7 @@ function playerOrComputer() {
             <p>First player to sink all of their opponents ships wins! Good Luck!</p>
             <p>Player vs Player is local play which means the screen is shared.<p>
             <p>Local play requires the opponent to not look at the screen whilst the other player is positioning their ships!</p>
-            <p>TIP: Watch the turn counter beneath the title if you get lost.</p>
+            <p>TIP: Watch the game tracker beneath the title if you get lost.</p>
         </div>
         `;
 
