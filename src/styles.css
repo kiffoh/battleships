@@ -136,6 +136,7 @@ h1.title, .winner-confirmation {
     width: 100%;
     flex: 5;
     align-items: center;
+    position: relative;
 }
 
 .player-selection-enter {
@@ -184,7 +185,7 @@ h1.title, .winner-confirmation {
     display: flex;
     gap: 1em;
     flex-direction: column;
-    min-height: 82px;
+    justify-content: center;
 }
 
 .player-2-btn-container, .computer-btn-container {
@@ -210,18 +211,27 @@ h1.title, .winner-confirmation {
     font-size: large;
 }
 
+.confirm-player-or-computer-btn-container {
+    position: absolute;
+    left: 65%;
+    top: 1%;
+}
+
 .confirm-player-or-computer-btn {
     margin: 18.72px;
 }
 
 .moniker-selection {
     display: none;
+    min-height: 70px;
 }
 
 .moniker-btns-container {
     display: grid;
     gap: 1em;
     justify-items: center;
+    position: absolute;
+    left: 70%;
 }
 
 .back-btn {
