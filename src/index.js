@@ -1,6 +1,6 @@
 import "./styles.css"
 import { Player } from "./classCreator";
-import { goesFirst, playerOrComputer } from "./goesFirst";
+import { goesFirst, playerOrComputer } from "./playerSelection";
 import { handleGameRulesButtonClick, handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, changeOverlaysTo, handleHorizontalOrVerticalButtonClick } from "./buttonLogic";
 import { randomise } from "./randomise";
 
