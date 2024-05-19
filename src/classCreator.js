@@ -195,6 +195,8 @@ const Player = () => {
 
     function resetShipsArray() {
         gameboard.ships.length = 0;
+        prevSelectedShipArray.length = 0;
+        prevSelectedShipIndexArray.length = 0;
     }
 
     // Display's rules
