@@ -119,9 +119,12 @@ const Player = () => {
     let winningCounter = null;
 
     // Variables for ship placement section
-    let selectedShip = null;
-    let planeOfPlacingShip = "HORIZONTAL";
     let draggableShips;
+    let selectedShip = null;
+    let prevSelectedShipArray = [];
+    let prevSelectedShipIndexArray = [];
+    let planeOfPlacingShip = "HORIZONTAL";
+    
 
     // For computer guessing logic
     let potentialComputerGuesses = null;
@@ -234,6 +237,10 @@ const Player = () => {
         placingDiv.innerHTML = 'PLACING:'
         placingDiv.classList.add(`placing-div`);
 
+        const undoBtn = document.createElement("button");
+        undoBtn.classList.add(`${this.name}`, `undo-btn`);
+        undoBtn.textContent = "UNDO";
+
         const horizontalOrVerticalBtn = document.createElement("button");
         horizontalOrVerticalBtn.classList.add(`${this.name}`, `horizontal-or-vertical-btn`);
         horizontalOrVerticalBtn.textContent = "HORIZONTAL";
@@ -252,6 +259,7 @@ const Player = () => {
 
         btnContainer.appendChild(placingDiv);
         btnContainer.appendChild(horizontalOrVerticalBtn);
+        btnContainer.appendChild(undoBtn);
         btnContainer.appendChild(randomiseBtn);
         btnContainer.appendChild(resetBtn);
         btnContainer.appendChild(confirmBtn);
@@ -318,8 +326,6 @@ const Player = () => {
             }
         })
     }
-
-    
 
     function selectDefaultShip(index=0) {
         if (draggableShips.length > 0) {
@@ -502,11 +508,14 @@ const Player = () => {
 
         function makeDraggableShipInvisible() {
             // Function to update the classList of the HTML element when the associated ship is being/is placed
-
-            for (let i =0; i < draggableShips.length; i++) {
+            for (let i = 0; i < draggableShips.length; i++) {
                 if (selectedShip === draggableShips[i]) {
                     draggableShips[i].classList.add("invisible");
                     draggableShips.splice(i, 1);
+
+                    // Adds prevSelectedShip once it's been dropped onto the gameboard
+                    prevSelectedShipArray.push(selectedShip);
+                    prevSelectedShipIndexArray.push(i);
 
                     // Moves the ship to be placed to the following ship
                     selectDefaultShip(i);
@@ -532,7 +541,7 @@ const Player = () => {
     function updateClassListOnShipSunk(ship) {
         // Function to update the classList of the HTML element when the associated ship is sunk
         // I compare the length opposed to the individual div as this means each ship is sunk from the top down which is more logical and less confusing
-        for (let i =0; i < draggableShips.length; i++) {
+        for (let i = 0; i < draggableShips.length; i++) {
             const dataSize = parseInt(draggableShips[i].dataset.size);
             if (ship.length === dataSize) {
                 draggableShips[i].classList.add("sunk");
@@ -541,6 +550,72 @@ const Player = () => {
             }
         }
     }
+
+    function removeLastShip() {
+        if (gameboard.ships.length > 0) {
+            // Need to remove Last Ship from ships array
+            const shipToBeRemoved = gameboard.ships.pop(gameboard.ships.length - 1)
+            const shipToBeRemovedCoordinates = removeShipFromBoardArray(shipToBeRemoved);
+            removeShipFromHTMLGameboard.bind(this)(shipToBeRemovedCoordinates);
+            removeXValuesFromMissedGameboard(shipToBeRemovedCoordinates);
+            reinstateToHTMLDraggableShips();
+        }
+    }
+
+    function removeShipFromBoardArray(ship) {
+        // Function returns gameboard coordinates of ship and simultaneously removes it from the gameboard
+        const shipCoordinates = [];
+        for (let y = 0; y <= 9; y++) {
+            for (let x = 0; x <= 9; x++) {
+                if (gameboard.board[y][x] === ship) {
+                    // Removes ship from gameboard
+                    gameboard.board[y][x] = null;
+                    shipCoordinates.push([y, x])
+                }
+            }
+        }
+        return shipCoordinates
+    }
+
+    function removeShipFromHTMLGameboard(shipCoordinates) {
+        console.log(shipCoordinates)
+        for (let coordinates of shipCoordinates) {
+            const y = coordinates[0];
+            const x = coordinates[1];
+            const gridDiv = gridDivFromCoordinates.bind(this)(y, x);
+            gridDiv.classList.remove("ship-present", "reveal");
+        }
+    }
+
+    function removeXValuesFromMissedGameboard(shipCoordinates) {
+        for (let coordinates of shipCoordinates) {
+            const y = coordinates[0];
+            const x = coordinates[1];
+            const coordinatesForMissedGameboard = findSurroundingCoordinates(x, y);
+            for (let missedCoordinates of coordinatesForMissedGameboard) {
+                const Y = missedCoordinates[1];
+                const X = missedCoordinates[0];
+                if (gameboard.missed[Y][X] != null) {
+                    gameboard.missed[Y][X] = null;
+                }
+            }
+        }
+    }
+
+    function reinstateToHTMLDraggableShips() {
+        // Last added ship is the previousSelectedShip
+        const prevSelectedShip = prevSelectedShipArray.pop();
+        const prevSelectedShipIndex = prevSelectedShipIndexArray.pop();
+
+        // Add previously placed ship back into draggable ships and the dragggable-ship container
+        prevSelectedShip.classList.remove("invisible");
+        draggableShips.splice(prevSelectedShipIndex, 0, prevSelectedShip);
+
+        // Revert the current selectedShip to be the previous
+        selectedShip.classList.remove("placing");
+        selectedShip = prevSelectedShip;
+        
+    }   
 
     function progressFromShipPlacement(player2TurnTracker) {
         // If VS COMPUTER, function is only called on Player 1!
@@ -1034,6 +1109,6 @@ const Player = () => {
     
     
 
-    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTMLDivContainers, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideGridShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips, resetHTMLGrid, progressFromShipPlacement, resetShipsArray, planeOfPlacingShip, winningCounter}
+    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTMLDivContainers, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideGridShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips, resetHTMLGrid, progressFromShipPlacement, resetShipsArray, planeOfPlacingShip, winningCounter, removeLastShip}
 }
 export {Ship, Gameboard, Player};
