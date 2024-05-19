@@ -1,7 +1,7 @@
 import "./styles.css"
 import { Player } from "./classCreator";
 import { goesFirst, playerOrComputer } from "./playerSelection";
-import { handleGameRulesButtonClick, handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, changeOverlaysTo, handleHorizontalOrVerticalButtonClick } from "./buttonLogic";
+import { handleGameRulesButtonClick, handleUndoButtonClick, handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, changeOverlaysTo, handleHorizontalOrVerticalButtonClick } from "./buttonLogic";
 import { randomise } from "./randomise";
 
 let player1WinningCounter = null;
@@ -78,9 +78,13 @@ async function initialiseGame() {
     // Use a for...of loop to iterate over the buttons 
     const horizontalOrVerticalButtons = document.querySelectorAll(".horizontal-or-vertical-btn");
     for (const button of horizontalOrVerticalButtons) {
-        button.onclick = () => handleHorizontalOrVerticalButtonClick(button, player1, player2);
+        button.onclick = () => handleHorizontalOrVerticalButtonClick(button);
     }
 
+    const undoButtons = document.querySelectorAll(".undo-btn");
+    for (const button of undoButtons) {
+        button.onclick = () => handleUndoButtonClick(button, player1, player2);
+    }
     const randomiseButtons = document.querySelectorAll(".randomise-btn");
     for (const button of randomiseButtons) {
         button.onclick = () => handleRandomiseButtonClick(button, player1, player2);

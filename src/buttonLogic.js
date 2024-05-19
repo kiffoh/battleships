@@ -28,13 +28,21 @@ function handleGameRulesButtonClick() {
         }
 }
 
-function handleHorizontalOrVerticalButtonClick(button, player1, player2) {
+function handleHorizontalOrVerticalButtonClick(button) {
     if (button.classList.contains("player1")) {
         button.textContent = (button.textContent === "HORIZONTAL" ? "VERTICAL" : "HORIZONTAL");
     } else {
         button.textContent = (button.textContent === "HORIZONTAL" ? "VERTICAL" : "HORIZONTAL");
     }
     
+}
+
+function handleUndoButtonClick(button, player1, player2) {
+    if (button.classList.contains("player1")) { 
+        player1.removeLastShip();
+    } else {
+        player2.removeLastShip();
+    }
 }
 
 // Define an async function to use await
@@ -179,4 +187,4 @@ function hideShipsContainer(hide, playerName) {
     }
 }
 
-export { handleGameRulesButtonClick, handleHorizontalOrVerticalButtonClick, handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, hideShipsContainer, changeOverlaysTo }
+export { handleGameRulesButtonClick, handleHorizontalOrVerticalButtonClick, handleUndoButtonClick, handleRandomiseButtonClick, handleResetButtonClick, handleConfirmBtnClick, hideShipsContainer, changeOverlaysTo }
