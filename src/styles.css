@@ -197,6 +197,7 @@ h1.title, .winner-confirmation {
 .player-2-btn, .computer-btn{
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: large;
+    padding: 4px 8px;
 }
 
 .player-2-btn {
@@ -225,7 +226,7 @@ h1.title, .winner-confirmation {
 
 .moniker-selection {
     display: none;
-    min-height: 70px;
+    min-height: 82px;
 }
 
 .moniker-btns-container {
