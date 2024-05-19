@@ -375,7 +375,7 @@ h3.title {
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-.start-button, .reset-btn, .randomise-btn, .confirm-btn, .horizontal-or-vertical-btn, .refresh-btn, .confirm-player-or-computer-btn, .back-btn, .confirm-moniker-btn {
+.start-button, .reset-btn, .randomise-btn, .confirm-btn, .horizontal-or-vertical-btn, .refresh-btn, .confirm-player-or-computer-btn, .back-btn, .confirm-moniker-btn, .undo-btn {
     font-size: large;
     padding: 4px 8px;
 
