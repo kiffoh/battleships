@@ -302,35 +302,37 @@ div.player1-grid.number.not-valid, div.player2-grid.number.not-valid {
 .inside-ship {
     width: 32px;
     height: 32px;
-    border: 2px solid darkblue;
-    position: relative;
+    outline: 2px solid darkblue;
 }
 
 .draggable-ship[data-size="1"] {
     width: 32px;
     height: 32px;
-    outline: 2px solid darkblue;
-    position: relative;
 }
 
 .draggable-ship[data-size="2"] {
     width: 32px;
     height: 64px;
-    outline: 2px solid darkblue;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .draggable-ship[data-size="3"] {
     width: 32px;
     height: 96px;
-    outline: 2px solid darkblue;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .draggable-ship[data-size="4"] {
     width: 32px;
     height: 128px;
-    outline: 2px solid darkblue;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
-
 
 h3.title {
     grid-area: 1 / 2;
@@ -486,7 +488,7 @@ h3 {
     outline: 2px solid red;
 }
 
-.draggable-ship.placing {
+.draggable-ship.placing > * {
     outline: 2px solid rgb(38, 209, 38);
 }
 

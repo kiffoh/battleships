@@ -296,20 +296,50 @@ const Player = () => {
 
         shipsContainer.innerHTML = `
         <div class="ship-container-1">
-            <div class="draggable-ship" data-size="4"></div> 
-            <div class="draggable-ship" data-size="3"></div>
-            <div class="draggable-ship" data-size="3"></div>
+            <div class="draggable-ship" data-size="4">
+                <div class="inside-ship"></div>
+                <div class="inside-ship"></div>
+                <div class="inside-ship"></div>
+                <div class="inside-ship"></div>
+            </div> 
+            <div class="draggable-ship" data-size="3">
+                <div class="inside-ship"></div>
+                <div class="inside-ship"></div>
+                <div class="inside-ship"></div>
+            </div>
+            <div class="draggable-ship" data-size="3">
+                <div class="inside-ship"></div>
+                <div class="inside-ship"></div>
+                <div class="inside-ship"></div>
+            </div>
         </div>
         <div class="ship-container-2">
-            <div class="draggable-ship" data-size="2"></div>
-            <div class="draggable-ship" data-size="2"></div>
-            <div class="draggable-ship" data-size="2"></div>
+            <div class="draggable-ship" data-size="2">
+                <div class="inside-ship"></div>
+                <div class="inside-ship"></div>
+            </div>
+            <div class="draggable-ship" data-size="2">
+                <div class="inside-ship"></div>
+                <div class="inside-ship"></div>
+            </div>
+            <div class="draggable-ship" data-size="2">
+                <div class="inside-ship"></div>
+                <div class="inside-ship"></div>
+            </div>
         </div>
         <div class="ship-container-3">
-            <div class="draggable-ship" data-size="1"></div>
-            <div class="draggable-ship" data-size="1"></div>
-            <div class="draggable-ship" data-size="1"></div>
-            <div class="draggable-ship" data-size="1"></div>
+            <div class="draggable-ship" data-size="1">
+                <div class="inside-ship"></div>
+            </div>
+            <div class="draggable-ship" data-size="1">
+                <div class="inside-ship"></div>
+            </div>
+            <div class="draggable-ship" data-size="1">
+                <div class="inside-ship"></div>
+            </div>
+            <div class="draggable-ship" data-size="1">
+                <div class="inside-ship"></div>
+            </div>
         </div>
         `;
 
