@@ -492,7 +492,7 @@ h3 {
     outline: 2px solid rgb(38, 209, 38);
 }
 
-.draggable-ship.invisible {
+.draggable-ship.invisible > * {
     outline: 2px solid white;
 }
 
