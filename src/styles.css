@@ -293,7 +293,9 @@ div.player1-grid.number.not-valid, div.player2-grid.number.not-valid {
     display: flex;
     gap: 1em;
     grid-area: 1 / 1 / -2 / 1;
-    padding: 1em;
+    padding-right: 1em;
+    /* PADDING TO ACCOUNT FOR OUTLINE WIDTH */
+    padding-bottom: 2px;
     justify-content: flex-end;
 }
 
