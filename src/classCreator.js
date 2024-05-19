@@ -233,9 +233,6 @@ const Player = () => {
 
     // Buttons for SHIP POSITIONING STAGE
     function buildButtonContainer() {
-        const btnContainer = document.createElement("div");
-        btnContainer.classList.add("btn-container");
-
         const singularShipBtns = document.createElement("div");
         singularShipBtns.classList.add("singular-ship-btns");
 
@@ -273,9 +270,6 @@ const Player = () => {
         multipleShipBtns.appendChild(resetBtn);
         multipleShipBtns.appendChild(confirmBtn);
 
-        btnContainer.appendChild(singularShipBtns);
-        btnContainer.appendChild(multipleShipBtns);
-
         const gameboard = document.querySelector(`.${this.name}-grid.game-board`)
         gameboard.insertAdjacentElement("afterend", multipleShipBtns);
         gameboard.insertAdjacentElement("afterend", singularShipBtns);
@@ -284,9 +278,11 @@ const Player = () => {
 
     function removeButtons() {
         const gridContainer = document.querySelector(`.${this.name}-grid-container`);
-        const btnContainer = gridContainer.querySelector(`.btn-container`);
+        const singularShipBtns = gridContainer.querySelector(`.singular-ship-btns`);
+        const multipleShipBtns = gridContainer.querySelector(`.multiple-ship-btns`);
 
-        gridContainer.removeChild(btnContainer);
+        gridContainer.removeChild(singularShipBtns);
+        gridContainer.removeChild(multipleShipBtns);
     }
 
     // builds ships to be placed
