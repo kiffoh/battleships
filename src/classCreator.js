@@ -207,7 +207,7 @@ const Player = () => {
 
         playerOverlay.innerHTML = `
             <h3 class="rules-title">RULES FOR SHIP PLACEMENT</h3>
-            <p>Click on the grid to place your ships! </p>
+            <p><strong>Click on the grid to place your ships!</strong></p>
             <p>You can <strong>change the ship</strong> you want to place by <strong>clicking on another</strong>.</p>
             <p><span class="highlighted green"><strong>Legal</strong></span> placements highlight <strong><span class="highlighted green">green</span></strong>. <span class="highlighted red"><strong>Illegal</strong></span> placements highlight <span class="highlighted red"><strong>red</strong></span>.</p>
             <p>You <strong>cannot place</strong> a ship within <strong>a square</strong> of an <strong>already placed ship</strong>, or if the ship <strong>length</strong> means it is positioned <strong>outside the grid</strong>.</p>
@@ -317,7 +317,7 @@ const Player = () => {
         const playerGridContainer = document.querySelector(`.${this.name}-grid-container`)
         playerGridContainer.insertAdjacentElement("afterbegin", shipsContainer);
 
-        // Stores the draggableShips div in array for updateClassLisstOnShipSunk
+        // Stores the draggableShips div in array for updateClassListOnDraggableShip
         draggableShips = [...playerGridContainer.querySelectorAll(".draggable-ship")];
     }
 
@@ -552,7 +552,7 @@ const Player = () => {
         applyDraggableShips.bind(this)();
     }
     
-    function updateClassListOnShipSunk(ship) {
+    function updateClassListOnDraggableShip(ship) {
         // Function to update the classList of the HTML element when the associated ship is sunk
         // I compare the length opposed to the individual div as this means each ship is sunk from the top down which is more logical and less confusing
         for (let i = 0; i < draggableShips.length; i++) {
@@ -779,7 +779,7 @@ const Player = () => {
                 nearbyShipSquaresHit.bind(this)(x, y);
             })
 
-            updateClassListOnShipSunk.bind(this)(gameboard.board[y][x]);
+            updateClassListOnDraggableShip.bind(this)(gameboard.board[y][x]);
 
             // Game over check?
             if (gameboard.allShipsSunk()) {
@@ -966,7 +966,7 @@ const Player = () => {
                 this.opponent.nearbyShipSquaresHit(x, y, potentialComputerGuesses);
             })        
 
-            this.opponent.updateClassListOnShipSunk(this.opponent.gameboard.board[y][x]);
+            this.opponent.updateClassListOnDraggableShip(this.opponent.gameboard.board[y][x]);
 
             // Game over check?
             if (this.opponent.gameboard.allShipsSunk()) {
@@ -1123,6 +1123,6 @@ const Player = () => {
     
     
 
-    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTMLDivContainers, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideGridShips, updateTurnText, updateClassListOnShipSunk, buildRules, removeRules, toggleShipsInvisible, resetShips, resetHTMLGrid, progressFromShipPlacement, resetShipsArray, planeOfPlacingShip, winningCounter, removeLastShip}
+    return {buildHTMLGrid, showOverlay, registerGridDivEventListener, buildHTMLDivContainers, computerGuess, opponent, generateComputerGuesses, positionShips: gameboard.positionShips, allShipsSunk: gameboard.allShipsSunk, allShipsPlaced: gameboard.allShipsPlaced, gameboard, gridDivFromCoordinates, nearbyShipSquaresHit, potentialComputerGuesses, buildShips, applyDraggableShips, buildButtonContainer, resetGrid, removeShips, removeButtons, hideGridShips, updateTurnText, updateClassListOnDraggableShip, buildRules, removeRules, toggleShipsInvisible, resetShips, resetHTMLGrid, progressFromShipPlacement, resetShipsArray, planeOfPlacingShip, winningCounter, removeLastShip}
 }
 export {Ship, Gameboard, Player};
