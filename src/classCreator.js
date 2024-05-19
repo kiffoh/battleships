@@ -203,6 +203,8 @@ const Player = () => {
     function buildRules() {
         const playerOverlay = document.getElementById(`${this.name}GridOverlay`);
 
+        playerOverlay.style.paddingLeft = "1em";
+
         this.showOverlay(true);
 
         playerOverlay.innerHTML = `
@@ -222,6 +224,8 @@ const Player = () => {
 
     function removeRules() {
         const playerOverlay = document.getElementById(`${this.name}GridOverlay`);
+
+        playerOverlay.style.paddingLeft = "0";
 
         this.showOverlay(false);
 
