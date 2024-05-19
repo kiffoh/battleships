@@ -212,6 +212,7 @@ const Player = () => {
             <br></br>
             <p><strong>Button descriptions:</strong></p>
             <p><strong>PLACING:</strong> Displays the <strong>current direction</strong> of the ship to be placed. <strong>Click</strong> the direction of the ship, HORIZONTAL / VERTICAL, to <strong>change</strong> the direction.</p>
+            <p><strong>↶:</strong> <strong>Undo</strong> the <strong>previous</strong> ship placement.</p>
             <p><strong>RANDOMISE:</strong> Places all ships onto the board in a random manner.</p>
             <p><strong>RESET:</strong> Removes all ships from the grid to the starting position.</p>
         `;
@@ -233,17 +234,23 @@ const Player = () => {
         const btnContainer = document.createElement("div");
         btnContainer.classList.add("btn-container");
 
+        const singularShipBtns = document.createElement("div");
+        singularShipBtns.classList.add("singular-ship-btns");
+
+        const multipleShipBtns = document.createElement("div");
+        multipleShipBtns.classList.add("multiple-ship-btns");
+
         const placingDiv = document.createElement("div");
         placingDiv.innerHTML = 'PLACING:'
         placingDiv.classList.add(`placing-div`);
 
-        const undoBtn = document.createElement("button");
-        undoBtn.classList.add(`${this.name}`, `undo-btn`);
-        undoBtn.textContent = "↶";
-
         const horizontalOrVerticalBtn = document.createElement("button");
         horizontalOrVerticalBtn.classList.add(`${this.name}`, `horizontal-or-vertical-btn`);
         horizontalOrVerticalBtn.textContent = "HORIZONTAL";
+
+        const undoBtn = document.createElement("button");
+        undoBtn.classList.add(`${this.name}`, `undo-btn`);
+        undoBtn.textContent = "↶";
 
         const randomiseBtn = document.createElement("button");
         randomiseBtn.classList.add(`${this.name}`, `randomise-btn`);
@@ -257,15 +264,20 @@ const Player = () => {
         resetBtn.classList.add(`${this.name}`, `reset-btn`);
         resetBtn.textContent = "RESET";
 
-        btnContainer.appendChild(placingDiv);
-        btnContainer.appendChild(horizontalOrVerticalBtn);
-        btnContainer.appendChild(undoBtn);
-        btnContainer.appendChild(randomiseBtn);
-        btnContainer.appendChild(resetBtn);
-        btnContainer.appendChild(confirmBtn);
+        singularShipBtns.appendChild(placingDiv);
+        singularShipBtns.appendChild(horizontalOrVerticalBtn);
+        singularShipBtns.appendChild(undoBtn);
+        multipleShipBtns.appendChild(randomiseBtn);
+        multipleShipBtns.appendChild(resetBtn);
+        multipleShipBtns.appendChild(confirmBtn);
+
+        btnContainer.appendChild(singularShipBtns);
+        btnContainer.appendChild(multipleShipBtns);
 
         const gameboard = document.querySelector(`.${this.name}-grid.game-board`)
-        gameboard.insertAdjacentElement("afterend", btnContainer);
+        gameboard.insertAdjacentElement("afterend", multipleShipBtns);
+        gameboard.insertAdjacentElement("afterend", singularShipBtns);
+        
     }
 
     function removeButtons() {
