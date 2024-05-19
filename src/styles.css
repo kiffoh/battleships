@@ -294,6 +294,7 @@ div.player1-grid.number.not-valid, div.player2-grid.number.not-valid {
     gap: 1em;
     grid-area: 1 / 1 / -2 / 1;
     padding: 1em;
+    justify-content: flex-end;
 }
 
 .inside-ship {
@@ -358,7 +359,6 @@ h3.title {
     justify-content: space-evenly;
 }
 
-/* ONLY colour player grid */
 .ship-present.reveal {
     outline: 2px solid darkblue;
     width: 100%;
@@ -380,6 +380,19 @@ h3.title {
     padding: 4px 8px;
 
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.multiple-ship-btns, .singular-ship-btns {
+    display: flex;
+}
+
+.singular-ship-btns {
+    gap: 1em;
+}
+
+.multiple-ship-btns {
+    display: flex;
+    justify-content: space-between;
 }
 
 .placing-div {
