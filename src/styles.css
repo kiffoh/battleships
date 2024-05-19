@@ -436,7 +436,7 @@ h3 {
     /* position: relative NEEDED TO CONTAIN OVERLAY to just the grid container*/
     position: relative;
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr auto;
     grid-template-rows: auto 1fr auto;
     gap: 1em;
 
