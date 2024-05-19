@@ -546,8 +546,8 @@ const Player = () => {
             if (selectedShip) {
                 selectedShip.classList.remove("placing");
             }
-            selectedShip = e.target;
-            e.target.classList.add("placing");
+            selectedShip = e.target.parentElement;
+            selectedShip.classList.add("placing");
         }
 
         function makeDraggableShipInvisible() {
