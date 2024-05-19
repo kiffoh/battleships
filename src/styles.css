@@ -294,10 +294,9 @@ div.player1-grid.number.not-valid, div.player2-grid.number.not-valid {
     display: flex;
     gap: 1em;
     grid-area: 1 / 1 / -2 / 1;
-    padding-right: 1em;
-    /* PADDING TO ACCOUNT FOR OUTLINE WIDTH */
-    padding-bottom: 2px;
     justify-content: flex-end;
+    /* PADDING TO ACCOUNT FOR OUTLINE WIDTH & MAKE GAP FOR GRID OVERLAY CONSISTENT */
+    padding: 0 1em 2px calc(2px + 1em);
 }
 
 .inside-ship {
@@ -353,8 +352,6 @@ h3.title {
 }
 
 #player1GridOverlay, #player2GridOverlay, #computerGridOverlay {
-    padding-left: 1em;
-    padding-right: 1em;
     color: rgb(237, 233, 233);
 }
 
