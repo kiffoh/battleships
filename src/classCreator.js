@@ -239,7 +239,7 @@ const Player = () => {
 
         const undoBtn = document.createElement("button");
         undoBtn.classList.add(`${this.name}`, `undo-btn`);
-        undoBtn.textContent = "UNDO";
+        undoBtn.textContent = "↶";
 
         const horizontalOrVerticalBtn = document.createElement("button");
         horizontalOrVerticalBtn.classList.add(`${this.name}`, `horizontal-or-vertical-btn`);
