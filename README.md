@@ -6,10 +6,19 @@ Welcome to Battleships, a classic game implemented using Test Driven Development
 
 As this project emphasises TDD, each functionality was implemented and tested independently to ensure the code’s reliability and maintainability.
 
+## Additional features
+
+## Intelligent computer Guessing
+
+The computer has been designed to guess locally on a successful hit.
+
+## Win tracker
+
+Play multiple games to see who is the true champion with the play again feature!
+
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
-- [Installation](#installation)
 - [Usage](#usage)
 - [Build for Production](#build-for-production)
 - [Configuration](#configuration)
@@ -24,46 +33,22 @@ As this project emphasises TDD, each functionality was implemented and tested in
 - **npm**: Node package manager, which is installed with Node.js
 - **webpack**: Module bundler
 
-To install webpack globally (optional):
-
-```bash
-npm install -g webpack webpack-cli
-
-## Installation
-Clone the repository:
-
-git clone https://github.com/your-username/your-project.git
-
-cd your-project
-Install dependencies:
-npm install
-
 ## Usage
 To run the development server with live reloading, use:
 
-npx webpack serve --open
+npm webpack serve --open
 This will open your project in the default web browser and reload it on changes.
 
 ## Build for Production
 To build the project for production, use:
 
-npx webpack --mode production
+npm webpack --mode production
 This will create an optimized and minified version of your project in the dist directory.
 
 To configure the project, edit the webpack.config.js file.
 
 ## Acknowledgements
 Special thanks to Odin Project for the education and information.
-
-## Additional features
-
-## Intelligent computer Guessing
-
-The computer has been designed to guess locally on a successful hit.
-
-## Win tracker
-
-Play multiple games to see who is the true champion with the play again feature!
 
 ## GitHub Pages
 
