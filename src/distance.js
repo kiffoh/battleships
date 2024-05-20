@@ -15,9 +15,6 @@ function updateMonikerSelectionDistanceVariable() {
     // Check computed style for display property
     const computerMonikerDisplayStyle = window.getComputedStyle(computerMonikerDiv).getPropertyValue('display');
 
-    console.log(player2MonikerDiv.offsetLeft, computerMonikerDiv.offsetLeft)
-
-
     const player2Moniker = (computerMonikerDisplayStyle === "none" ? player2MonikerDiv : computerMonikerDiv)
 
     // Calculate the distance between containers
