@@ -8,11 +8,11 @@ As this project emphasises TDD, each functionality was implemented and tested in
 
 ## Additional features
 
-## Intelligent computer Guessing
+**Intelligent computer Guessing**
 
-The computer has been designed to guess locally on a successful hit.
+The computer has been designed to guess locally on a successful hit, so do not give it too many chances!
 
-## Win tracker
+**Win tracker**
 
 Play multiple games to see who is the true champion with the play again feature!
 
