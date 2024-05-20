@@ -1136,7 +1136,7 @@ const Player = () => {
             this.opponent.winningCounter++;
         } else {
             winner = this.moniker;
-            winningCounter++;
+            this.winningCounter++;
         }
 
         // Add the inner HTML content for the player-selection div
@@ -1145,9 +1145,9 @@ const Player = () => {
 
         const currentScore = document.querySelector(".current-score#gameEnd");
         if (this.name === "player1") {
-            currentScore.textContent = `${this.moniker}: ${this.winningCounter}     -     ${this.opponent.moniker}: ${this.opponent.winningCounter}`;
+            currentScore.textContent = `${this.moniker} : ${this.winningCounter}     -     ${this.opponent.winningCounter} : ${this.opponent.moniker}`;
         } else {
-            currentScore.textContent = `${this.opponent.moniker}: ${this.opponent.winningCounter}     -     ${this.moniker}: ${this.winningCounter}`;
+            currentScore.textContent = `${this.opponent.moniker} : ${this.opponent.winningCounter}     -     ${this.winningCounter} : ${this.moniker}`;
         }
     }
     
