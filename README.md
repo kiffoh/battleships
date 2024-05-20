@@ -4,7 +4,7 @@
 
 Welcome to Battleships, a classic game implemented using Test Driven Development (TDD) principles. In this project, I built the famous Battleship game from scratch. You can play against the computer or locally against a friend.
 
-This project emphasizes TDD, each functionality will be implemented and tested independently to ensure the code’s reliability and maintainability.
+As this project emphasises TDD, each functionality was implemented and tested independently to ensure the code’s reliability and maintainability.
 
 ## Assignment
 
@@ -30,4 +30,4 @@ Create conditions to end the game once one player’s ships have all been sunk.
 
 ## GitHub Pages
 
-The latest version of the Battleships game is deployed on GitHub Pages. You can play it [here](https://kiffoh.github.io/battleships/). The code pushed to GitHub Pages is from the `production-build` branch which is different from the rest, as the `dist` files are created using "webpack --mode production" rather than "webpack serve --open". The other branches contain unfinished features.
+The latest version of the Battleships game is deployed on GitHub Pages. You can play it [here](https://kiffoh.github.io/battleships/).
