@@ -1,4 +1,12 @@
 import { updatePlayerSelectionDistanceVariable, updateMonikerSelectionDistanceVariable } from "./distance";
+import Icon1 from "./images/1.png"
+import Icon2 from "./images/2.png"
+import Icon3 from "./images/3.png"
+import Icon4 from "./images/4.png"
+import Icon5 from "./images/5.png"
+import Icon6 from "./images/6.png"
+import Icon7 from "./images/7.png"
+import Icon8 from "./images/8.png"
 
 function goesFirst(players) {
     let number = Math.random();
@@ -86,6 +94,15 @@ function playerOrComputer() {
 
     // Append the player-selection div to the grid-overlay div
     gridOverlay.appendChild(centeredContainerDiv);
+
+    const importedImagesTop = importImages();
+    importedImagesTop.classList.add("top");
+
+    const importedImagesBottom = importImages();
+    importedImagesBottom.classList.add("bottom");
+
+    centeredContainerDiv.insertBefore(importedImagesTop, centeredContainerDiv.firstChild);
+    centeredContainerDiv.appendChild(importedImagesBottom);
 
     // Code to appropriately position the confirm buttons
     updatePlayerSelectionDistanceVariable();
@@ -235,6 +252,46 @@ function playerOrComputer() {
 
     return monikerConfirmPromise;
 };
+
+function importImages() {
+    const myIcon1 = new Image();
+    myIcon1.src = Icon1;
+
+    const myIcon2 = new Image();
+    myIcon2.src = Icon2;
+
+    const myIcon3 = new Image();
+    myIcon3.src = Icon3;
+    
+    const myIcon4 = new Image();
+    myIcon4.src = Icon4;
+
+    const myIcon5 = new Image();
+    myIcon5.src = Icon5;
+
+    const myIcon6 = new Image();
+    myIcon6.src = Icon6;
+
+    const myIcon7 = new Image();
+    myIcon7.src = Icon7;
+    
+    const myIcon8 = new Image();
+    myIcon8.src = Icon8;
+
+    const logosDiv = document.createElement("div");
+    logosDiv.classList.add("logos-div");
+
+    logosDiv.appendChild(myIcon1);
+    logosDiv.appendChild(myIcon2);
+    logosDiv.appendChild(myIcon3);
+    logosDiv.appendChild(myIcon4);
+    logosDiv.appendChild(myIcon5);
+    logosDiv.appendChild(myIcon6);
+    logosDiv.appendChild(myIcon7);
+    logosDiv.appendChild(myIcon8);
+
+    return logosDiv;
+}
 
 function dullTitleText(dull) {
     const titleText = document.querySelector("h1")
