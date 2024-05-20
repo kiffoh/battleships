@@ -49,6 +49,12 @@ h1.title, .winner-confirmation {
     gap: 2em;
 }
 
+@media (min-width: 1081px) {
+    .centered-container {
+        grid-template-rows: auto 1fr auto 3fr auto;
+    }
+}
+
 .game-rules-btn {
     position: absolute;
     left: 90%;
@@ -238,7 +244,7 @@ h1.title, .winner-confirmation {
 }
 
 .logos-div img {
-    height: 100px;
+    height: 75px;
 }
 
 .back-btn {

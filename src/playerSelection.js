@@ -95,14 +95,7 @@ function playerOrComputer() {
     // Append the player-selection div to the grid-overlay div
     gridOverlay.appendChild(centeredContainerDiv);
 
-    const importedImagesTop = importImages();
-    importedImagesTop.classList.add("top");
-
-    const importedImagesBottom = importImages();
-    importedImagesBottom.classList.add("bottom");
-
-    centeredContainerDiv.insertBefore(importedImagesTop, centeredContainerDiv.firstChild);
-    centeredContainerDiv.appendChild(importedImagesBottom);
+    updateImportedImages();
 
     // Code to appropriately position the confirm buttons
     updatePlayerSelectionDistanceVariable();
@@ -110,6 +103,7 @@ function playerOrComputer() {
 
     window.addEventListener("resize", updatePlayerSelectionDistanceVariable);
     window.addEventListener("resize", updateMonikerSelectionDistanceVariable);
+    window.addEventListener("resize", updateImportedImages);
 
     // Variable to hold the chosen player
     let chosenPlayer2 = null;
@@ -247,6 +241,7 @@ function playerOrComputer() {
             // Remove event listeners after they have served their purpose
             window.removeEventListener("resize", updatePlayerSelectionDistanceVariable);
             window.removeEventListener("resize", updateMonikerSelectionDistanceVariable);
+            window.removeEventListener("resize", updateImportedImages);
         });
     });
 
@@ -291,6 +286,31 @@ function importImages() {
     logosDiv.appendChild(myIcon8);
 
     return logosDiv;
+}
+
+function updateImportedImages() {
+    console.log(window.innerWidth)
+    if (window.innerWidth > 1280) {
+        const importedImagesTop = importImages();
+        importedImagesTop.classList.add("top");
+
+        const importedImagesBottom = importImages();
+        importedImagesBottom.classList.add("bottom");
+
+        const centeredContainerDiv = document.querySelector(".centered-container");
+
+        centeredContainerDiv.insertBefore(importedImagesTop, centeredContainerDiv.firstChild);
+        centeredContainerDiv.appendChild(importedImagesBottom);
+    } else {
+        const importedImagesTop = document.querySelector(".logos-div.top");
+        const importedImagesBottom = document.querySelector(".logos-div.bottom");
+        const centeredContainerDiv = document.querySelector(".centered-container");
+
+        if (importedImagesTop && importedImagesBottom) {
+            centeredContainerDiv.removeChild(importedImagesTop);
+            centeredContainerDiv.removeChild(importedImagesBottom);            
+        }
+    }
 }
 
 function dullTitleText(dull) {
