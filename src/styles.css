@@ -237,6 +237,10 @@ h1.title, .winner-confirmation {
     left: var(--moniker-selection-distance);
 }
 
+.logos-div img {
+    height: 100px;
+}
+
 .back-btn {
     width: 92.09px;
 }
