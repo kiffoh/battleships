@@ -482,7 +482,7 @@ h3 {
     height: 100%;
 }
 
-.draggable-ship.sunk {
+.draggable-ship.sunk > * {
     outline: 2px solid red;
 }
 
