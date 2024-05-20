@@ -6,28 +6,66 @@ Welcome to Battleships, a classic game implemented using Test Driven Development
 
 As this project emphasises TDD, each functionality was implemented and tested independently to ensure the code’s reliability and maintainability.
 
-## Assignment
+## Table of Contents
 
-### Ship Class/Factory
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Build for Production](#build-for-production)
+- [Configuration](#configuration)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgements](#acknowledgements)
+- [Contact Information](#contact-information)
 
-Start by creating the Ship class/factory. Each ship object includes its length, the number of hits it has taken, and whether or not it has been sunk. Implement methods such as `hit()` to increase the number of hits and `isSunk()` to determine if the ship is sunk.
+## Prerequisites
 
-### Gameboard Class/Factory
+- **Node.js**: [Download and install Node.js](https://nodejs.org/)
+- **npm**: Node package manager, which is installed with Node.js
+- **webpack**: Module bundler
 
-Gameboards should be able to place ships at specific coordinates and receive attacks. Implement a method to determine if all ships have been sunk. Keep track of missed attacks to display them properly.
+To install webpack globally (optional):
 
-### Player
+```bash
+npm install -g webpack webpack-cli
 
-Players can take turns playing the game by attacking the enemy Gameboard. Implement a computer player capable of making random plays. Ensure the AI knows whether a move is legal.
+## Installation
+Clone the repository:
 
-### Main Game Loop and DOM Interaction
+git clone https://github.com/your-username/your-project.git
 
-Create the main game loop and a module for DOM interaction. Set up a new game and populate Gameboards with coordinates. Implement methods to render gameboards and take user input for attacking. Display both players’ boards using information from the Gameboard class/factory.
+cd your-project
+Install dependencies:
+npm install
 
-### Game Completion
+## Usage
+To run the development server with live reloading, use:
 
-Create conditions to end the game once one player’s ships have all been sunk.
+npx webpack serve --open
+This will open your project in the default web browser and reload it on changes.
+
+## Build for Production
+To build the project for production, use:
+
+npx webpack --mode production
+This will create an optimized and minified version of your project in the dist directory.
+
+To configure the project, edit the webpack.config.js file.
+
+## Acknowledgements
+Special thanks to Odin Project for the education and information.
+
+## Additional features
+
+## Intelligent computer Guessing
+
+The computer has been designed to guess locally on a successful hit.
+
+## Win tracker
+
+Play multiple games to see who is the true champion with the play again feature!
 
 ## GitHub Pages
 
 The latest version of the Battleships game is deployed on GitHub Pages. You can play it [here](https://kiffoh.github.io/battleships/).
+
