@@ -22,7 +22,7 @@ Play multiple games to see who is the true champion with the play again feature!
 - [Usage](#usage)
 - [Build for Production](#build-for-production)
 - [Acknowledgements](#acknowledgements)
-- [Contact Information](#contact-information)
+- [Deployment](#deployment)
 
 ## Prerequisites
 
@@ -33,14 +33,18 @@ Play multiple games to see who is the true champion with the play again feature!
 ## Usage
 To run the development server with live reloading, use:
 
+```bash
 npm webpack serve --open
+```
 
 This will open the project in the default web browser and reload it on changes.
 
 ## Build for Production
 To build the project for production, use:
 
+```bash
 npm webpack --mode production
+```
 
 This will create an optimised and minified version of the project in the dist directory.
 
@@ -49,7 +53,7 @@ To configure the project, edit the webpack.config.js file.
 ## Acknowledgements
 Special thanks to [Odin Project](https://www.theodinproject.com/lessons/node-path-javascript-battleship)  for the education and information.
 
-## GitHub Pages
+## Deployment
 
 The latest version of the Battleships game is deployed on GitHub Pages. You can play it [here](https://kiffoh.github.io/battleships/).
 
