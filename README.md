@@ -34,12 +34,14 @@ Play multiple games to see who is the true champion with the play again feature!
 To run the development server with live reloading, use:
 
 npm webpack serve --open
+
 This will open the project in the default web browser and reload it on changes.
 
 ## Build for Production
 To build the project for production, use:
 
 npm webpack --mode production
+
 This will create an optimised and minified version of the project in the dist directory.
 
 To configure the project, edit the webpack.config.js file.
