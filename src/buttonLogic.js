@@ -14,7 +14,6 @@ function handleGameRulesButtonClick() {
 
             gameRulesOverlay.addEventListener("animationend", () => {
                 gameRulesOverlay.classList.remove("rules-load-in");
-                body.style.overflow = "auto";
             }, { once: true })
         } else {
             body.style.overflow = "hidden";
