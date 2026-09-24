@@ -2,9 +2,9 @@
 
 ## Introduction
 
-Welcome to Battleships, a classic game implemented using Test Driven Development (TDD) principles. In this project, I built the famous Battleship game from scratch. You can play against the computer or locally against a friend.
+Welcome to Battleships, a classic game implemented in vanilla JavaScript. In this project, I built the famous Battleship game from scratch. You can play against the computer or locally against a friend.
 
-As this project emphasises TDD, each functionality was implemented and tested independently to ensure the code’s reliability and maintainability.
+Core game logic, such as ship creation, positioning, hits and sinking, is covered by Jest unit tests in `tests.test.js`. UI and game-flow code is not currently unit tested.
 
 ## Additional features
 
@@ -31,19 +31,25 @@ Play multiple games to see who is the true champion with the play again feature!
 - **webpack**: Module bundler
 
 ## Usage
-To run the development server with live reloading, use:
+First install dependencies with `npm install`. To run the development server with live reloading, use:
 
 ```bash
-npm webpack serve --open
+npm start
 ```
 
 This will open the project in the default web browser and reload it on changes.
+
+To run the test suite, use:
+
+```bash
+npm test
+```
 
 ## Build for Production
 To build the project for production, use:
 
 ```bash
-npm webpack --mode production
+npm run build
 ```
 
 This will create an optimised and minified version of the project in the dist directory.
