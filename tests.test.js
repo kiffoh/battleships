@@ -1,12 +1,10 @@
-// const {Ship, Gameboard} = require("./src/classCreator");
-// const {player1} = require("./src/buildGrid");
-const {nearbyShipSquaresHit, board, Ship} = require("./src/randomise")
+const {Ship, Gameboard} = require("./src/classCreator");
 
-/*
 // Ships class
 test("Create a ship", () => {
     expect(new Ship(4)).toEqual({
         length: 4,
+        placed: false,
         hits: 0,
         sunk: false,
     })
@@ -15,6 +13,7 @@ test("Create a ship", () => {
 test("Hit a ship twice", () => {
     expect(new Ship(4).hit().hit()).toEqual({
         length: 4,
+        placed: false,
         hits: 2,
         sunk: false,
     })
@@ -23,6 +22,7 @@ test("Hit a ship twice", () => {
 test("Sunk function work?", () => {
     expect(new Ship(1).hit().isSunk()).toEqual({
         length: 1,
+        placed: false,
         hits: 1,
         sunk: true,
     })
@@ -31,6 +31,7 @@ test("Sunk function work?", () => {
 test("Sink a ship", () => {
     expect(new Ship(1).hit()).toEqual({
         length: 1,
+        placed: false,
         hits: 1,
         sunk: true,
     })
@@ -44,7 +45,7 @@ test("Position ship (Length = 1)", () => {
     expect(gameboard.board).toEqual(
         [
             [null, null, null, null, null, null, null, null, null, null],
-            [null, { length: 1, hits: 0, sunk: false }, null, null, null, null, null, null, null, null],
+            [null, { length: 1, placed: true, hits: 0, sunk: false }, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
@@ -65,9 +66,9 @@ test("Position ship (Length = 3 ; Y-AXIS)", () => {
     // Now, check the state of the board
     expect(gameboard.board).toEqual(
         [
-            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
-            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
-            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
+            [{ length: 3, placed: true, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
+            [{ length: 3, placed: true, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
+            [{ length: 3, placed: true, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
@@ -92,7 +93,7 @@ test("Position ship (Length = 5 ; X-AXIS)", () => {
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, null],
+            [null, null, null, null, { length: 5, placed: true, hits: 0, sunk: false }, { length: 5, placed: true, hits: 0, sunk: false }, { length: 5, placed: true, hits: 0, sunk: false }, { length: 5, placed: true, hits: 0, sunk: false }, { length: 5, placed: true, hits: 0, sunk: false }, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
@@ -108,13 +109,13 @@ test("Position multiple ships", () => {
     // Now, check the state of the board
     expect(gameboard.board).toEqual(
         [
-            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
-            [{ length: 3, hits: 0, sunk: false }, { length: 1, hits: 0, sunk: false }, null, null, null, null, null, null, null, null],
-            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
+            [{ length: 3, placed: true, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
+            [{ length: 3, placed: true, hits: 0, sunk: false }, { length: 1, placed: true, hits: 0, sunk: false }, null, null, null, null, null, null, null, null],
+            [{ length: 3, placed: true, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, null],
+            [null, null, null, null, { length: 5, placed: true, hits: 0, sunk: false }, { length: 5, placed: true, hits: 0, sunk: false }, { length: 5, placed: true, hits: 0, sunk: false }, { length: 5, placed: true, hits: 0, sunk: false }, { length: 5, placed: true, hits: 0, sunk: false }, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
@@ -132,13 +133,13 @@ test("Check hit for a SINGLE ship", () => {
     // Now, check the state of the board
     expect(gameboard.board).toEqual(
         [
-            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
-            [{ length: 3, hits: 0, sunk: false }, { length: 1, hits: 1, sunk: true }, null, null, null, null, null, null, null, null],
-            [{ length: 3, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
+            [{ length: 3, placed: true, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
+            [{ length: 3, placed: true, hits: 0, sunk: false }, { length: 1, placed: true, hits: 1, sunk: true }, null, null, null, null, null, null, null, null],
+            [{ length: 3, placed: true, hits: 0, sunk: false }, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
-            [null, null, null, null, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, { length: 5, hits: 0, sunk: false }, null],
+            [null, null, null, null, { length: 5, placed: true, hits: 0, sunk: false }, { length: 5, placed: true, hits: 0, sunk: false }, { length: 5, placed: true, hits: 0, sunk: false }, { length: 5, placed: true, hits: 0, sunk: false }, { length: 5, placed: true, hits: 0, sunk: false }, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
@@ -159,9 +160,9 @@ test("Check hits for MULTIPLE ships", () => {
     // Now, check the state of the board
     expect(gameboard.board).toEqual(
         [
-            [{ length: 3, hits: 3, sunk: true }, null, null, null, null, null, null, null, null, null],
-            [{ length: 3, hits: 3, sunk: true }, { length: 1, hits: 1, sunk: true }, null, null, null, null, null, null, null, null],
-            [{ length: 3, hits: 3, sunk: true }, null, null, null, null, null, null, null, null, null],
+            [{ length: 3, placed: true, hits: 3, sunk: true }, null, null, null, null, null, null, null, null, null],
+            [{ length: 3, placed: true, hits: 3, sunk: true }, { length: 1, placed: true, hits: 1, sunk: true }, null, null, null, null, null, null, null, null],
+            [{ length: 3, placed: true, hits: 3, sunk: true }, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
             [null, null, null, null, null, null, null, null, null, null],
@@ -208,6 +209,9 @@ test("Missed hits", () => {
 });
 
 // MainGameLoop
+// Not restored: this test requires `player1` from ./src/buildGrid, a module
+// that no longer exists in this codebase (the game state now lives elsewhere).
+/*
 test("Testing player1 creation", () => {
     expect(player1.board).toEqual(
         [
@@ -225,6 +229,12 @@ test("Testing player1 creation", () => {
     )
 })
 */
+
+// Not restored: `nearbyShipSquaresHit`, `board` and `Ship` are internal to
+// ./src/randomise and are not exported from it, so this test cannot run
+// without changing that module.
+/*
+const {nearbyShipSquaresHit, board, Ship} = require("./src/randomise")
 
 test("Testing nearbySquaresHit", () => {
     const board = Array.from({length: 10}, () => Array(10).fill(null));
@@ -254,3 +264,4 @@ test("Testing nearbySquaresHit", () => {
         ]
     )
 })
+*/
